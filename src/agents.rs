@@ -7,22 +7,19 @@
 //     db: Database<StoreKey>,
 // }
 
-// pub struct Agent {
-//     address: Vec<u8>,
-//     nonce: usize,
-//     balance: usize,
-//     state: String,
-//     code: Vec<u8>
-// }
+pub struct Agent {
+    address: Vec<u8>,
+    nonce: usize,
+    balance: usize,
+    state: String,
+    code: Vec<u8>
+}
 
-// impl Agent {
-//     fn new(address: Vec<u8>, code: Vec<u8>) -> Self{
-//         Agent {address, 0, 0, "", code}
-//     }
-//     fn load(address: Vec<u8>) -> Self {
-        
-//     }
-// }
+impl Agent {
+    fn new(address: Vec<u8>, nonce: usize, balance: usize, state: String, code: Vec<u8>) -> Self{
+        Agent {address, nonce, balance, state, code}
+    }
+}
 
 // pub struct AgentsManager {
 //     db: Database<StoreKey>
