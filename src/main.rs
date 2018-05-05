@@ -15,7 +15,12 @@ extern crate log;
 extern crate fern;
 
 #[macro_use]
+extern crate lazy_static;
+
+#[macro_use]
 extern crate failure;
+
+use std::sync::Mutex;
 
 use clap::{App, Arg, SubCommand};
 use rand::{OsRng};
@@ -33,6 +38,7 @@ mod vm;
 
 use app::Pallium;
 use transaction::Transaction;
+use store::Store;
 
 fn main() {
     setup_logger();
@@ -54,10 +60,15 @@ fn main() {
     }
 
     if let Some(matches) = matches.subcommand_matches("node") {
-        static APP: Pallium = Pallium;
+
+        lazy_static! {
+            static ref STORE: Mutex<Store> = Mutex::new(Store::new());
+            static ref APP: Pallium = Pallium::connect(&*STORE);
+        };
+
         let addr = "127.0.0.1:46658".parse().unwrap();
         info!("Starting ABCIServer on {:?}", addr);
-        server::start(addr, &APP);
+        server::start(addr, &*APP);
     }
 }
 
