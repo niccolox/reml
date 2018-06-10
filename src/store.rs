@@ -29,7 +29,6 @@ impl Store {
 
     pub fn get(&self, key: String) -> String {
         let value = self.db.get("1");
-        // panic!("{:?}", value);
         value.unwrap().to_owned()
     }
 }

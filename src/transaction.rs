@@ -2,8 +2,6 @@ use rlp::{self, Encodable, Decodable, RlpStream, UntrustedRlp, DecoderError, Rlp
 use std::fmt::Write;
 use hex; 
 
-use vm;
-
 type Address = String;
 
 #[derive(Debug)]
@@ -47,14 +45,13 @@ impl Transaction {
     }
 
     pub fn deserialize(rlp: Vec<u8>) -> Self {
-        info!("Start deserialize");
         rlp::decode(&rlp)
     }
 
     pub fn send(&self) -> bool {
         let tx = self.serialize();
 
-        vm::executor(hex::encode(tx));
+       // vm::executor(hex::encode(tx));
         
         true
     }

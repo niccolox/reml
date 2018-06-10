@@ -10,7 +10,6 @@ name = "pallium"
 path = "src/main.rs"
 
 [dependencies]
-abci-rs = { git = "https://github.com/neocortexlab/abci-rs" }
 clap = "^2.31.2"
 log = "0.4.1"
 fern = "0.5.5"
@@ -28,3 +27,6 @@ sha2 = "0.7.0"
 ed25519-dalek = "0.6.2"
 rlp = "0.2.1"
 lazy_static = "1.0.0"
+
+[dependencies.abci-rs ]
+path = "./src/abci-rs"

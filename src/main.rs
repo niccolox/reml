@@ -33,12 +33,13 @@ use abci_rs::server;
 mod app;
 mod store;
 mod transaction;
-mod agents;
-mod vm;
+// mod agents;
+mod pvm;
 
 use app::Pallium;
 use transaction::Transaction;
 use store::Store;
+use pvm::Vm;
 
 fn main() {
     setup_logger();
@@ -63,7 +64,8 @@ fn main() {
 
         lazy_static! {
             static ref STORE: Mutex<Store> = Mutex::new(Store::new());
-            static ref APP: Pallium = Pallium::connect(&*STORE);
+            static ref PVM: Mutex<Vm> = Mutex::new(Vm::new());
+            static ref APP: Pallium = Pallium::connect(&*STORE, &*PVM);
         };
 
         let addr = "127.0.0.1:46658".parse().unwrap();
