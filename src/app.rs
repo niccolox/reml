@@ -1,23 +1,10 @@
 use abci_rs::Application;
 use abci_rs::types::*;
-use store::Store;
 
-use std::sync::Mutex;
+#[derive(Copy, Clone)]
+pub struct Pallium;
 
-#[derive(Debug)]
-pub struct Pallium {
-    store: &'static Mutex<Store>
-}
-
-impl Pallium {
-    #[inline]
-    pub fn connect(store: &'static Mutex<Store>) -> Pallium {
-        Pallium {
-            store: store
-        }
-    }
-}
-
+// Socket implementation
 impl Application for Pallium {
     fn begin_block(&self, p: &RequestBeginBlock) -> ResponseBeginBlock {
         println!("begin_block");
@@ -40,11 +27,8 @@ impl Application for Pallium {
     }
 
     fn echo(&self, p: &RequestEcho) -> ResponseEcho {
-        self.store.lock().unwrap().insert("1".into(), p.get_message().into());
-
         let mut response = ResponseEcho::new();
-        //response.set_message(p.get_message().to_owned());
-        response.set_message(self.store.lock().unwrap().get("1".to_owned()));
+        response.set_message(p.get_message().to_owned());
         return response;
     }
 
@@ -64,7 +48,8 @@ impl Application for Pallium {
     }
 
     fn info(&self, p: &RequestInfo) -> ResponseInfo {
-        println!("info {:?}", p);
+        //println!("info");
+        println!("indo {:?}", p);
         ResponseInfo::new()
     }
 
