@@ -19,30 +19,6 @@ impl Agent {
     fn new(address: Vec<u8>, nonce: usize, balance: usize, state: String, code: Vec<u8>) -> Self{
         Agent {address, nonce, balance, state, code}
     }
-
-    fn construct() {
-        unimplemented!()
-    }
-
-    fn get_message(action: u8, message: Vec<u8>) {
-        match action {
-            0 => println!("Hi zerro"),
-            1 => println!("Hi one"),
-            _ => println!("command not found")
-        }
-    }
-
-    fn will_delpoy() {
-        unimplemented!()
-    }
-
-    fn deploy() {
-        unimplemented!()
-    }
-
-    fn did_deploy() {
-        unimplemented!()
-    }
 }
 
 // pub struct AgentsManager {

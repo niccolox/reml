@@ -1,22 +1,19 @@
 use abci_rs::Application;
 use abci_rs::types::*;
 use store::Store;
-use pvm::Vm;
 
 use std::sync::Mutex;
 
 #[derive(Debug)]
 pub struct Pallium {
-    store: &'static Mutex<Store>,
-    pvm: &'static Mutex<Vm>
+    store: &'static Mutex<Store>
 }
 
 impl Pallium {
     #[inline]
-    pub fn connect(store: &'static Mutex<Store>, pvm: &'static Mutex<Vm>) -> Pallium {
+    pub fn connect(store: &'static Mutex<Store>) -> Pallium {
         Pallium {
-            store: store,
-            pvm: pvm
+            store: store
         }
     }
 }
