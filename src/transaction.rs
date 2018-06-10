@@ -1,44 +1,24 @@
-use rlp::{self, Encodable, Decodable, RlpStream, UntrustedRlp, DecoderError, Rlp};
-use std::fmt::Write;
-use hex; 
-
-use vm;
-
-type Address = String;
+use rlp::{self, Encodable, RlpStream};
 
 #[derive(Debug)]
 pub struct Transaction {
     nonce: usize,
-    to: Address,
+    to: Vec<u8>,
     value: usize,
-    data: String
+    data: Vec<u8>
 }
 
 impl Encodable for Transaction {
     fn rlp_append(&self, s: &mut RlpStream) {
-        s.begin_list(4)
-            .append(&self.nonce)
-            .append(&self.to)
-            .append(&self.value)
-            .append(&self.data);
-    }
-}
-
-impl Decodable for Transaction {
-    fn decode(rlp: &UntrustedRlp) -> Result<Self, DecoderError> {
-        let tx = Transaction {
-            nonce: rlp.at(0).unwrap().as_val::<usize>().unwrap(),
-            to: rlp.at(1).unwrap().as_val::<String>().unwrap(),
-            value: rlp.at(2).unwrap().as_val::<usize>().unwrap(),
-            data: rlp.at(3).unwrap().as_val::<String>().unwrap(),
-        };
-        
-        Ok(tx)
+        s.append(&self.nonce);
+        s.append(&self.to);
+        s.append(&self.value);
+        s.append(&self.data);
     }
 }
 
 impl Transaction {
-    pub fn new(nonce: usize, to: Address, value: usize, data: String) -> Self{
+    pub fn new(nonce: usize, to: Vec<u8>, value: usize, data: Vec<u8>) -> Self{
         Transaction {nonce, to, value, data}
     }
 
@@ -46,16 +26,9 @@ impl Transaction {
         rlp::encode(self).into_vec()
     }
 
-    pub fn deserialize(rlp: Vec<u8>) -> Self {
-        info!("Start deserialize");
-        rlp::decode(&rlp)
-    }
-
     pub fn send(&self) -> bool {
         let tx = self.serialize();
-
-        vm::executor(hex::encode(tx));
-        
+        println!("RLP: {:?}", tx);
         true
     }
 
@@ -69,4 +42,3 @@ impl Transaction {
         // assert!(verified);
     }
 }
-

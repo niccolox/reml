@@ -8,7 +8,6 @@ extern crate ed25519_dalek;
 extern crate tiny_keccak;
 extern crate sha2;
 extern crate rlp;
-extern crate hex;
 
 #[macro_use]
 extern crate log;
@@ -29,7 +28,6 @@ mod app;
 mod store;
 mod transaction;
 mod agents;
-mod vm;
 
 use app::Pallium;
 use transaction::Transaction;
@@ -68,7 +66,7 @@ fn create_agent(code: Vec<u8>){
     let public_key: PublicKey = keypair.public;
     let address = get_address(&public_key);
     
-    let tx = Transaction::new(0, hex::encode(address), 0, hex::encode(code));
+    let tx = Transaction::new(0, address.to_vec(), 0, code);
     println!("{:?}", tx);
     tx.send();
 }
@@ -100,5 +98,12 @@ fn setup_logger() {
 
     fern_dispatch.chain(io::stderr()).apply().unwrap();
 }
-// fn to_hex(bytes: &Vec<u8>) -
+// fn to_hex(bytes: &Vec<u8>) -> String {
+//     let mut hex = String::with_capacity(bytes.len() * 2);
+
+//     for byte in bytes {
+//         write!(hex, "{:02x}", byte).expect("Can't fail on writing to string");
+//     }
+
+//     hex
 // }
