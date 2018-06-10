@@ -1,109 +1,91 @@
-extern crate abci_rs;
-extern crate chrono;
 extern crate clap;
-extern crate db_key;
-extern crate leveldb;
-extern crate rand;
-extern crate ed25519_dalek;
-extern crate tiny_keccak;
-extern crate sha2;
-extern crate rlp;
-
-#[macro_use]
-extern crate log;
-extern crate fern;
-
-#[macro_use]
-extern crate failure;
+extern crate abci_rs;
 
 use clap::{App, Arg, SubCommand};
-use rand::{OsRng};
-use ed25519_dalek::{Keypair, PublicKey};
-use tiny_keccak::Keccak;
-use sha2::Sha512;
 
-use abci_rs::server;
+use abci_rs::{Application, server};
+//use abci_rs::Application;
+use abci_rs::types::*;
 
-mod app;
-mod store;
-mod transaction;
-mod agents;
+#[derive(Copy, Clone)]
+struct Pallium;
 
-use app::Pallium;
-use transaction::Transaction;
+// Socket implementation
+impl Application for Pallium {
+    fn begin_block(&self, p: &RequestBeginBlock) -> ResponseBeginBlock {
+        println!("begin_block");
+        ResponseBeginBlock::new()
+    }
+
+    fn check_tx(&self, p: &RequestCheckTx) -> ResponseCheckTx {
+        println!("check_tx");
+        ResponseCheckTx::new()
+    }
+
+    fn commit(&self, p: &RequestCommit) -> ResponseCommit {
+        println!("commit");
+        ResponseCommit::new()
+    }
+
+    fn deliver_tx(&self, p: &RequestDeliverTx) -> ResponseDeliverTx {
+        println!("deliver_tx");
+        ResponseDeliverTx::new()
+    }
+
+    fn echo(&self, p: &RequestEcho) -> ResponseEcho {
+        let mut response = ResponseEcho::new();
+        response.set_message(p.get_message().to_owned());
+        return response;
+    }
+
+    fn end_block(&self, p: &RequestEndBlock) -> ResponseEndBlock {
+        println!("end_block");
+        ResponseEndBlock::new()
+    }
+
+    fn flush(&self, p: &RequestFlush) -> ResponseFlush {
+        println!("flush");
+        ResponseFlush::new()
+    }
+
+    fn init_chain(&self, p: &RequestInitChain) -> ResponseInitChain {
+        println!("init_chain");
+        ResponseInitChain::new()
+    }
+
+    fn info(&self, p: &RequestInfo) -> ResponseInfo {
+        //println!("info");
+        println!("indo {:?}", p);
+        ResponseInfo::new()
+    }
+
+    fn query(&self, p: &RequestQuery) -> ResponseQuery {
+        println!("query");
+        ResponseQuery::new()
+    }
+
+    fn set_option(&self, p: &RequestSetOption) -> ResponseSetOption {
+        println!("set_option {:?}", p);
+        ResponseSetOption::new()
+    }
+}
 
 fn main() {
-    setup_logger();
-
     let matches = App::new("Pallium Network CLI")
         .version("0.1.0")
         .author("Neocortex R&D Ltd.")
-        .subcommand(SubCommand::with_name("create")
-                    .about("Create new agent")
-                    .arg(Arg::with_name("code")
-                         .help("alias for pure agent address")
-                         .index(1)))
-        .subcommand(SubCommand::with_name("node").about("Run the Pallium Network node"))
+        .subcommand(SubCommand::with_name("node")
+                    .about("Run the Pallium Network node"))
         .get_matches();
-
-    if let Some(matches) = matches.subcommand_matches("create") {
-        let code:Vec<u8> = Vec::new();
-        create_agent(code);
-    }
 
     if let Some(matches) = matches.subcommand_matches("node") {
         static APP: Pallium = Pallium;
         let addr = "127.0.0.1:46658".parse().unwrap();
-        info!("Starting ABCIServer on {:?}", addr);
+        println!("Starting ABCIServer on {:?}", addr);
         server::start(addr, &APP);
     }
+
+    // loop {
+    //     thread::park();
+    // }
 }
-
-fn create_agent(code: Vec<u8>){
-    let mut cspring: OsRng = OsRng::new().unwrap();
-    let keypair: Keypair = Keypair::generate::<Sha512>(&mut cspring);
-
-    let public_key: PublicKey = keypair.public;
-    let address = get_address(&public_key);
-    
-    let tx = Transaction::new(0, address.to_vec(), 0, code);
-    println!("{:?}", tx);
-    tx.send();
-}
-
-fn get_address(public_key: &PublicKey) -> [u8; 32]{
-    let mut keccak = Keccak::new_keccak256();
-    let mut result = [0u8; 32];
-    keccak.update(&public_key.to_bytes().to_vec());
-    keccak.finalize(&mut result);
-    result
-}
-
-use std::io;
-
-fn setup_logger() {
-    let log_level = log::LevelFilter::Debug;
-    let fern_dispatch = fern::Dispatch::default()
-        .level(log::LevelFilter::Error)
-        .level_for("pallium", log_level)
-        .format(|out, message, record| {
-            out.finish(format_args!(
-                "{}[{}][{}] {}",
-                chrono::Local::now().format("[%Y-%m-%d][%H:%M:%S]"),
-                record.target(),
-                record.level(),
-                message
-            ))
-        });
-
-    fern_dispatch.chain(io::stderr()).apply().unwrap();
-}
-// fn to_hex(bytes: &Vec<u8>) -> String {
-//     let mut hex = String::with_capacity(bytes.len() * 2);
-
-//     for byte in bytes {
-//         write!(hex, "{:02x}", byte).expect("Can't fail on writing to string");
-//     }
-
-//     hex
-// }
