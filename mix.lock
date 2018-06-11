@@ -22,6 +22,7 @@
   "poison": {:hex, :poison, "3.1.0", "d9eb636610e096f86f25d9a46f35a9facac35609a7591b3be3326e99a0484665", [:mix], [], "hexpm"},
   "protox": {:hex, :protox, "0.17.0", "c17e3c1579bffea45317519eecf080701dd788e457290742256eecbe503e807d", [:mix], [], "hexpm"},
   "ranch": {:git, "https://github.com/ninenines/ranch.git", "55c2a9d623454f372a15e99721a37093d8773b48", [tag: "1.4.0"]},
+  "sage": {:hex, :sage, "0.4.0", "b244f17cd185536a3ead64bec7c728d4b4812ee8d1b2aa600b66a791f6f3c259", [:mix], [], "hexpm"},
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.1", "28a4d65b7f59893bc2c7de786dec1e1555bd742d336043fe644ae956c3497fbe", [:make, :rebar], [], "hexpm"},
   "unicode_util_compat": {:hex, :unicode_util_compat, "0.3.1", "a1f612a7b512638634a603c8f401892afbf99b8ce93a45041f8aaca99cadb85e", [:rebar3], [], "hexpm"},
 }

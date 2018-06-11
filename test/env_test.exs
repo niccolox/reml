@@ -18,12 +18,12 @@ defmodule EnvTest do
         end
       end
 
-    [{PalliumAgent, object_code}] = Code.compile_quoted(agent)
+    [{moudule_name, object_code}] = Code.compile_quoted(agent)
 
     # unload module, it should be load in Pallium.Env
-    :code.purge(PalliumAgent)
-    :code.delete(PalliumAgent)
+    :code.purge(moudule_name)
+    :code.delete(moudule_name)
 
-    assert Pallium.Env.deploy_agent(PalliumAgent, object_code) == :hello
+    assert Pallium.Env.deploy_agent(agent_name, object_code) == :hello
   end
 end

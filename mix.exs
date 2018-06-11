@@ -28,6 +28,7 @@ defmodule Pallium.MixProject do
   defp deps do
     [
       {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
+      {:sage, "~> 0.4.0"},
       {:ed25519, "~> 1.3"},
       {:keccakf1600, "~> 2.0.0", hex: :keccakf1600_orig},
       {:ex_rlp, "~> 0.3.0"},

@@ -3,6 +3,7 @@ defmodule Pallium.Myelin.Agent do
   Documentation for Pallium Autonomous Intelligent Agents.
   """
   alias Pallium.Myelin.Store
+  alias Pallium.Env
 
   @empty_keccak Helpers.keccak(<<>>)
   # @empty_trie MerklePatriciaTree.Trie.empty_trie_root_hash
@@ -50,13 +51,15 @@ defmodule Pallium.Myelin.Agent do
   def new(code) do
     %__MODULE__{%Pallium.Myelin.Agent{} | code: code} |> serialize() |> ExRLP.encode()
   end
+  
+  def put(agent_rlp, address) do
+    Store.update(address, agent_rlp)
+    {:ok, address}
+  end
 
-  def get_balance(address) do
-    case get_agent(address) do
-      nil -> nil
-      <<>> -> nil
-      agent -> {:ok, agent.balance}
-    end
+  def dispatch(address, data) do
+    agent = get_agent(address)
+    Env.deploy_agent(address, agent.code)
   end
 
   def transfer(to, from, value) when from != "0x" do
@@ -92,8 +95,12 @@ defmodule Pallium.Myelin.Agent do
     %__MODULE__{agent | nonce: value}
   end
 
-  def put(agent_rlp, address) do
-    Store.update(address, agent_rlp)
+  def get_balance(address) do
+    case get_agent(address) do
+      nil -> nil
+      <<>> -> nil
+      agent -> {:ok, agent.balance}
+    end
   end
 
   def get_agent(address) do

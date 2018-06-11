@@ -15,7 +15,7 @@ defmodule Pallium do
     {secret_key, public_key} = Ed25519.generate_key_pair()
     address = Myelin.Address.new(public_key) |> Helpers.to_hex()
     agent = Myelin.Agent.new(code)
-    response = {0, address, <<>>, 0, agent} |> Tx.create() |> Tx.send()
+    response = {0, :create, address, <<>>, 0, agent} |> Tx.create() |> Tx.send()
     {:ok, address}
   end
 
