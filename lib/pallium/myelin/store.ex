@@ -3,7 +3,7 @@ defmodule Pallium.Myelin.Store do
 
   def init(trie), do: {:ok, trie}
 
-  def handle_call(:get_root, _from, trie), do: {:reply, trie.root_hash, trie}
+  def handle_call(:get, _from, trie), do: {:reply, trie, trie}
 
   def handle_call({:get, key}, _from, trie) do
     {:reply, MerklePatriciaTree.Trie.get(trie, key), trie}
@@ -22,7 +22,7 @@ defmodule Pallium.Myelin.Store do
     GenServer.start_link(__MODULE__, trie, name: __MODULE__)
   end
 
-  def get_root, do: GenServer.call(__MODULE__, :get_root)
+  def get, do: GenServer.call(__MODULE__, :get)
   def get(key), do: GenServer.call(__MODULE__, {:get, key})
   def update(key, value), do: GenServer.cast(__MODULE__, {:update, key, value})
 end

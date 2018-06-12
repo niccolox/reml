@@ -6,7 +6,4 @@ defmodule Pallium.Myelin.Address do
   def new(public_key) do
     public_key |> Helpers.keccak()
   end
-
-  def send(tx) do
-  end
 end

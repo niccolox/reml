@@ -17,11 +17,13 @@ defmodule TransactionTest do
 
   test "test create type" do
     agent = Agent.new(<<>>)
-    {0, :create, @sender, <<>>, 0, agent} 
-      |> Tx.create()
-      |> Tx.serialize() 
-      |> ExRLP.encode()
-      |> Tx.execute()
+
+    {0, :create, @sender, <<>>, 0, agent}
+    |> Tx.create()
+    |> Tx.serialize()
+    |> ExRLP.encode()
+    |> Tx.execute()
+
     assert Agent.get_balance(@sender) == {:ok, 0}
   end
 
@@ -32,35 +34,43 @@ defmodule TransactionTest do
       quote do
         defmodule unquote(agent_atom) do
           @behaviour Pallium.Env.AgentBehaviour
-
           def construct() do
-            :hello
+            state = %{foo: "bar", hello: "world"}
+            Pallium.Env.set_state(state)
+          end
+
+          def get_message(action, data) do
+            case action do
+              "foo" -> Pallium.Env.get_value("foo")
+              "hello" -> Pallium.Env.get_value("hello")
+            end
           end
         end
       end
 
     [{_, object_code}] = Code.compile_quoted(agent)
-    
+
     :code.purge(String.to_atom(@sender))
     :code.delete(String.to_atom(@sender))
 
     agent = Agent.new(object_code)
 
-    {0, :create, @sender, <<>>, 0, agent} 
-      |> Tx.create()
-      |> Tx.serialize() 
-      |> ExRLP.encode()
-      |> Tx.execute()
-    
-    created_agent = Agent.get_agent(@sender)
-    assert created_agent.code == object_code 
+    {0, :create, @sender, <<>>, 0, agent}
+    |> Tx.create()
+    |> Tx.serialize()
+    |> ExRLP.encode()
+    |> Tx.execute()
 
-    result = 
-    {0, :dispatch, @sender, <<>>, 0, <<>>} 
+    created_agent = Agent.get_agent(@sender)
+    assert created_agent.code == object_code
+
+    result =
+      {0, :dispatch, @sender, <<>>, 0, <<>>}
       |> Tx.create()
-      |> Tx.serialize() 
+      |> Tx.serialize()
       |> ExRLP.encode()
       |> Tx.execute()
+
     assert result == :hello
   end
 end

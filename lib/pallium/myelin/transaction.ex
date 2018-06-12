@@ -85,7 +85,7 @@ defmodule Pallium.Myelin.Transaction do
     tx = rlp |> ExRLP.decode() |> deserialize()
 
     case tx.type do
-      :create   -> Agent.put(tx.data, tx.to)
+      :create -> Agent.put(tx.data, tx.to)
       :transfer -> Agent.transfer(tx.to, tx.from, tx.value)
       :dispatch -> Agent.dispatch(tx.to, tx.data)
       _ -> {:reject, "Execution failure"}

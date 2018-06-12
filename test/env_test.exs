@@ -11,7 +11,6 @@ defmodule EnvTest do
       quote do
         defmodule unquote(agent_atom) do
           @behaviour Pallium.Env.AgentBehaviour
-
           def construct() do
             :hello
           end

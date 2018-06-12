@@ -2,15 +2,16 @@ defmodule Pallium.Myelin.Agent do
   @moduledoc """
   Documentation for Pallium Autonomous Intelligent Agents.
   """
+  alias MerklePatriciaTree.Trie
   alias Pallium.Myelin.Store
   alias Pallium.Env
 
   @empty_keccak Helpers.keccak(<<>>)
-  # @empty_trie MerklePatriciaTree.Trie.empty_trie_root_hash
+  @empty_trie MerklePatriciaTree.Trie.empty_trie_root_hash()
 
   defstruct nonce: 0,
             balance: 0,
-            state: @empty_keccak,
+            state: @empty_trie,
             code: <<>>
 
   @type agent :: %__MODULE__{
@@ -51,56 +52,10 @@ defmodule Pallium.Myelin.Agent do
   def new(code) do
     %__MODULE__{%Pallium.Myelin.Agent{} | code: code} |> serialize() |> ExRLP.encode()
   end
-  
+
   def put(agent_rlp, address) do
     Store.update(address, agent_rlp)
     {:ok, address}
-  end
-
-  def dispatch(address, data) do
-    agent = get_agent(address)
-    Env.deploy_agent(address, agent.code)
-  end
-
-  def transfer(to, from, value) when from != "0x" do
-    recipient = get_agent(to)
-    sender = get_agent(from)
-
-    if sender.balance - value > 0 do
-      do_transfer(sender, from, sender.balance - value, sender.nonce + 1)
-      do_transfer(recipient, to, recipient.balance + value, recipient.nonce + 1)
-      {:ok, ""}
-    else
-      {:reject, "Insufficient funds"}
-    end
-  end
-
-  def transfer(to, from, value) when from == "0x" do
-    recipient = get_agent(to)
-    recipient |> do_transfer(to, recipient.balance + value, recipient.nonce + 1)
-  end
-
-  defp do_transfer(agent, address, next_balance, next_nonce) do
-    agent
-    |> update_balance(next_balance)
-    |> update_nonce(next_nonce)
-    |> (fn next -> next |> serialize() |> ExRLP.encode() |> put(address) end).()
-  end
-
-  defp update_balance(agent, value) do
-    %__MODULE__{agent | balance: value}
-  end
-
-  defp update_nonce(agent, value) do
-    %__MODULE__{agent | nonce: value}
-  end
-
-  def get_balance(address) do
-    case get_agent(address) do
-      nil -> nil
-      <<>> -> nil
-      agent -> {:ok, agent.balance}
-    end
   end
 
   def get_agent(address) do
@@ -109,5 +64,100 @@ defmodule Pallium.Myelin.Agent do
       <<>> -> nil
       agent -> agent |> ExRLP.decode() |> deserialize()
     end
+  end
+
+  def dispatch(address, data) do
+    with agent <- get_agent(address),
+         state <- agent.state,
+         do: Env.deploy_agent(address, agent.code) |> Env.dispatch(state)
+  end
+
+  def transfer(to, from, value) do
+    from_agent = get_agent(from)
+
+    cond do
+      from == "0x" ->
+        to |> get_agent() |> do_transfer(to, value)
+
+      from_agent == nil ->
+        {:reject, "sender account does not exist"}
+
+      from_agent.balance < value ->
+        {:reject, "sender account insufficient funds"}
+
+      true ->
+        (fn ->
+           to |> get_agent() |> do_transfer(to, value)
+           from_agent |> do_transfer(from, -1 * value)
+         end).()
+    end
+  end
+
+  defp do_transfer(agent, address, value) do
+    agent
+    |> update_balance(agent.balance + value)
+    |> increment_nonce()
+    |> (fn next -> next |> commit(address) end).()
+  end
+
+  def get_balance(address) do
+    case get_agent(address) do
+      nil -> nil
+      agent -> {:ok, agent.balance}
+    end
+  end
+
+  def put_state(address, key, value) do
+    case get_agent(address) do
+      nil ->
+        nil
+
+      agent ->
+        (fn ->
+           updated_storage_trie = state_update(agent.state, key, value)
+           agent |> update_state(updated_storage_trie.root_hash) |> commit(address)
+         end).()
+    end
+  end
+
+  defp state_update(root, key, value) do
+    store = Store.get()
+
+    Trie.new(store.db, root)
+    |> Trie.update(key |> Helpers.keccak(), value |> ExRLP.encode())
+  end
+
+  def get_state(address, key) do
+    case get_agent(address) do
+      nil -> nil
+      agent -> state_fetch(agent.state, key)
+    end
+  end
+
+  def set_state(address, state) do
+    Enum.each(state, fn {key, value} ->
+      put_state(address, Atom.to_string(key), value)
+    end)
+  end
+
+  defp state_fetch(root, key) do
+    store = Store.get()
+    Trie.new(store.db, root) |> Trie.get(key |> Helpers.keccak()) |> ExRLP.decode()
+  end
+
+  defp increment_nonce(agent) do
+    %__MODULE__{agent | nonce: agent.nonce + 1}
+  end
+
+  defp update_balance(agent, value) do
+    %__MODULE__{agent | balance: value}
+  end
+
+  defp update_state(agent, value) do
+    %__MODULE__{agent | state: value}
+  end
+
+  defp commit(next_agent, address) do
+    next_agent |> serialize() |> ExRLP.encode() |> put(address)
   end
 end
