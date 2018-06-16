@@ -4,6 +4,7 @@ defmodule Pallium.Myelin.Agent do
   """
   alias MerklePatriciaTree.Trie
   alias Pallium.Myelin.Store
+  alias Pallium.Myelin.Message
   alias Pallium.Env
 
   @empty_keccak Helpers.keccak(<<>>)
@@ -53,6 +54,15 @@ defmodule Pallium.Myelin.Agent do
     %__MODULE__{%Pallium.Myelin.Agent{} | code: code} |> serialize() |> ExRLP.encode()
   end
 
+  def create(agent_rlp, address) do
+    agent = agent_rlp |> put(address)
+
+    case agent do
+      {:ok, address} -> dispatch(address, "CONSTRUCT")
+      {:reject, reason} -> {:reject, reason}
+    end
+  end
+
   def put(agent_rlp, address) do
     Store.update(address, agent_rlp)
     {:ok, address}
@@ -66,10 +76,18 @@ defmodule Pallium.Myelin.Agent do
     end
   end
 
-  def dispatch(address, data) do
+  def send(address, rlp_msg) do
+    message = Message.decode(rlp_msg)
+    dispatch(address, "MESSAGE", %{action: message.action, data: message.data})
+  end
+
+  def dispatch(address, method, data \\ <<>>) do
     with agent <- get_agent(address),
-         state <- agent.state,
-         do: Env.deploy_agent(address, agent.code) |> Env.dispatch(state)
+         state <- agent.state do
+      if agent.code != <<>> do
+        Env.deploy_agent(address, agent.code) |> Env.dispatch(state, address, method, data)
+      end
+    end
   end
 
   def transfer(to, from, value) do

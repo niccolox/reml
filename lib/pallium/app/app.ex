@@ -53,6 +53,11 @@ defmodule Pallium.App do
     Types.ResponseCommit.new(data: <<>>)
   end
 
+  def flush(req) do
+    _ = req
+    Types.ResponseFlush.new()
+  end
+
   def echo(req) do
     msg = req.message
     Types.ResponseEcho.new(message: msg)
@@ -63,16 +68,14 @@ defmodule Pallium.App do
   end
 
   def deliver_tx(req) do
-    IO.inspect(req)
-
     case Transaction.execute(req.tx) do
-      {:ok, result} -> Types.ResponseDeliverTx.new(code: @code_type_ok)
+      :ok -> Types.ResponseDeliverTx.new(code: @code_type_ok)
+      {:ok, result} -> Types.ResponseDeliverTx.new(code: @code_type_ok, data: result)
       {:error, reason} -> Types.ResponseDeliverTx.new(code: @code_type_encoding_error)
     end
   end
 
   def check_tx(req) do
-    IO.inspect(req)
     Types.ResponseCheckTx.new(code: @code_type_ok)
   end
 end

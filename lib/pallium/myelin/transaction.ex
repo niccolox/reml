@@ -77,17 +77,15 @@ defmodule Pallium.Myelin.Transaction do
     host = Application.get_env(:pallium, :host)
     broadcast = Application.get_env(:pallium, :broadcast)
     encoded_tx = tx |> serialize() |> ExRLP.encode() |> Helpers.to_hex()
-
-    result = JSONRPC2.Clients.HTTP.call(host <> broadcast <> "0x" <> encoded_tx, "", [])
+    JSONRPC2.Clients.HTTP.call(host <> broadcast <> "0x" <> encoded_tx, "", [])
   end
 
   def execute(rlp) do
     tx = rlp |> ExRLP.decode() |> deserialize()
-
     case tx.type do
-      :create -> Agent.put(tx.data, tx.to)
+      :create -> Agent.create(tx.data, tx.to)
       :transfer -> Agent.transfer(tx.to, tx.from, tx.value)
-      :dispatch -> Agent.dispatch(tx.to, tx.data)
+      :send -> Agent.send(tx.to, tx.data)
       _ -> {:reject, "Execution failure"}
     end
   end
