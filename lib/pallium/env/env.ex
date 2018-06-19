@@ -3,6 +3,7 @@ defmodule Pallium.Env do
   Documentation for Pallium Environment.
   """
   alias Pallium.Myelin.Agent
+  alias Pallium.Env.Flow
 
   def deploy_agent(address, code) do
     agent = String.to_existing_atom("Elixir.#{address}")

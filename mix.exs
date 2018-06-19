@@ -36,7 +36,8 @@ defmodule Pallium.MixProject do
       {:exleveldb, "~> 0.13.1"},
       {:abci, path: "/Users/xcilog/Documents/projects/pallium/abci-ex"},
       {:jsonrpc2, "~> 1.0"},
-      {:hackney, "~> 1.12"}
+      {:hackney, "~> 1.12"},
+      {:extensor, "~> 0.1"}
     ]
   end
 end
