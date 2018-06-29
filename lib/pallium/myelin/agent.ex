@@ -58,7 +58,7 @@ defmodule Pallium.Myelin.Agent do
     agent = agent_rlp |> put(address)
 
     case agent do
-      {:ok, address} -> dispatch(address, "CONSTRUCT")
+      {:ok, address} -> dispatch(address, :construct)
       {:reject, reason} -> {:reject, reason}
     end
   end
@@ -78,7 +78,15 @@ defmodule Pallium.Myelin.Agent do
 
   def send(address, rlp_msg) do
     message = Message.decode(rlp_msg)
-    dispatch(address, "MESSAGE", %{action: message.action, data: message.data})
+    dispatch(address, :message , %{action: message.action, data: message.data})
+  end
+
+  def send!(address, rlp_msg) do
+    #unimplement send msg to channel
+  end
+
+  def channel(address, pid) do
+    dispatch(address, :channel , pid)
   end
 
   def dispatch(address, method, data \\ <<>>) do

@@ -15,8 +15,9 @@ defmodule Pallium.Env do
 
   def dispatch(agent, state, address, method, data) do
      case method do
-       "CONSTRUCT" -> agent.construct(address)
-       "MESSAGE" -> {:ok, agent.handle(address, data.action, data.data)}
+       :construct -> agent.construct(address)
+       :message -> {:ok, agent.handle(address, data.action, data.data)}
+       :channel -> agent.register(address, data)
      end
   end
 
@@ -27,4 +28,9 @@ defmodule Pallium.Env do
   def get_value(address, key) do
     Agent.get_state(address, key)
   end
+
+  def set_value(address, key, value) do
+    Agent.put_state(address, Atom.to_string(key), value)
+  end
+
 end

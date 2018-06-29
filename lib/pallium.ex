@@ -5,6 +5,7 @@ defmodule Pallium do
   alias Pallium.Myelin
   alias Myelin.Store
   alias Myelin.Transaction, as: Tx
+  alias Pallium.Env.Channel, as: Chan
 
   def start() do
     MerklePatriciaTree.Test.random_ets_db() |> MerklePatriciaTree.Trie.new() |> Store.start_link()
@@ -25,10 +26,15 @@ defmodule Pallium do
   end
 
   def transfer(to, from, value) do
-    {0, to, from, value, <<>>} |> Tx.create() |> Tx.send()
+    {0, :transfer, to, from, value, <<>>} |> Tx.create() |> Tx.send()
   end
 
   def send(to, message) do
     {0, :send, to, <<>>, 0, message} |> Tx.create() |> Tx.send()
+  end
+
+  def new(to) do
+    chan = Chan.open()
+    {0, :channel, to, <<>>, 0, chan} |> Tx.create
   end
 end
