@@ -13,6 +13,16 @@ defmodule Helpers do
   @spec to_hex(binary()) :: String.t()
   def to_hex(bin), do: Base.encode16(bin, case: :lower)
 
+  def pid_to_binary(pid) when is_pid(pid) do
+    pid |> :erlang.pid_to_list |> :erlang.list_to_binary
+  end
+
+  def pid_from_string(string) do
+    string
+    |> :erlang.binary_to_list
+    |> :erlang.list_to_pid
+  end
+
   def get_agent_code(address) do
     agent_atom = agent_atom = {:__aliases__, [alias: false], [String.to_atom(address)]}
 
@@ -20,6 +30,8 @@ defmodule Helpers do
       quote do
         defmodule unquote(agent_atom) do
           #@behaviour Pallium.Env.AgentBehaviour
+          @self unquote(address)
+
           def construct(agent) do
             state = %{foo: "bar", hello: "Hello, world!"}
             Pallium.Env.set_state(agent, state)
@@ -27,13 +39,13 @@ defmodule Helpers do
 
           def register(agent, chan) do
             #key must be an address of channel owner
-            Pallium.Env.set_value(agent, chan, chan)
+            Pallium.Env.set_value(@self, "channels", chan)
           end
 
           def handle(agent, action, data) do
             case action do
-              "foo" -> Pallium.Env.get_value(agent, "foo")
-              "hello" -> Pallium.Env.get_value(agent, "hello")
+              "foo" ->   Pallium.Env.get_value(agent, "foo")
+              "hello" -> Pallium.Env.get_value(agent, "hello") |> Pallium.Env.in_chan(agent)
             end
           end
         end

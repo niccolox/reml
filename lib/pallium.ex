@@ -33,8 +33,8 @@ defmodule Pallium do
     {0, :send, to, <<>>, 0, message} |> Tx.create() |> Tx.send()
   end
 
-  def new(to) do
-    chan = Chan.open()
-    {0, :channel, to, <<>>, 0, chan} |> Tx.create
+  def new_chan(to) do
+    chan = Chan.open() |> Helpers.pid_to_binary
+    {0, :channel, to, <<>>, 0, chan} |> Tx.create |> Tx.send()
   end
 end

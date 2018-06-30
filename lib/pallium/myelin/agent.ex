@@ -86,7 +86,7 @@ defmodule Pallium.Myelin.Agent do
   end
 
   def channel(address, pid) do
-    dispatch(address, :channel , pid)
+    dispatch(address, :channel, pid)
   end
 
   def dispatch(address, method, data \\ <<>>) do

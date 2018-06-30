@@ -21,8 +21,7 @@ defmodule Pallium.Env.Channel do
 
   def new() do
     receive do
-      {_, message} -> IO.puts(message)
-      {:register, address} -> IO.puts(address)
+      {_, message} -> IO.puts("Channel [#{inspect self()}]: #{message}")
     end
     new()
   end

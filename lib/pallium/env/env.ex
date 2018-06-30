@@ -30,7 +30,12 @@ defmodule Pallium.Env do
   end
 
   def set_value(address, key, value) do
-    Agent.put_state(address, Atom.to_string(key), value)
+    Agent.put_state(address, key, value)
   end
 
+  def in_chan(msg, address) do
+    chan = get_value(address, "channels") |> Helpers.pid_from_string
+    send chan, {:ok, msg}
+    "success"
+  end
 end
