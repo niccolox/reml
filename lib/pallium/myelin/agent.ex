@@ -81,14 +81,6 @@ defmodule Pallium.Myelin.Agent do
     dispatch(address, :message , %{action: message.action, data: message.data})
   end
 
-  def send!(address, rlp_msg) do
-    #unimplement send msg to channel
-  end
-
-  def channel(address, pid) do
-    dispatch(address, :channel, pid)
-  end
-
   def dispatch(address, method, data \\ <<>>) do
     with agent <- get_agent(address),
          state <- agent.state do

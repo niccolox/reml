@@ -3,11 +3,19 @@ defmodule FlowTest do
   alias Pallium.Env.Flow
   doctest Flow
 
-  test "should launch tf model" do
+  test "should launch add model" do
     input = %{
-      "a" => Extensor.Tensor.from_list([3, 5]),
-      "b" => Extensor.Tensor.from_list([4, 12])
+      "a" => Extensor.Tensor.from_list([5]),
+      "b" => Extensor.Tensor.from_list([5])
     }
-    assert Flow.run("./examples/graph.pb", input) == [5.0, 13.0]
+    assert Flow.run("./examples/add.pb", input) == [10.0]
   end
+
+  test "should launch square tf model" do
+    input = %{
+      "a" => Extensor.Tensor.from_list([5])
+    }
+    assert Flow.run("./examples/square.pb", input) == [25.0]
+  end
+
 end

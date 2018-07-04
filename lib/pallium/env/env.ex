@@ -4,21 +4,31 @@ defmodule Pallium.Env do
   """
   alias Pallium.Myelin.Agent
   alias Pallium.Env.Flow
+  alias Pallium.Env.Channel
 
   def deploy_agent(address, code) do
     agent = String.to_existing_atom("Elixir.#{address}")
+
     case :code.load_binary(agent, 'nofile', code) do
       {:module, module_name} -> module_name
       {:error, reason} -> {:error, reason}
     end
   end
 
-  def dispatch(agent, state, address, method, data) do
+  def dispatch(agent, state, address, method, props) do
      case method do
        :construct -> agent.construct(address)
-       :message -> {:ok, agent.handle(address, data.action, data.data)}
-       :channel -> agent.register(address, data)
+       :message -> {:ok, agent.handle(props.action, props.data)}
      end
+  end
+
+  def to_process(address, props) do
+      agent = String.to_existing_atom("Elixir.#{address}")
+
+      state = agent.will_deploy()
+      pid = spawn(agent, :deploy, [state, props])
+
+      pid |> Helpers.pid_to_binary
   end
 
   def set_state(address, state) do
@@ -33,9 +43,16 @@ defmodule Pallium.Env do
     Agent.put_state(address, key, value)
   end
 
-  def in_chan(msg, address) do
-    chan = get_value(address, "channels") |> Helpers.pid_from_string
-    send chan, {:ok, msg}
-    "success"
+  def to_chan(msg, chan) do
+    send chan, msg
   end
+
+  def connect(who, channel) do
+    send channel, {:connect, who}
+  end
+
+  def open_channel(owner) do
+    chan = Pallium.Env.Channel.open(owner)
+  end
+
 end

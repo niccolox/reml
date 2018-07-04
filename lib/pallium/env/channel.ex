@@ -1,36 +1,38 @@
 defmodule Pallium.Env.Channel do
-  defstruct owner: <<>>,
-            subscribers: <<>>,
-            events: <<>>
+  @moduledoc """
+  Documentation for Pallium Channel.
+  """
 
-  def open() do
-    spawn(__MODULE__, :new, [])
+  defstruct parties: [],
+            owner: <<>>,
+            observers: []
+
+  @type t :: %__MODULE__{
+          parties: [Pallium.Myelin.Address.address()],
+          owner: Pallium.Myelin.Address.address(),
+          observers: [pid()]
+        }
+
+  @spec open(Pallium.Myelin.Address.address()) :: pid()
+  def open(owner) do
+    state = %__MODULE__{%__MODULE__{} | owner: owner, parties: [owner]}
+    spawn(__MODULE__, :new, [state])
   end
 
-  def init() do
-    "init"
-  end
-
-  def close() do
-    "close"
-  end
-
-  def set_state(next_state) do
-    "new state"
-  end
-
-  def new() do
+  def new(state) do
     receive do
-      {_, message} -> IO.puts("Channel [#{inspect self()}]: #{message}")
+      {:ok, msg} -> broadcast(msg, state.observers)
+      {:connect, pid} -> new(%{state | observers: state.observers ++ [pid]})
+      :state -> IO.puts("#{inspect state}")
     end
-    new()
+    new(state)
+  end
+
+  def broadcast(msg, observers) do
+    Enum.each(observers, fn(p) -> send p, {:ok, msg} end)
   end
 
   def commit() do
     "state"
-  end
-
-  def subscribe() do
-    "subscriber"
   end
 end

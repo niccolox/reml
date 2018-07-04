@@ -86,7 +86,6 @@ defmodule Pallium.Myelin.Transaction do
       :create -> Agent.create(tx.data, tx.to)
       :transfer -> Agent.transfer(tx.to, tx.from, tx.value)
       :send -> Agent.send(tx.to, tx.data)
-      :channel -> Agent.channel(tx.to, tx.data)
       _ -> {:reject, "Execution failure"}
     end
   end

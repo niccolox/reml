@@ -15,7 +15,7 @@ defmodule Pallium do
   def create_agent() do
     {secret_key, public_key} = Ed25519.generate_key_pair()
     address = Myelin.Address.new(public_key) |> Helpers.to_hex()
-    code = Helpers.get_agent_code(address)
+    code = Helpers.get_add_agent_code(address)
     agent = Myelin.Agent.new(code)
     response = {0, :create, address, <<>>, 0, agent} |> Tx.create() |> Tx.send()
     {:ok, address}
@@ -31,10 +31,5 @@ defmodule Pallium do
 
   def send(to, message) do
     {0, :send, to, <<>>, 0, message} |> Tx.create() |> Tx.send()
-  end
-
-  def new_chan(to) do
-    chan = Chan.open() |> Helpers.pid_to_binary
-    {0, :channel, to, <<>>, 0, chan} |> Tx.create |> Tx.send()
   end
 end
