@@ -1,4 +1,5 @@
 %{
+  "abci": {:git, "https://github.com/neocortexlab/abci-ex.git", "5f39b129dff616f1fd26fe8b87fbf1da391d5554", []},
   "abci_server": {:git, "https://github.com/KrzysiekJ/abci_server.git", "ee7e1674064899488e23e191064d4085ac2b11c9", [tag: "v0.4.0"]},
   "bunt": {:hex, :bunt, "0.2.0", "951c6e801e8b1d2cbe58ebbd3e616a869061ddadcc4863d0a2182541acae9a38", [:mix], [], "hexpm"},
   "certifi": {:hex, :certifi, "2.3.1", "d0f424232390bf47d82da8478022301c561cf6445b5b5fb6a84d49a9e76d2639", [:rebar3], [{:parse_trans, "3.2.0", [hex: :parse_trans, repo: "hexpm", optional: false]}], "hexpm"},
