@@ -75,7 +75,7 @@ defmodule Helpers do
 
             input = %{
               "a" => Extensor.Tensor.from_list([String.to_float(x)]),
-              "b" => Extensor.Tensor.from_list([String.to_float(x)])
+              "b" => Extensor.Tensor.from_list([String.to_float(y)])
             }
 
             add = Pallium.Env.Flow.run(model, input)
