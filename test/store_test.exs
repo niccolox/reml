@@ -1,4 +1,4 @@
-defmodule PalliumTest do
+defmodule StoreTest do
   use ExUnit.Case
   alias Pallium.Myelin.Store
   doctest Store
