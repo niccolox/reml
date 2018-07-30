@@ -17,8 +17,9 @@ On OS X TensorFlow could be installed with HomeBrew:
 brew install tensorflow
 ```
 
-Install Tendermint v0.22.8 from binary release https://github.com/tendermint/tendermint/releases/tag/v0.22.8-autodraft
-For Linux and OS X just copy the binary to `/usr/local/bin`
+Install Tendermint v0.22.8 from binary release https://github.com/tendermint/tendermint/releases/tag/v0.22.8-autodraft.
+
+For Linux or OS X just copy the binary to `/usr/local/bin`
 
 Clone Pallium repository, install dependencies and compile application:
 ```
