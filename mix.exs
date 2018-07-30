@@ -5,7 +5,7 @@ defmodule Pallium.MixProject do
     [
       app: :pallium,
       version: "0.1.0",
-      elixir: "~> 1.6",
+      elixir: "~> 1.7",
       description: "Open source decentralized ecosystem for autonomous intelligent agents",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
