@@ -1,7 +1,7 @@
 defmodule Pallium.App.State do
   @initial_state %{last_block_height: 0, last_block_app_hash: ""}
 
-  def init() do
+  def start_link() do
     Agent.start_link(fn -> @initial_state end, name: :pallium_app)
   end
 

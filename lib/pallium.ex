@@ -9,7 +9,7 @@ defmodule Pallium do
 
   def start() do
     MerklePatriciaTree.Test.random_ets_db() |> MerklePatriciaTree.Trie.new() |> Store.start_link()
-    Pallium.App.start_link()
+    Pallium.App.init()
   end
 
   def create_agent() do

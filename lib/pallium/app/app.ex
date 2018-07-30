@@ -12,13 +12,9 @@ defmodule Pallium.App do
   alias Pallium.App.State
   alias Pallium.Myelin.Transaction
 
-  def start_link() do
-    spawn(fn -> init() end)
-  end
-
   def init() do
-    State.init()
-    ABCI.init(__MODULE__)
+    State.start_link()
+    ABCI.start_link(__MODULE__)
   end
 
   def info(req) do
