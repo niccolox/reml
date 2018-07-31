@@ -15,19 +15,11 @@ defmodule TransactionTest do
     :ok
   end
 
-  test "create type" do
-    agent = Helpers.get_agent_code(@sender) |> Agent.new()
-
-    {0, :create, @sender, <<>>, 0, agent}
-    |> Tx.create()
-    |> Tx.serialize()
-    |> ExRLP.encode()
-    |> Tx.execute()
-
+  test "create agent" do
+    sender_code = Helpers.get_agent_code(@sender)
+    sender_code |> Agent.new() |> Agent.create(@sender)
+    
     assert Agent.get_balance(@sender) == {:ok, 0}
   end
 
-  test "send type" do
-    
-  end
 end

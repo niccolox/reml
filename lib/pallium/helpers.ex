@@ -39,8 +39,8 @@ defmodule Helpers do
 
           def handle(action, data) do
             case action do
-              "foo" ->   Pallium.Env.get_value(agent, "foo")
-              "hello" -> Pallium.Env.get_value(agent, "hello") |> Pallium.Env.in_chan(agent)
+              "foo" ->   Pallium.Env.get_value(@self, "foo")
+              "hello" -> Pallium.Env.get_value(@self, "hello") |> Pallium.Env.in_chan(@self)
             end
           end
         end

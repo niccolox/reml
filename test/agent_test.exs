@@ -63,10 +63,4 @@ defmodule AgentTest do
     assert Agent.get_state(@recipient, "foo") == "bar"
     assert Agent.get_state(@recipient, "hello") == "world"
   end
-
-  test "should register channel" do
-    chan = Pallium.Env.Channel.open |> Helpers.pid_to_binary
-    Agent.channel(@sender, chan)
-    assert Agent.get_state(@sender, "channels") == chan
-  end
 end
