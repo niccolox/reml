@@ -35,7 +35,7 @@ defmodule Pallium.MixProject do
       {:merkle_patricia_tree, "~> 0.2.7"},
       {:exleveldb, "~> 0.13.1"},
       {:abci, github: "neocortexlab/abci-ex"},
-      {:jsonrpc2, "~> 1.0"},
+      {:jsonrpc2, "~> 1.0.3"},
       {:hackney, "~> 1.12"},
       {:extensor, "~> 0.1"}
     ]
