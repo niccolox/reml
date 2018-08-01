@@ -61,7 +61,6 @@ defmodule Pallium.Myelin.Transaction do
 
   def create(raw) do
     {nonce, type, to, from, value, data} = raw
-
     tx = %__MODULE__{
       %Pallium.Myelin.Transaction{}
       | nonce: nonce,
@@ -76,7 +75,7 @@ defmodule Pallium.Myelin.Transaction do
   def send(tx) do
     host = Application.get_env(:pallium, :host)
     broadcast = Application.get_env(:pallium, :broadcast)
-    encoded_tx = tx |> serialize() |> ExRLP.encode() |> Helpers.to_hex()
+    encoded_tx = tx |> serialize() |> ExRLP.encode(encoding: :hex)
     JSONRPC2.Clients.HTTP.call(host <> broadcast <> "0x" <> encoded_tx, "", [])
   end
 

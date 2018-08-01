@@ -51,7 +51,7 @@ defmodule Pallium.Myelin.Agent do
 
   # @spec(binary()) :: agent()
   def new(code) do
-    %__MODULE__{%Pallium.Myelin.Agent{} | code: code} |> serialize() |> ExRLP.encode()
+    %__MODULE__{%Pallium.Myelin.Agent{} | code: code |> Helpers.from_hex()} |> serialize() |> ExRLP.encode(encoding: :hex)
   end
 
   def create(agent_rlp, address) do

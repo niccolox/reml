@@ -24,7 +24,7 @@ defmodule Helpers do
   end
 
   def get_agent_code(address) do
-    agent_atom = agent_atom = {:__aliases__, [alias: false], [String.to_atom(address)]}
+    agent_atom = {:__aliases__, [alias: false], [String.to_atom(address)]}
 
     agent =
       quote do
@@ -55,7 +55,7 @@ defmodule Helpers do
   end
 
   def get_add_agent_code(address) do
-    agent_atom = agent_atom = {:__aliases__, [alias: false], [String.to_atom(address)]}
+    agent_atom = {:__aliases__, [alias: false], [String.to_atom(address)]}
 
     agent =
       quote do
@@ -115,7 +115,7 @@ defmodule Helpers do
   end
 
   def get_square_agent_code(address) do
-    agent_atom = agent_atom = {:__aliases__, [alias: false], [String.to_atom(address)]}
+    agent_atom = {:__aliases__, [alias: false], [String.to_atom(address)]}
 
     agent =
       quote do

@@ -1,7 +1,11 @@
 defmodule Pallium.Api.Resolvers.Agent do
+  alias Pallium.Myelin.Agent
 
-  def get_balance(_parent, args, _resolution) do
-    {:ok, %{address: args.address, balance: 1, }}
+  def new(_parent, args, _resolution) do
+    {:ok, %{rlp: Agent.new(args.code)}}
   end
 
+  def get_agent(_parent, args, _resolution) do
+    {:ok, %{address: args.address, balance: 1, }}
+  end
 end
