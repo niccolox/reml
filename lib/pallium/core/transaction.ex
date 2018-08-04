@@ -1,8 +1,5 @@
 defmodule Pallium.Core.Transaction do
-  import Sage
-
-  alias Pallium.App
-  alias Pallium.Core.{Store, Agent, Address, Transaction}
+  alias Pallium.Core.{Agent, Address, Transaction}
 
   defstruct nonce: 0,
             type: <<>>,
@@ -61,7 +58,7 @@ defmodule Pallium.Core.Transaction do
   def create(raw) do
     {nonce, type, to, from, value, data} = raw
 
-    tx = %__MODULE__{
+    %__MODULE__{
       %Transaction{}
       | nonce: nonce,
         type: Atom.to_string(type),

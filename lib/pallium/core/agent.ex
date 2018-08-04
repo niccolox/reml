@@ -6,7 +6,7 @@ defmodule Pallium.Core.Agent do
   alias Pallium.Core.{Agent, Message, Store}
   alias Pallium.Env
 
-  @empty_keccak Helpers.keccak(<<>>)
+  # @empty_keccak Helpers.keccak(<<>>)
   @empty_trie MerklePatriciaTree.Trie.empty_trie_root_hash()
 
   defstruct nonce: 0,

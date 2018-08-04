@@ -2,10 +2,8 @@ defmodule Pallium do
   @moduledoc """
   Documentation for Pallium.
   """
-  alias Pallium.Myelin
-  alias Myelin.Store
-  alias Myelin.Transaction, as: Tx
-  alias Pallium.Env.Channel, as: Chan
+  alias Pallium.Core.{Address, Agent, Store}
+  alias Pallium.Core.Transaction, as: Tx
 
   def start() do
     MerklePatriciaTree.Test.random_ets_db() |> MerklePatriciaTree.Trie.new() |> Store.start_link()
@@ -14,11 +12,11 @@ defmodule Pallium do
   end
 
   def create_agent() do
-    {secret_key, public_key} = Ed25519.generate_key_pair()
-    address = Myelin.Address.new(public_key) |> Helpers.to_hex()
+    {_secret_key, public_key} = Ed25519.generate_key_pair()
+    address = Address.new(public_key) |> Helpers.to_hex()
     code = Helpers.get_add_agent_code(address)
-    agent = Myelin.Agent.new(code)
-    response = {0, :create, address, <<>>, 0, agent} |> Tx.create() |> Tx.send()
+    agent = Agent.new(code)
+    {0, :create, address, <<>>, 0, agent} |> Tx.create() |> Tx.send()
     {:ok, address}
   end
 

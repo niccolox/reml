@@ -5,8 +5,8 @@ defmodule Pallium.App do
 
   @code_type_ok 0
   @code_type_encoding_error 1
-  @code_type_bad_nonce 2
-  @code_type_unauthorized 3
+  # @code_type_bad_nonce 2
+  # @code_type_unauthorized 3
 
   alias ABCI.Types
   alias Pallium.App.State
@@ -17,8 +17,7 @@ defmodule Pallium.App do
     ABCI.start_link(__MODULE__)
   end
 
-  def info(req) do
-    # IO.inspect(req)
+  def info(_req) do
     state = State.get()
 
     Types.ResponseInfo.new(
@@ -28,29 +27,24 @@ defmodule Pallium.App do
     )
   end
 
-  def init_chain(req) do
-    # IO.inspect(req)
+  def init_chain(_req) do
     Types.ResponseInitChain.new()
   end
 
-  def begin_block(req) do
-    # IO.inspect(req)
+  def begin_block(_req) do
     Types.ResponseBeginBlock.new(code: @code_type_ok)
   end
 
-  def end_block(req) do
-    # IO.inspect(req)
+  def end_block(_req) do
     Types.ResponseEndBlock.new(code: @code_type_ok)
   end
 
-  def commit(req) do
+  def commit(_req) do
     # response hash state
-    # IO.inspect(req)
     Types.ResponseCommit.new(data: <<>>)
   end
 
-  def flush(req) do
-    _ = req
+  def flush(_req) do
     Types.ResponseFlush.new()
   end
 
@@ -59,7 +53,7 @@ defmodule Pallium.App do
     Types.ResponseEcho.new(message: msg)
   end
 
-  def set_option(req) do
+  def set_option(_req) do
     Types.ResponseSetOption.new()
   end
 
@@ -67,11 +61,11 @@ defmodule Pallium.App do
     case Transaction.execute(req.tx) do
       :ok -> Types.ResponseDeliverTx.new(code: @code_type_ok)
       {:ok, result} -> Types.ResponseDeliverTx.new(code: @code_type_ok, data: result)
-      {:error, reason} -> Types.ResponseDeliverTx.new(code: @code_type_encoding_error)
+      {:error, _reason} -> Types.ResponseDeliverTx.new(code: @code_type_encoding_error)
     end
   end
 
-  def check_tx(req) do
+  def check_tx(_req) do
     Types.ResponseCheckTx.new(code: @code_type_ok)
   end
 end

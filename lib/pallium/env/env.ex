@@ -3,8 +3,6 @@ defmodule Pallium.Env do
   Documentation for Pallium Environment.
   """
   alias Pallium.Core.Agent
-  alias Pallium.Env.Flow
-  alias Pallium.Env.Channel
 
   def deploy_agent(address, code) do
     agent = String.to_atom("Elixir.#{address}")
@@ -15,7 +13,7 @@ defmodule Pallium.Env do
     end
   end
 
-  def dispatch(agent, state, address, method, props) do
+  def dispatch(agent, _state, address, method, props) do
     case method do
       :construct -> agent.construct(address)
       :message -> {:ok, agent.handle(props.action, props.data)}
@@ -52,6 +50,6 @@ defmodule Pallium.Env do
   end
 
   def open_channel(owner) do
-    chan = Pallium.Env.Channel.open(owner)
+    Pallium.Env.Channel.open(owner)
   end
 end
