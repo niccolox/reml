@@ -1,9 +1,8 @@
-defmodule Pallium.Myelin.Transaction do
+defmodule Pallium.Core.Transaction do
   import Sage
 
   alias Pallium.App
-  alias Pallium.Myelin.Store
-  alias Pallium.Myelin.Agent
+  alias Pallium.Core.{Store,Agent,Address,Transaction}
 
   defstruct nonce: 0,
             type: <<>>,
@@ -16,8 +15,8 @@ defmodule Pallium.Myelin.Transaction do
   @type tx :: %__MODULE__{
           nonce: integer(),
           type: atom(),
-          to: Pallium.Myelin.Address.address() | <<_::0>>,
-          from: Pallium.Myelin.Address.address() | <<_::0>>,
+          to: Address.address() | <<_::0>>,
+          from: Address.address() | <<_::0>>,
           value: integer(),
           data: binary(),
           sign: binary()
@@ -62,7 +61,7 @@ defmodule Pallium.Myelin.Transaction do
   def create(raw) do
     {nonce, type, to, from, value, data} = raw
     tx = %__MODULE__{
-      %Pallium.Myelin.Transaction{}
+      %Transaction{}
       | nonce: nonce,
         type: Atom.to_string(type),
         to: to,

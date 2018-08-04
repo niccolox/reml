@@ -1,4 +1,4 @@
-defmodule Pallium.Myelin.Address do
+defmodule Pallium.Core.Address do
   @type key :: binary
   @type address :: <<_::160>>
 

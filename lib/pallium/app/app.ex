@@ -10,7 +10,7 @@ defmodule Pallium.App do
 
   alias ABCI.Types
   alias Pallium.App.State
-  alias Pallium.Myelin.Transaction
+  alias Pallium.Core.Transaction
 
   def init() do
     State.start_link()

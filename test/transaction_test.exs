@@ -1,9 +1,9 @@
 defmodule TransactionTest do
   use ExUnit.Case
 
-  alias Pallium.Myelin.Transaction, as: Tx
-  alias Pallium.Myelin.Store
-  alias Pallium.Myelin.Agent
+  alias Pallium.Core.Transaction, as: Tx
+  alias Pallium.Core.Store
+  alias Pallium.Core.Agent
 
   doctest Tx
 

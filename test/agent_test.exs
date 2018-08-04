@@ -1,8 +1,6 @@
 defmodule AgentTest do
   use ExUnit.Case, async: false
-  alias Pallium.Myelin.Agent
-  alias Pallium.Myelin.Store
-  alias Pallium.Myelin.Message
+  alias Pallium.Core.{Agent,Message,Store}
   alias Pallium.Env.Channel, as: Chan
 
   doctest Agent

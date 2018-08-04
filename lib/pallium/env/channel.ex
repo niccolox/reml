@@ -2,18 +2,19 @@ defmodule Pallium.Env.Channel do
   @moduledoc """
   Documentation for Pallium Channel.
   """
+  alias Pallium.Core.Address
 
   defstruct parties: [],
             owner: <<>>,
             observers: []
 
   @type t :: %__MODULE__{
-          parties: [Pallium.Myelin.Address.address()],
-          owner: Pallium.Myelin.Address.address(),
+          parties: [Address.address()],
+          owner: Address.address(),
           observers: [pid()]
         }
 
-  @spec open(Pallium.Myelin.Address.address()) :: pid()
+  @spec open(Address.address()) :: pid()
   def open(owner) do
     state = %__MODULE__{%__MODULE__{} | owner: owner, parties: [owner]}
     spawn(__MODULE__, :new, [state])

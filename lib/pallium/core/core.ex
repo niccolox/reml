@@ -1,4 +1,4 @@
-defmodule Pallium.Myelin do
+defmodule Pallium.Core do
   @moduledoc """
   Documentation for Pallium Blockchain.
   """

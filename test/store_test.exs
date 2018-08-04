@@ -1,6 +1,6 @@
 defmodule StoreTest do
   use ExUnit.Case
-  alias Pallium.Myelin.Store
+  alias Pallium.Core.Store
   doctest Store
 
   test "write and read Store" do

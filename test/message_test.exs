@@ -1,6 +1,6 @@
 defmodule MessageTest do
   use ExUnit.Case
-  alias Pallium.Myelin.Message
+  alias Pallium.Core.Message
   doctest Message
 
   test "create message" do

@@ -1,5 +1,5 @@
 defmodule Pallium.Api.Resolvers.Agent do
-  alias Pallium.Myelin.Agent
+  alias Pallium.Core.Agent
 
   def new(_parent, args, _resolution) do
     {:ok, %{rlp: Agent.new(args.code)}}

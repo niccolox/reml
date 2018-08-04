@@ -1,4 +1,4 @@
-defmodule Pallium.Myelin.Store do
+defmodule Pallium.Core.Store do
   use GenServer
 
   def init(trie), do: {:ok, trie}

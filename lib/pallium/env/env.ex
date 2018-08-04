@@ -2,7 +2,7 @@ defmodule Pallium.Env do
   @moduledoc """
   Documentation for Pallium Environment.
   """
-  alias Pallium.Myelin.Agent
+  alias Pallium.Core.Agent
   alias Pallium.Env.Flow
   alias Pallium.Env.Channel
 

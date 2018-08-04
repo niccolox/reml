@@ -1,4 +1,6 @@
-defmodule Pallium.Myelin.Message do
+defmodule Pallium.Core.Message do
+  alias Pallium.Core.Message
+
   defstruct action: <<>>,
             data: <<>>
 
@@ -29,7 +31,7 @@ defmodule Pallium.Myelin.Message do
   end
 
   def create(action, data) do
-    %__MODULE__{%Pallium.Myelin.Message{} | action: action, data: data} |> serialize() |> ExRLP.encode()
+    %__MODULE__{%Message{} | action: action, data: data} |> serialize() |> ExRLP.encode()
   end
 
   def decode(rlp) do

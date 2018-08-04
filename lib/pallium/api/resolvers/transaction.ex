@@ -1,5 +1,5 @@
 defmodule Pallium.Api.Resolvers.Transaction do
-  alias Pallium.Myelin.Transaction, as: Tx
+  alias Pallium.Core.Transaction, as: Tx
 
   def send(_parent, args, _resolution) do
     type = String.to_atom(args.type)

@@ -1,10 +1,9 @@
-defmodule Pallium.Myelin.Agent do
+defmodule Pallium.Core.Agent do
   @moduledoc """
   Documentation for Pallium Autonomous Intelligent Agents.
   """
   alias MerklePatriciaTree.Trie
-  alias Pallium.Myelin.Store
-  alias Pallium.Myelin.Message
+  alias Pallium.Core.{Agent,Message,Store}
   alias Pallium.Env
 
   @empty_keccak Helpers.keccak(<<>>)
@@ -18,7 +17,7 @@ defmodule Pallium.Myelin.Agent do
   @type agent :: %__MODULE__{
           nonce: integer(),
           balance: integer(),
-          state: Myelin.trie_root(),
+          state: Core.trie_root(),
           code: binary()
         }
 
@@ -51,7 +50,7 @@ defmodule Pallium.Myelin.Agent do
 
   # @spec(binary()) :: agent()
   def new(code) do
-    %__MODULE__{%Pallium.Myelin.Agent{} | code: code |> Helpers.from_hex()} |> serialize() |> ExRLP.encode(encoding: :hex)
+    %__MODULE__{%Agent{} | code: code |> Helpers.from_hex()} |> serialize() |> ExRLP.encode(encoding: :hex)
   end
 
   def create(agent_rlp, address) do
