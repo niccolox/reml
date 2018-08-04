@@ -3,6 +3,7 @@ defmodule EnvTest do
   import ExUnit.CaptureIO
   doctest Pallium.Env
 
+  alias MerklePatriciaTree.{Test, Trie}
   alias Pallium.Core.{Agent, Message, Store}
 
   @add_agent "eeb2be97535a4444950ce7304fc93ad0a216051244dda3021799dbe92edb0f19"
@@ -12,7 +13,7 @@ defmodule EnvTest do
     add_agent_code = Helpers.get_add_agent_code(@add_agent)
     square_agent_code = Helpers.get_square_agent_code(@square_agent)
 
-    MerklePatriciaTree.Test.random_ets_db() |> MerklePatriciaTree.Trie.new() |> Store.start_link()
+    Test.random_ets_db() |> Trie.new() |> Store.start_link()
     add_agent_code |> Agent.new() |> Agent.create(@add_agent)
     square_agent_code |> Agent.new() |> Agent.create(@square_agent)
     :ok

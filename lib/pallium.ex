@@ -2,16 +2,19 @@ defmodule Pallium do
   @moduledoc """
   Documentation for Pallium.
   """
+  alias MerklePatriciaTree.{Test, Trie}
+  alias Pallium.Api.Server
+  alias Pallium.App
   alias Pallium.Core.{Address, Agent, Store}
   alias Pallium.Core.Transaction, as: Tx
 
-  def start() do
-    MerklePatriciaTree.Test.random_ets_db() |> MerklePatriciaTree.Trie.new() |> Store.start_link()
-    Pallium.App.init()
-    Pallium.Api.Server.start_link()
+  def start do
+    Test.random_ets_db() |> Trie.new() |> Store.start_link()
+    App.init()
+    Server.start_link()
   end
 
-  def create_agent() do
+  def create_agent do
     {_secret_key, public_key} = Ed25519.generate_key_pair()
     address = public_key |> Address.new() |> Helpers.to_hex()
     code = Helpers.get_add_agent_code(address)

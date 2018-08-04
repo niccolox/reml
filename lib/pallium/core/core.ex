@@ -2,8 +2,12 @@ defmodule Pallium.Core do
   @moduledoc """
   Documentation for Pallium Blockchain.
   """
+
+  alias MerklePatriciaTree.DB.LevelDB
+  alias MerklePatriciaTree.Trie
+
   @type hash :: <<_::256>>
-  @type trie_root :: MerklePatriciaTree.Trie.root_hash()
+  @type trie_root :: Trie.root_hash()
   @type timestamp :: integer()
 
   defstruct genesis: %{}
@@ -14,13 +18,13 @@ defmodule Pallium.Core do
           }
         }
 
-  def init() do
+  def init do
     home = System.user_home()
     File.rm_rf("#{home}/.pallium")
 
     {_, db_ref} =
       case File.mkdir("#{home}/.pallium") do
-        :ok -> MerklePatriciaTree.DB.LevelDB.init("#{home}/.pallium/store")
+        :ok -> LevelDB.init("#{home}/.pallium/store")
       end
 
     Exleveldb.close(db_ref)

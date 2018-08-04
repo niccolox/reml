@@ -1,6 +1,9 @@
 defmodule Pallium.Api.Server do
   @moduledoc false
 
+  alias Pallium.Api.Server
+  alias Plug.Adapters.Cowboy2
+
   use Plug.Router
 
   plug Plug.Parsers,
@@ -15,7 +18,7 @@ defmodule Pallium.Api.Server do
     to: Absinthe.Plug,
     init_opts: [schema: Pallium.Api.Schema]
 
-  def start_link() do
-    {:ok, _} = Plug.Adapters.Cowboy2.http(Pallium.Api.Server, [], port: 8080)
+  def start_link do
+    {:ok, _} = Cowboy2.http(Server, [], port: 8080)
   end
 end

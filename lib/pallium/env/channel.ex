@@ -34,7 +34,7 @@ defmodule Pallium.Env.Channel do
     Enum.each(observers, fn p -> send(p, {:ok, msg}) end)
   end
 
-  def commit() do
+  def commit do
     "state"
   end
 end

@@ -1,7 +1,9 @@
 defmodule AgentTest do
   use ExUnit.Case, async: false
+
   alias Pallium.Core.{Agent, Message, Store}
   alias Pallium.Env.Channel, as: Chan
+  alias MerklePatriciaTree.{Test, Trie}
 
   doctest Agent
 
@@ -11,7 +13,7 @@ defmodule AgentTest do
   setup do
     sender_code = Helpers.get_agent_code(@sender)
 
-    MerklePatriciaTree.Test.random_ets_db() |> MerklePatriciaTree.Trie.new() |> Store.start_link()
+    Test.random_ets_db() |> Trie.new() |> Store.start_link()
     sender_code |> Agent.new() |> Agent.create(@sender)
     <<>> |> Agent.new() |> Agent.put(@recipient)
     :ok
