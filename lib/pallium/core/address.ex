@@ -1,4 +1,6 @@
 defmodule Pallium.Core.Address do
+  @moduledoc false
+
   @type key :: binary
   @type address :: <<_::160>>
 

@@ -40,7 +40,7 @@ defmodule Helpers do
           def handle(action, data) do
             case action do
               "foo" -> Pallium.Env.get_value(@self, "foo")
-              "hello" -> Pallium.Env.get_value(@self, "hello") |> Pallium.Env.in_chan(@self)
+              "hello" -> @self |> Pallium.Env.get_value("hello") |> Pallium.Env.in_chan(@self)
             end
           end
         end
@@ -90,7 +90,7 @@ defmodule Helpers do
             receive do
               {:run, args} -> {:ok, payload(args)} |> Pallium.Env.to_chan(state.chan)
               {:connect, pid} -> Pallium.Env.to_chan({:connect, pid}, state.chan)
-              {:chan, _} -> IO.puts("#{inspect state.chan}")
+              {:chan, _} -> IO.puts("#{inspect(state.chan)}")
             end
 
             deploy(state, props)

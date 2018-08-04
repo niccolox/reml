@@ -1,4 +1,6 @@
 defmodule Pallium.Api.Schema do
+  @moduledoc false
+
   use Absinthe.Schema
   import_types Pallium.Api.Schema.AgentTypes
   import_types Pallium.Api.Schema.TransactionTypes

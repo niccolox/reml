@@ -1,4 +1,6 @@
 defmodule Pallium.Api.Schema.AgentTypes do
+  @moduledoc false
+
   use Absinthe.Schema.Notation
 
   object :agent do

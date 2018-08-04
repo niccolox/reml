@@ -1,4 +1,6 @@
 defmodule Pallium.Api.Resolvers.Transaction do
+  @moduledoc false
+
   alias Pallium.Core.Transaction, as: Tx
 
   def send(_parent, args, _resolution) do

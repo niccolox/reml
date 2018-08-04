@@ -1,4 +1,6 @@
 defmodule Pallium.Core.Message do
+  @moduledoc false
+
   alias Pallium.Core.Message
 
   defstruct action: <<>>,

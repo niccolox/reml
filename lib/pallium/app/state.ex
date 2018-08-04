@@ -1,4 +1,6 @@
 defmodule Pallium.App.State do
+  @moduledoc false
+
   @initial_state %{last_block_height: 0, last_block_app_hash: ""}
 
   def start_link() do

@@ -1,4 +1,6 @@
 defmodule Pallium.Core.Transaction do
+  @moduledoc false
+
   alias Pallium.Core.{Agent, Address, Transaction}
 
   defstruct nonce: 0,

@@ -13,7 +13,7 @@ defmodule Pallium do
 
   def create_agent() do
     {_secret_key, public_key} = Ed25519.generate_key_pair()
-    address = Address.new(public_key) |> Helpers.to_hex()
+    address = public_key |> Address.new() |> Helpers.to_hex()
     code = Helpers.get_add_agent_code(address)
     agent = Agent.new(code)
     {0, :create, address, <<>>, 0, agent} |> Tx.create() |> Tx.send()

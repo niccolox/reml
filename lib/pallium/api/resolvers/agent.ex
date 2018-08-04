@@ -1,4 +1,6 @@
 defmodule Pallium.Api.Resolvers.Agent do
+  @moduledoc false
+
   alias Pallium.Core.Agent
 
   def new(_parent, args, _resolution) do

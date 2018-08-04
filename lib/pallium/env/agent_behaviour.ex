@@ -1,4 +1,6 @@
 defmodule Pallium.Env.AgentBehaviour do
+  @moduledoc false
+
   @callback construct() :: :hello
   @callback get_message() :: nil
   @callback will_deploy() :: nil

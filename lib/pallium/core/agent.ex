@@ -86,7 +86,9 @@ defmodule Pallium.Core.Agent do
     with agent <- get_agent(address),
          state <- agent.state do
       if agent.code != <<>> do
-        Env.deploy_agent(address, agent.code) |> Env.dispatch(state, address, method, data)
+        address
+        |> Env.deploy_agent(agent.code)
+        |> Env.dispatch(state, address, method, data)
       end
     end
   end
@@ -132,17 +134,14 @@ defmodule Pallium.Core.Agent do
         nil
 
       agent ->
-        (fn ->
-           updated_storage_trie = state_update(agent.state, key, value)
-           agent |> update_state(updated_storage_trie.root_hash) |> commit(address)
-         end).()
+        updated_storage_trie = state_update(agent.state, key, value)
+        agent |> update_state(updated_storage_trie.root_hash) |> commit(address)
     end
   end
 
   defp state_update(root, key, value) do
-    store = Store.get()
-
-    Trie.new(store.db, root)
+    root
+    |> store_trie()
     |> Trie.update(key |> Helpers.keccak(), value |> ExRLP.encode())
   end
 
@@ -159,9 +158,13 @@ defmodule Pallium.Core.Agent do
     end)
   end
 
+  defp store_trie(root), do: Store.get().db |> Trie.new(root)
+
   defp state_fetch(root, key) do
-    store = Store.get()
-    Trie.new(store.db, root) |> Trie.get(key |> Helpers.keccak()) |> ExRLP.decode()
+    root
+    |> store_trie()
+    |> Trie.get(key |> Helpers.keccak())
+    |> ExRLP.decode()
   end
 
   defp increment_nonce(agent) do

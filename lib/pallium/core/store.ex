@@ -1,4 +1,6 @@
 defmodule Pallium.Core.Store do
+  @moduledoc false
+
   use GenServer
 
   def init(trie), do: {:ok, trie}

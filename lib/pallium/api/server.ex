@@ -1,4 +1,6 @@
 defmodule Pallium.Api.Server do
+  @moduledoc false
+
   use Plug.Router
 
   plug Plug.Parsers,
