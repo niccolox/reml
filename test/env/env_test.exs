@@ -3,7 +3,7 @@ defmodule EnvTest do
   import ExUnit.CaptureIO
   doctest Pallium.Env
 
-  alias Pallium.Core.{Agent,Message,Store}
+  alias Pallium.Core.{Agent, Message, Store}
 
   @add_agent "eeb2be97535a4444950ce7304fc93ad0a216051244dda3021799dbe92edb0f19"
   @square_agent "f26568ad9e5557a70aace0e699888ddc71c74b31102d5d3ab5161dd496e3f64d"
@@ -29,17 +29,17 @@ defmodule EnvTest do
   end
 
   test "should open channel" do
-
     msg = Message.create("deploy", [])
     {:ok, response} = Agent.send(@add_agent, msg)
-    agent_p = response |> Helpers.pid_from_string
+    agent_p = response |> Helpers.pid_from_string()
     observer = Helpers.observer()
-    send agent_p, {:connect, observer}
+    send(agent_p, {:connect, observer})
 
-    output = capture_io fn ->
-      Process.group_leader(observer, self())
-      send agent_p, {:run, ["5.0", "5.0"]}
-    end
+    output =
+      capture_io(fn ->
+        Process.group_leader(observer, self())
+        send(agent_p, {:run, ["5.0", "5.0"]})
+      end)
 
     assert_receive {:io_request, _, _, {:put_chars, :unicode, "10.0\n"}}
 

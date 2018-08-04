@@ -14,13 +14,13 @@ defmodule Helpers do
   def to_hex(bin), do: Base.encode16(bin, case: :lower)
 
   def pid_to_binary(pid) when is_pid(pid) do
-    pid |> :erlang.pid_to_list |> :erlang.list_to_binary
+    pid |> :erlang.pid_to_list() |> :erlang.list_to_binary()
   end
 
   def pid_from_string(string) do
     string
-    |> :erlang.binary_to_list
-    |> :erlang.list_to_pid
+    |> :erlang.binary_to_list()
+    |> :erlang.list_to_pid()
   end
 
   def get_agent_code(address) do
@@ -29,7 +29,7 @@ defmodule Helpers do
     agent =
       quote do
         defmodule unquote(agent_atom) do
-          #@behaviour Pallium.Env.AgentBehaviour
+          # @behaviour Pallium.Env.AgentBehaviour
           @self unquote(address)
 
           def construct(agent) do
@@ -39,7 +39,7 @@ defmodule Helpers do
 
           def handle(action, data) do
             case action do
-              "foo" ->   Pallium.Env.get_value(@self, "foo")
+              "foo" -> Pallium.Env.get_value(@self, "foo")
               "hello" -> Pallium.Env.get_value(@self, "hello") |> Pallium.Env.in_chan(@self)
             end
           end
@@ -60,7 +60,7 @@ defmodule Helpers do
     agent =
       quote do
         defmodule unquote(agent_atom) do
-          #@behaviour Pallium.Env.AgentBehaviour
+          # @behaviour Pallium.Env.AgentBehaviour
           @self unquote(address)
 
           def construct(agent) do
@@ -79,7 +79,7 @@ defmodule Helpers do
             }
 
             add = Pallium.Env.Flow.run(model, input)
-            add |> List.first |> Float.to_string
+            add |> List.first() |> Float.to_string()
           end
 
           def will_deploy() do
@@ -102,7 +102,6 @@ defmodule Helpers do
               "deploy" -> Pallium.Env.to_process(@self, props)
             end
           end
-
         end
       end
 
@@ -120,7 +119,7 @@ defmodule Helpers do
     agent =
       quote do
         defmodule unquote(agent_atom) do
-          #@behaviour Pallium.Env.AgentBehaviour
+          # @behaviour Pallium.Env.AgentBehaviour
           @self unquote(address)
 
           def construct(agent) do
@@ -138,7 +137,7 @@ defmodule Helpers do
             }
 
             square = Pallium.Env.Flow.run(model, input)
-            square |> List.first |> Float.to_string
+            square |> List.first() |> Float.to_string()
           end
 
           def will_deploy() do
@@ -158,7 +157,6 @@ defmodule Helpers do
               "deploy" -> Pallium.Env.to_process(@self, props)
             end
           end
-
         end
       end
 
@@ -173,11 +171,12 @@ defmodule Helpers do
   def observer() do
     ob = fn f ->
       receive do
-        {_, msg} -> IO.puts(msg)
-        f.(f)
+        {_, msg} ->
+          IO.puts(msg)
+          f.(f)
       end
     end
+
     spawn(fn -> ob.(ob) end)
   end
-
 end

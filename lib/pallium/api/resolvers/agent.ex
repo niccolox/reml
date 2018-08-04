@@ -6,6 +6,6 @@ defmodule Pallium.Api.Resolvers.Agent do
   end
 
   def get_agent(_parent, args, _resolution) do
-    {:ok, %{address: args.address, balance: 1, }}
+    {:ok, %{address: args.address, balance: 1}}
   end
 end

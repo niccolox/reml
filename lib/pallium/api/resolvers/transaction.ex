@@ -9,5 +9,4 @@ defmodule Pallium.Api.Resolvers.Transaction do
     # #res = Tx.execute(encoded_tx)
     {:ok, %{rlp: "123"}}
   end
-
 end

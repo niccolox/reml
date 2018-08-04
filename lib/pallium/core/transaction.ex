@@ -2,7 +2,7 @@ defmodule Pallium.Core.Transaction do
   import Sage
 
   alias Pallium.App
-  alias Pallium.Core.{Store,Agent,Address,Transaction}
+  alias Pallium.Core.{Store, Agent, Address, Transaction}
 
   defstruct nonce: 0,
             type: <<>>,
@@ -60,6 +60,7 @@ defmodule Pallium.Core.Transaction do
 
   def create(raw) do
     {nonce, type, to, from, value, data} = raw
+
     tx = %__MODULE__{
       %Transaction{}
       | nonce: nonce,
@@ -80,6 +81,7 @@ defmodule Pallium.Core.Transaction do
 
   def execute(rlp) do
     tx = rlp |> ExRLP.decode() |> deserialize()
+
     case tx.type do
       :create -> Agent.create(tx.data, tx.to)
       :transfer -> Agent.transfer(tx.to, tx.from, tx.value)

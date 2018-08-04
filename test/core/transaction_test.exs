@@ -18,8 +18,7 @@ defmodule TransactionTest do
   test "create agent" do
     sender_code = Helpers.get_agent_code(@sender)
     sender_code |> Agent.new() |> Agent.create(@sender)
-    
+
     assert Agent.get_balance(@sender) == {:ok, 0}
   end
-
 end

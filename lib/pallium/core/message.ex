@@ -6,7 +6,7 @@ defmodule Pallium.Core.Message do
 
   @type t :: %__MODULE__{
           action: binary(),
-          data: binary(),
+          data: binary()
         }
 
   @spec serialize(t) :: ExRLP.t()
@@ -37,5 +37,4 @@ defmodule Pallium.Core.Message do
   def decode(rlp) do
     rlp |> ExRLP.decode() |> deserialize()
   end
-
 end

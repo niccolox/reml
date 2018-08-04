@@ -8,6 +8,7 @@ defmodule Pallium.Env do
 
   def deploy_agent(address, code) do
     agent = String.to_atom("Elixir.#{address}")
+
     case :code.load_binary(agent, 'nofile', code) do
       {:module, module_name} -> module_name
       {:error, reason} -> {:error, reason}
@@ -15,19 +16,19 @@ defmodule Pallium.Env do
   end
 
   def dispatch(agent, state, address, method, props) do
-     case method do
-       :construct -> agent.construct(address)
-       :message -> {:ok, agent.handle(props.action, props.data)}
-     end
+    case method do
+      :construct -> agent.construct(address)
+      :message -> {:ok, agent.handle(props.action, props.data)}
+    end
   end
 
   def to_process(address, props) do
-      agent = String.to_existing_atom("Elixir.#{address}")
+    agent = String.to_existing_atom("Elixir.#{address}")
 
-      state = agent.will_deploy()
-      pid = spawn(agent, :deploy, [state, props])
+    state = agent.will_deploy()
+    pid = spawn(agent, :deploy, [state, props])
 
-      pid |> Helpers.pid_to_binary
+    pid |> Helpers.pid_to_binary()
   end
 
   def set_state(address, state) do
@@ -53,5 +54,4 @@ defmodule Pallium.Env do
   def open_channel(owner) do
     chan = Pallium.Env.Channel.open(owner)
   end
-
 end

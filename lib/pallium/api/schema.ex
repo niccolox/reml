@@ -6,7 +6,6 @@ defmodule Pallium.Api.Schema do
   alias Pallium.Api.Resolvers
 
   query do
-
     @desc "Get agent"
     field :get_agent, :agent do
       arg :address, non_null(:string)
@@ -19,11 +18,9 @@ defmodule Pallium.Api.Schema do
         arg :code, :string
         resolve &Resolvers.Agent.new/3
     end
-
   end
 
   mutation do
-
     @desc "Send a transaction"
     field :send_tx, type: :tx do
       arg :type, non_null(:string)
@@ -35,6 +32,5 @@ defmodule Pallium.Api.Schema do
 
       resolve &Resolvers.Transaction.send/3
     end
-
   end
 end

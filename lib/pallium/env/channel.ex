@@ -26,11 +26,12 @@ defmodule Pallium.Env.Channel do
       {:connect, pid} -> new(%{state | observers: state.observers ++ [pid]})
       :state -> IO.puts("#{inspect state}")
     end
+
     new(state)
   end
 
   def broadcast(msg, observers) do
-    Enum.each(observers, fn(p) -> send p, {:ok, msg} end)
+    Enum.each(observers, fn p -> send(p, {:ok, msg}) end)
   end
 
   def commit() do
