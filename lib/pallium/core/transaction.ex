@@ -78,8 +78,8 @@ defmodule Pallium.Core.Transaction do
     JSONRPC2.Clients.HTTP.call(host <> broadcast <> "0x" <> encoded_tx, "", [])
   end
 
-  def execute(rlp) do
-    tx = rlp |> ExRLP.decode() |> deserialize()
+  def execute(hex_rlp) do
+    tx = hex_rlp |> ExRLP.decode(encoding: :hex) |> deserialize()
 
     case tx.type do
       :create -> Agent.create(tx.data, tx.to)

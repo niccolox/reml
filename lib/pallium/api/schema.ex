@@ -34,5 +34,39 @@ defmodule Pallium.Api.Schema do
 
       resolve &Resolvers.Transaction.send/3
     end
+
+    @desc "Create agent"
+    field :create, type: :tx do
+      arg :to, non_null(:string)
+      arg :data, :string
+      resolve &Resolvers.Transaction.create/3
+    end
+
+    @desc "Transfer of spike"
+    field :transfer, type: :tx do
+      arg :to, non_null(:string)
+      arg :from, non_null(:string)
+      arg :value, non_null(:integer)
+
+      resolve &Resolvers.Transaction.transfer/3
+    end
+
+    @desc "Mint spike to agent"
+    field :mint, type: :tx do
+      arg :to, non_null(:string)
+      arg :value, non_null(:integer)
+
+      resolve &Resolvers.Transaction.mint/3
+    end
+
+    @desc "Send message to agent"
+    field :send_msg, type: :tx do
+      arg :to, non_null(:string)
+      arg :from, non_null(:string)
+      arg :value, non_null(:integer)
+      arg :message, non_null(:string)
+
+      resolve &Resolvers.Transaction.send_msg/3
+    end
   end
 end

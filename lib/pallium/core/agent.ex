@@ -6,7 +6,6 @@ defmodule Pallium.Core.Agent do
   alias Pallium.Core.{Agent, Message, Store}
   alias Pallium.Env
 
-  # @empty_keccak Helpers.keccak(<<>>)
   @empty_trie MerklePatriciaTree.Trie.empty_trie_root_hash()
 
   defstruct nonce: 0,
@@ -47,28 +46,42 @@ defmodule Pallium.Core.Agent do
       code: code
     }
   end
+  @doc """
+  Creates an agent struct
 
-  # @spec(binary()) :: agent()
-  def new(code) do
+  Return: Hex string with RLP encoded agent struct
+
+  ## Arguments
+    - code: Hex string with code of agent
+  """
+  def new(code \\ <<>>) do
     %__MODULE__{%Agent{} | code: code |> Helpers.from_hex()}
     |> serialize()
     |> ExRLP.encode(encoding: :hex)
   end
 
-  def create(agent_rlp, address) do
-    agent = agent_rlp |> put(address)
+  @doc """
+  Creates a new entry in the Store with an agent structure and execute construct
+  function in agent code
 
-    case agent do
-      {:ok, address} -> dispatch(address, :construct)
-      {:reject, reason} -> {:reject, reason}
-    end
+  ## Arguments
+    - agent_rlp: Hex string with RLP encoded agent struct
+    - address: Address of agent
+  """
+  def create(agent_hex_rlp, address) do
+    with :ok <- Store.update(address, agent_hex_rlp |> Helpers.from_hex),
+         {:ok, _} <- dispatch(address, :construct),
+         do: {:ok, address}
   end
 
-  def put(agent_rlp, address) do
-    Store.update(address, agent_rlp)
-    {:ok, address}
-  end
+  @doc """
+  Get agent struct from Store
 
+  Return: Agent struct
+
+  ## Arguments
+    - address: Address of agent
+  """
   def get_agent(address) do
     case Store.get(address) do
       nil -> nil
@@ -130,22 +143,20 @@ defmodule Pallium.Core.Agent do
 
   def put_state(address, key, value) do
     case get_agent(address) do
-      nil ->
-        nil
-
+      nil -> nil
       agent ->
-        updated_storage_trie = state_update(agent.state, key, value)
+        updated_storage_trie = update_state(agent.state, key, value)
         agent |> update_state(updated_storage_trie.root_hash) |> commit(address)
     end
   end
 
-  defp state_update(root, key, value) do
+  defp update_state(root, key, value) do
     root
     |> store_trie()
     |> Trie.update(key |> Helpers.keccak(), value |> ExRLP.encode())
   end
 
-  def get_state(address, key) do
+  def get_state_value(address, key) do
     case get_agent(address) do
       nil -> nil
       agent -> state_fetch(agent.state, key)
@@ -179,7 +190,14 @@ defmodule Pallium.Core.Agent do
     %__MODULE__{agent | state: value}
   end
 
+  @doc """
+  Commit new agent structure
+
+  ## Arguments
+    - next_agent: New agent structure
+    - address: Address of agent
+  """
   defp commit(next_agent, address) do
-    next_agent |> serialize() |> ExRLP.encode() |> put(address)
+    Store.update(address, next_agent |> serialize() |> ExRLP.encode())
   end
 end
