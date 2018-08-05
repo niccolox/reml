@@ -3,16 +3,18 @@ defmodule Pallium.App do
   Documentation for Pallium ABCI App.
   """
 
+  alias ABCI.Types
+  alias Pallium.App.State
+  alias Pallium.Core.Transaction
+
   @code_type_ok 0
   @code_type_encoding_error 1
   # @code_type_bad_nonce 2
   # @code_type_unauthorized 3
 
-  alias ABCI.Types
-  alias Pallium.App.State
-  alias Pallium.Core.Transaction
+  # credo:disable-for-this-file Credo.Check.Design.AliasUsage
 
-  def init() do
+  def init do
     State.start_link()
     ABCI.start_link(__MODULE__)
   end

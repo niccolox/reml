@@ -2,11 +2,11 @@ defmodule ChannelTest do
   use ExUnit.Case
   import ExUnit.CaptureIO
 
-  alias Pallium.Myelin.Store
-  alias Pallium.Env.Channel
-  alias Pallium.Myelin.Agent
-  alias Pallium.Myelin.Message
+  alias Pallium.Core.Agent
+  alias Pallium.Core.Message
+  alias Pallium.Core.Store
   alias Pallium.Env
+  alias Pallium.Env.Channel
 
   doctest Channel
 

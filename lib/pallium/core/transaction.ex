@@ -1,7 +1,8 @@
 defmodule Pallium.Core.Transaction do
   @moduledoc false
 
-  alias Pallium.Core.{Agent, Address, Transaction}
+  alias JSONRPC2.Clients.HTTP
+  alias Pallium.Core.{Address, Agent, Transaction}
 
   defstruct nonce: 0,
             type: <<>>,
@@ -75,7 +76,7 @@ defmodule Pallium.Core.Transaction do
     host = Application.get_env(:pallium, :host)
     broadcast = Application.get_env(:pallium, :broadcast)
     encoded_tx = tx |> serialize() |> ExRLP.encode(encoding: :hex)
-    JSONRPC2.Clients.HTTP.call(host <> broadcast <> "0x" <> encoded_tx, "", [])
+    HTTP.call(host <> broadcast <> "0x" <> encoded_tx, "", [])
   end
 
   def execute(hex_rlp) do

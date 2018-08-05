@@ -1,7 +1,9 @@
 defmodule AgentTest do
   use ExUnit.Case, async: false
+
   alias Pallium.Core.{Agent, Message, Store}
   alias Pallium.Env.Channel, as: Chan
+  alias MerklePatriciaTree.{Test, Trie}
 
   doctest Agent
 

@@ -2,6 +2,12 @@ defmodule Helpers do
   @moduledoc """
   Helpers for common operations
   """
+
+  alias Entensor.Tensor
+  alias Pallium.App.Store
+  alias Pallium.Env
+  alias Pallium.Env.Flow
+
   @type keccak_hash :: binary()
 
   @spec keccak(binary()) :: keccak_hash
@@ -34,13 +40,13 @@ defmodule Helpers do
 
           def construct(agent) do
             state = %{foo: "bar", hello: "Hello, world!"}
-            Pallium.Env.set_state(agent, state)
+            Env.set_state(agent, state)
           end
 
           def handle(action, data) do
             case action do
-              "foo" -> Pallium.Env.get_value(@self, "foo")
-              "hello" -> @self |> Pallium.Env.get_value("hello") |> Pallium.Env.in_chan(@self)
+              "foo" -> Env.get_value(@self, "foo")
+              "hello" -> @self |> Env.get_value("hello") |> Env.in_chan(@self)
             end
           end
         end
@@ -54,7 +60,121 @@ defmodule Helpers do
     agent_code
   end
 
-  def observer() do
+  def get_add_agent_code(address) do
+    agent_atom = {:__aliases__, [alias: false], [String.to_atom(address)]}
+
+    agent =
+      quote do
+        defmodule unquote(agent_atom) do
+          # @behaviour Pallium.Env.AgentBehaviour
+          @self unquote(address)
+
+          def construct(agent) do
+            state = %{model: "./examples/add.pb"}
+            Env.set_state(@self, state)
+          end
+
+          def payload(props) do
+            [x, y] = props
+
+            model = Env.get_value(@self, "model")
+
+            input = %{
+              "a" => Tensor.from_list([String.to_float(x)]),
+              "b" => Tensor.from_list([String.to_float(y)])
+            }
+
+            add = Flow.run(model, input)
+            add |> List.first() |> Float.to_string()
+          end
+
+          def will_deploy do
+            %{chan: Env.open_channel(@self)}
+          end
+
+          def deploy(state, props) do
+            receive do
+              {:run, args} -> {:ok, payload(args)} |> Env.to_chan(state.chan)
+              {:connect, pid} -> Env.to_chan({:connect, pid}, state.chan)
+              {:chan, _} -> IO.puts("#{inspect(state.chan)}")
+            end
+
+            deploy(state, props)
+          end
+
+          def handle(action, props) do
+            case action do
+              "run" -> payload(props)
+              "deploy" -> Env.to_process(@self, props)
+            end
+          end
+        end
+      end
+
+    [{_, agent_code}] = Code.compile_quoted(agent)
+
+    :code.purge(String.to_atom(address))
+    :code.delete(String.to_atom(address))
+
+    agent_code
+  end
+
+  def get_square_agent_code(address) do
+    agent_atom = {:__aliases__, [alias: false], [String.to_atom(address)]}
+
+    agent =
+      quote do
+        defmodule unquote(agent_atom) do
+          # @behaviour Pallium.Env.AgentBehaviour
+          @self unquote(address)
+
+          def construct(agent) do
+            state = %{model: "./examples/square.pb"}
+            Env.set_state(@self, state)
+          end
+
+          def payload(props) do
+            [x] = props
+
+            model = Env.get_value(@self, "model")
+
+            input = %{
+              "a" => Tensor.from_list([String.to_float(x)])
+            }
+
+            square = Flow.run(model, input)
+            square |> List.first() |> Float.to_string()
+          end
+
+          def will_deploy do
+            %{chan: Env.open_channel(@self)}
+          end
+
+          def deploy(state, props) do
+            receive do
+              {:run, props} -> payload(props)
+              {:chan, _} -> state.chan
+            end
+          end
+
+          def handle(action, props) do
+            case action do
+              "run" -> payload(props)
+              "deploy" -> Env.to_process(@self, props)
+            end
+          end
+        end
+      end
+
+    [{_, agent_code}] = Code.compile_quoted(agent)
+
+    :code.purge(String.to_atom(address))
+    :code.delete(String.to_atom(address))
+
+    agent_code
+  end
+
+  def observer do
     ob = fn f ->
       receive do
         {_, msg} ->

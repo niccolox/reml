@@ -1,9 +1,10 @@
 defmodule TransactionTest do
   use ExUnit.Case
 
-  alias Pallium.Core.Transaction, as: Tx
-  alias Pallium.Core.Store
+  alias MerklePatriciaTree.{Test, Trie}
   alias Pallium.Core.Agent
+  alias Pallium.Core.Store
+  alias Pallium.Core.Transaction, as: Tx
 
   doctest Tx
 
@@ -11,7 +12,7 @@ defmodule TransactionTest do
   @recipient "f26568ad9e5557a70aace0e699888ddc71c74b31102d5d3ab5161dd496e3f64d"
 
   setup do
-    MerklePatriciaTree.Test.random_ets_db() |> MerklePatriciaTree.Trie.new() |> Store.start_link()
+    Test.random_ets_db() |> Trie.new() |> Store.start_link()
     :ok
   end
 
