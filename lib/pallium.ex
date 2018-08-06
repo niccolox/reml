@@ -2,7 +2,12 @@ defmodule Pallium do
   @moduledoc """
   Documentation for Pallium.
   """
+  alias Pallium.Api.Server
+  alias Pallium.App
   alias Pallium.Core.Store
+
+  alias MerklePatriciaTree.Test
+  alias MerklePatriciaTree.Trie
 
   @type key :: binary
   @type address :: <<_::160>>

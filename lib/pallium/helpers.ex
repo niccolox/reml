@@ -3,8 +3,7 @@ defmodule Helpers do
   Helpers for common operations
   """
 
-  alias Entensor.Tensor
-  alias Pallium.App.Store
+  alias Extensor.Tensor
   alias Pallium.Env
   alias Pallium.Env.Flow
 

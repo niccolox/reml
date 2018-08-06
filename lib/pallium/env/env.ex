@@ -35,7 +35,7 @@ defmodule Pallium.Env do
   end
 
   def get_value(address, key) do
-    Agent.get_state(address, key)
+    Agent.get_state_value(address, key)
   end
 
   def set_value(address, key, value) do
