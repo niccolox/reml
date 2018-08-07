@@ -3,7 +3,7 @@ defmodule Pallium.Api.Schema do
 
   use Absinthe.Schema
 
-  alias Pallium.Api.Resolvers.{Agent, Transaction}
+  alias Pallium.Api.Resolvers.{Agent, Transaction, Message}
 
   import_types Pallium.Api.Schema.AgentTypes
   import_types Pallium.Api.Schema.TransactionTypes
@@ -21,6 +21,13 @@ defmodule Pallium.Api.Schema do
         arg :code, :string
         resolve &Agent.new/3
     end
+
+    @desc "New message"
+    field :new_message, :agent_rlp do
+        arg :action, non_null(:string)
+        arg :props, non_null(:string)
+        resolve &Message.new/3
+    end
   end
 
   mutation do
@@ -33,14 +40,14 @@ defmodule Pallium.Api.Schema do
       arg :data, :string
       arg :sign, :string
 
-      resolve &Transaction.send/3
+      resolve &Transaction.send_tx/3
     end
 
     @desc "Create agent"
     field :create, type: :tx do
-      arg :to, non_null(:string)
-      arg :data, :string
-      resolve &Resolvers.Transaction.create/3
+      arg :address, non_null(:string)
+      arg :agent, :string
+      resolve &Transaction.create/3
     end
 
     @desc "Transfer of spike"
@@ -49,7 +56,7 @@ defmodule Pallium.Api.Schema do
       arg :from, non_null(:string)
       arg :value, non_null(:integer)
 
-      resolve &Resolvers.Transaction.transfer/3
+      resolve &Transaction.transfer/3
     end
 
     @desc "Mint spike to agent"
@@ -57,17 +64,16 @@ defmodule Pallium.Api.Schema do
       arg :to, non_null(:string)
       arg :value, non_null(:integer)
 
-      resolve &Resolvers.Transaction.mint/3
+      resolve &Transaction.mint/3
     end
 
     @desc "Send message to agent"
     field :send_msg, type: :tx do
       arg :to, non_null(:string)
       arg :from, non_null(:string)
-      arg :value, non_null(:integer)
       arg :message, non_null(:string)
 
-      resolve &Resolvers.Transaction.send_msg/3
+      resolve &Transaction.send_msg/3
     end
   end
 end

@@ -58,7 +58,7 @@ defmodule Pallium.Core.Transaction do
     }
   end
 
-  def create(raw) do
+  def new(raw) do
     {nonce, type, to, from, value, data} = raw
 
     %__MODULE__{
@@ -69,19 +69,17 @@ defmodule Pallium.Core.Transaction do
         from: from,
         value: value,
         data: data
-    }
+    } |> serialize() |> ExRLP.encode(encoding: :hex)
   end
 
   def send(tx) do
     host = Application.get_env(:pallium, :host)
     broadcast = Application.get_env(:pallium, :broadcast)
-    encoded_tx = tx |> serialize() |> ExRLP.encode(encoding: :hex)
-    HTTP.call(host <> broadcast <> "0x" <> encoded_tx, "", [])
+    HTTP.call(host <> broadcast <> "0x" <> tx, "", [])
   end
 
   def execute(hex_rlp) do
     tx = hex_rlp |> ExRLP.decode(encoding: :hex) |> deserialize()
-
     case tx.type do
       :create -> Agent.create(tx.data, tx.to)
       :transfer -> Agent.transfer(tx.to, tx.from, tx.value)

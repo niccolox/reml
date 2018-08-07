@@ -3,8 +3,8 @@ defmodule MessageTest do
   alias Pallium.Core.Message
   doctest Message
 
-  test "create message" do
-    message = Message.create("foo", "bar")
-    assert Message.decode(message) == %Message{action: "foo", data: "bar"}
+  test "should return new RLP encoded message struct" do
+    message = Message.new("foo", "bar")
+    assert Message.decode(message) == %Message{action: "foo", props: "bar"}
   end
 end
