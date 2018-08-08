@@ -4,18 +4,18 @@ defmodule Pallium.Core.Message do
   alias Pallium.Core.Message
 
   defstruct action: <<>>,
-            data: <<>>
+            props: <<>>
 
   @type t :: %__MODULE__{
           action: binary(),
-          data: binary()
+          props: binary()
         }
 
   @spec serialize(t) :: ExRLP.t()
   def serialize(message) do
     [
       message.action,
-      message.data
+      message.props
     ]
   end
 
@@ -23,20 +23,20 @@ defmodule Pallium.Core.Message do
   def deserialize(rlp) do
     [
       action,
-      data
+      props
     ] = rlp
 
     %__MODULE__{
       action: action,
-      data: data
+      props: props
     }
   end
 
-  def create(action, data) do
-    %__MODULE__{%Message{} | action: action, data: data} |> serialize() |> ExRLP.encode()
+  def new(action, props) do
+    %__MODULE__{%Message{} | action: action, props: props} |> serialize() |> ExRLP.encode(encoding: :hex)
   end
 
   def decode(rlp) do
-    rlp |> ExRLP.decode() |> deserialize()
+    rlp |> ExRLP.decode(encoding: :hex) |> deserialize()
   end
 end

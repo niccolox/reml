@@ -3,7 +3,7 @@ defmodule Pallium.Api.Schema do
 
   use Absinthe.Schema
 
-  alias Pallium.Api.Resolvers.{Agent, Transaction}
+  alias Pallium.Api.Resolvers.{Agent, Transaction, Message}
 
   import_types Pallium.Api.Schema.AgentTypes
   import_types Pallium.Api.Schema.TransactionTypes
@@ -20,6 +20,13 @@ defmodule Pallium.Api.Schema do
     field :new_agent, :agent_rlp do
         arg :code, :string
         resolve &Agent.new/3
+    end
+
+    @desc "New message"
+    field :new_message, :agent_rlp do
+        arg :action, non_null(:string)
+        arg :props, non_null(:string)
+        resolve &Message.new/3
     end
   end
 
@@ -38,8 +45,8 @@ defmodule Pallium.Api.Schema do
 
     @desc "Create agent"
     field :create, type: :tx do
-      arg :to, non_null(:string)
-      arg :data, :string
+      arg :address, non_null(:string)
+      arg :agent, :string
       resolve &Transaction.create/3
     end
 
@@ -64,7 +71,6 @@ defmodule Pallium.Api.Schema do
     field :send_msg, type: :tx do
       arg :to, non_null(:string)
       arg :from, non_null(:string)
-      arg :value, non_null(:integer)
       arg :message, non_null(:string)
 
       resolve &Transaction.send_msg/3

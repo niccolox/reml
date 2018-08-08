@@ -6,7 +6,7 @@ defmodule Pallium.Api.Resolvers.Transaction do
   def send_tx(_parent, args, _resolution) do
     type = String.to_atom(args.type)
     data = args.data |> Helpers.from_hex()
-    {0, type, args.to, args.from, args.value, data} |> Tx.create() |> Tx.send()
+    {0, type, args.to, args.from, args.value, data} |> Tx.new() |> Tx.send()
     {:ok, %{rlp: "123"}}
   end
 
@@ -14,21 +14,21 @@ defmodule Pallium.Api.Resolvers.Transaction do
   Creates and sends a transaction to create an agent in the Store
 
   ## Arguments
-    - args.to:   Address of new agent
-    - args.data: Structure of the agent encoded by RLP
+    - args.address:   Address of new agent
+    - args.agent: Structure of the agent encoded by RLP
   """
   def create(_parent, args, _resolution) do
-    {0, :create, args.to, <<>>, 0, args.data} |> Tx.create() |> Tx.send()
+    {0, :create, args.address, <<>>, 0, args.agent} |> Tx.new() |> Tx.send()
     {:ok, %{rlp: "123"}}
   end
 
   def mint(_parent, args, _resolution) do
-    {0, :transfer, args.to, "0x", args.value, <<>>} |> Tx.create() |> Tx.send()
+    {0, :transfer, args.to, "0x", args.value, <<>>} |> Tx.new() |> Tx.send()
     {:ok, %{rlp: "123"}}
   end
 
   def transfer(_parent, args, _resolution) do
-    {0, :transfer, args.to, args.from, args.value, <<>>} |> Tx.create() |> Tx.send()
+    {0, :transfer, args.to, args.from, args.value, <<>>} |> Tx.new() |> Tx.send()
     {:ok, %{rlp: "123"}}
   end
 
@@ -41,7 +41,7 @@ defmodule Pallium.Api.Resolvers.Transaction do
     - args.message: Structure of the message encoded by RLP
   """
   def send_msg(_parent, args, _resolution) do
-    {0, :send, args.to, args.from, args.value, args.message} |> Tx.create() |> Tx.send()
+    {0, :send, args.to, args.from, args.value, args.message} |> Tx.new() |> Tx.send()
     {:ok, %{rlp: "123"}}
   end
 end

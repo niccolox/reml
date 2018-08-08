@@ -92,7 +92,7 @@ defmodule Pallium.Core.Agent do
 
   def send(address, rlp_msg) do
     message = Message.decode(rlp_msg)
-    dispatch(address, :message, %{action: message.action, data: message.data})
+    dispatch(address, :message, %{action: message.action, data: message.props})
   end
 
   def dispatch(address, method, data \\ <<>>) do
@@ -190,13 +190,6 @@ defmodule Pallium.Core.Agent do
     %__MODULE__{agent | state: value}
   end
 
-  @doc """
-  Commit new agent structure
-
-  ## Arguments
-    - next_agent: New agent structure
-    - address: Address of agent
-  """
   defp commit(next_agent, address) do
     Store.update(address, next_agent |> serialize() |> ExRLP.encode())
   end
