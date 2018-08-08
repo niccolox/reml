@@ -33,14 +33,14 @@ defmodule Pallium.Api.Schema do
       arg :data, :string
       arg :sign, :string
 
-      resolve &Transaction.send/3
+      resolve &Transaction.send_tx/3
     end
 
     @desc "Create agent"
     field :create, type: :tx do
       arg :to, non_null(:string)
       arg :data, :string
-      resolve &Resolvers.Transaction.create/3
+      resolve &Transaction.create/3
     end
 
     @desc "Transfer of spike"
@@ -49,7 +49,7 @@ defmodule Pallium.Api.Schema do
       arg :from, non_null(:string)
       arg :value, non_null(:integer)
 
-      resolve &Resolvers.Transaction.transfer/3
+      resolve &Transaction.transfer/3
     end
 
     @desc "Mint spike to agent"
@@ -57,7 +57,7 @@ defmodule Pallium.Api.Schema do
       arg :to, non_null(:string)
       arg :value, non_null(:integer)
 
-      resolve &Resolvers.Transaction.mint/3
+      resolve &Transaction.mint/3
     end
 
     @desc "Send message to agent"
@@ -67,7 +67,7 @@ defmodule Pallium.Api.Schema do
       arg :value, non_null(:integer)
       arg :message, non_null(:string)
 
-      resolve &Resolvers.Transaction.send_msg/3
+      resolve &Transaction.send_msg/3
     end
   end
 end
