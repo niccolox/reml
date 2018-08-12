@@ -78,8 +78,8 @@ defmodule Pallium.Core.Transaction do
     HTTP.call(host <> broadcast <> "0x" <> tx, "", [])
   end
 
-  def execute(hex_rlp) do
-    tx = hex_rlp |> ExRLP.decode(encoding: :hex) |> deserialize()
+  def execute(rlp) do
+    tx = rlp |> ExRLP.decode() |> deserialize()
     case tx.type do
       :create -> Agent.create(tx.data, tx.to)
       :transfer -> Agent.transfer(tx.to, tx.from, tx.value)

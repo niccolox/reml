@@ -27,7 +27,7 @@ defmodule TransactionTest do
   test "should execution create type transaction" do
     sender_code = @sender |> Helpers.get_agent_code
     agent_hex_rlp = Agent.new(sender_code |> Helpers.to_hex())
-    {0, :create, @sender, <<>>, 0, agent_hex_rlp} |> Tx.new() |> Tx.execute()
+    {0, :create, @sender, <<>>, 0, agent_hex_rlp} |> Tx.new() |> Helpers.from_hex() |> Tx.execute()
     agent = Agent.get_agent(@sender)
     assert agent.code == sender_code
   end
@@ -35,10 +35,10 @@ defmodule TransactionTest do
   test "should execution send type transaction" do
     sender_code = @sender |> Helpers.get_agent_code
     agent_hex_rlp = Agent.new(sender_code |> Helpers.to_hex())
-    {0, :create, @sender, <<>>, 0, agent_hex_rlp} |> Tx.new() |> Tx.execute()
+    {0, :create, @sender, <<>>, 0, agent_hex_rlp} |> Tx.new() |> Helpers.from_hex() |> Tx.execute()
 
     msg = Message.new("foo", <<>>)
-    {:ok, result} = {0, :send, @sender, <<>>, 0, msg} |> Tx.new() |> Tx.execute()
+    {:ok, result} = {0, :send, @sender, <<>>, 0, msg} |> Tx.new() |> Helpers.from_hex() |> Tx.execute()
     assert result == "bar"
   end
 end

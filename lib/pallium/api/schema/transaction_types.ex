@@ -4,6 +4,8 @@ defmodule Pallium.Api.Schema.TransactionTypes do
   use Absinthe.Schema.Notation
 
   object :tx do
-    field :rlp, :string
+    field :hash, :string
+    field :height, :integer
+    field :data, :string
   end
 end

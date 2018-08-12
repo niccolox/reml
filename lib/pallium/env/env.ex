@@ -16,7 +16,7 @@ defmodule Pallium.Env do
 
   def dispatch(agent, _state, address, method, props) do
     case method do
-      :construct -> {:ok, agent.construct(address)}
+      :construct -> {:ok, agent.construct()}
       :message -> {:ok, agent.handle(props.action, props.data)}
     end
   end
