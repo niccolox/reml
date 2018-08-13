@@ -44,7 +44,10 @@ defmodule Pallium.Api.Resolvers.Transaction do
     - args.message: Structure of the message encoded by RLP
   """
   def send_msg(_parent, args, _resolution) do
-    {0, :send, args.to, args.from, args.value, args.message} |> Tx.new() |> Tx.send()
-    {:ok, %{rlp: "123"}}
+    {:ok, response} = {0, :send, args.to, "", "", args.message} |> Tx.new() |> Tx.send()
+    {:ok, %{hash:   response["hash"],
+            height: response["height"],
+            data:   response["deliver_tx"]["data"] }
+    }
   end
 end

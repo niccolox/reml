@@ -70,7 +70,7 @@ defmodule Pallium.Api.Schema do
     @desc "Send message to agent"
     field :send_msg, type: :tx do
       arg :to, non_null(:string)
-      arg :from, non_null(:string)
+      arg :from, :string
       arg :message, non_null(:string)
 
       resolve &Transaction.send_msg/3
