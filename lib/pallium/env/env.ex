@@ -21,6 +21,7 @@ defmodule Pallium.Env do
     end
   end
 
+  # TODO: remove to_process
   def to_process(address, props) do
     agent = String.to_existing_atom("Elixir.#{address}")
 
@@ -40,6 +41,10 @@ defmodule Pallium.Env do
 
   def set_value(address, key, value) do
     Agent.put_state(address, key, value)
+  end
+
+  def start_process(address, fun) do
+    Task.Supervisor.async_nolink(AgentProcessSupervisor, fun)
   end
 
   def to_chan(msg, chan) do
