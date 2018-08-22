@@ -2,9 +2,13 @@ defmodule ExamplesTest do
   use ExUnit.Case
 
   test "should recognize the panda" do
-    img_as_list = Matrex.load("examples/inception/panda.csv") |> Matrex.to_list()
-    float_to_int = Enum.map(img_as_list, fn(y) -> Kernel.trunc(y) end)
-    list_to_format = Enum.chunk_every(float_to_int, 3) |> Enum.chunk_every(100)
+    list_to_format =
+      "examples/inception/panda.csv"
+      |> Matrex.load()
+      |> Matrex.to_list()
+      |> Enum.map(&Kernel.trunc/1)
+      |> Enum.chunk_every(3)
+      |> Enum.chunk_every(100)
 
     session = Extensor.Session.load_frozen_graph!("examples/inception/classify_image_graph_def.pb")
 
