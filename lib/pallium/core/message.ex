@@ -37,9 +37,6 @@ defmodule Pallium.Core.Message do
   end
 
   def decode(rlp) do
-    rlp
-    |> ExRLP.decode(encoding: :hex)
-    |> deserialize()
-    |> IO.inspect(label: "#{__MODULE__}.decode")
+    rlp |> ExRLP.decode(encoding: :hex) |> deserialize()
   end
 end

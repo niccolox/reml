@@ -4,10 +4,8 @@ defmodule Pallium.Api.Resolvers.Transaction do
   alias Pallium.Core.Transaction, as: Tx
 
   def send_tx(_parent, args, _resolution) do
-    IO.puts :send_tx
     type = String.to_atom(args.type)
     data = args.data |> Helpers.from_hex()
-    IO.inspect(data, label: :data)
     {0, type, args.to, args.from, args.value, data} |> Tx.new() |> Tx.send()
     {:ok, %{rlp: "123"}}
   end
