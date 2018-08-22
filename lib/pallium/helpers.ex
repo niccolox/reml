@@ -37,9 +37,9 @@ defmodule Helpers do
           # @behaviour Pallium.Env.AgentBehaviour
           @self unquote(address)
 
-          def construct(agent) do
+          def construct() do
             state = %{foo: "bar", hello: "Hello, world!"}
-            Env.set_state(agent, state)
+            Env.set_state(@self, state)
           end
 
           def handle(action, data) do

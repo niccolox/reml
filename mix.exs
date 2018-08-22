@@ -42,7 +42,8 @@ defmodule Pallium.MixProject do
       {:poison, "~> 3.1"},
       {:jsonrpc2, "~> 1.0.3"},
       {:hackney, "~> 1.12"},
-      {:extensor, "~> 0.1"}
+      {:extensor, "~> 0.1"},
+      {:matrex, "~> 0.6"}
     ]
   end
 end
