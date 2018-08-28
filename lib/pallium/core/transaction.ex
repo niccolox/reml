@@ -58,17 +58,14 @@ defmodule Pallium.Core.Transaction do
     }
   end
 
-  def new(raw) do
-    {nonce, type, to, from, value, data} = raw
-
+  def new({nonce, type, to, from, value, data}) do
     %__MODULE__{
-      %Transaction{}
-      | nonce: nonce,
-        type: Atom.to_string(type),
-        to: to,
-        from: from,
-        value: value,
-        data: data
+      nonce: nonce,
+      type: Atom.to_string(type),
+      to: to,
+      from: from,
+      value: value,
+      data: data
     } |> serialize() |> ExRLP.encode(encoding: :hex)
   end
 

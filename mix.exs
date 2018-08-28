@@ -28,22 +28,24 @@ defmodule Pallium.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
-      {:sage, "~> 0.4.0"},
-      {:ed25519, "~> 1.3"},
-      {:keccakf1600, "~> 2.0.0", hex: :keccakf1600_orig},
-      {:ex_rlp, "~> 0.3.0"},
-      {:merkle_patricia_tree, "~> 0.2.7"},
-      {:exleveldb, "~> 0.13.1"},
       {:abci, github: "neocortexlab/abci-ex"},
-      {:cowboy, "~> 2.4"},
       {:absinthe, "~> 1.4"},
       {:absinthe_plug, "~> 1.4.0"},
-      {:poison, "~> 3.1"},
-      {:jsonrpc2, "~> 1.0.3"},
-      {:hackney, "~> 1.12"},
+      {:cowboy, "~> 2.4"},
+      {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
+      {:ed25519, "~> 1.3"},
+      {:ex_rlp, "~> 0.3.0"},
+      {:exleveldb, "~> 0.13.1"},
       {:extensor, "~> 0.1"},
-      {:matrex, "~> 0.6"}
+      {:hackney, "~> 1.12"},
+      {:jsonrpc2, "~> 1.0.3"},
+      {:keccakf1600, "~> 2.0.0", hex: :keccakf1600_orig},
+      {:matrex, "~> 0.6"},
+      {:merkle_patricia_tree, "~> 0.2.7"},
+      {:myelin, path: "../myelin", only: [:dev, :test]},
+      # {:myelin, github: "neocortexlab/myelin", only: [:dev, :test]},
+      {:poison, "~> 3.1"},
+      {:sage, "~> 0.4.0"},
     ]
   end
 end

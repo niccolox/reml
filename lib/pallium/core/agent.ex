@@ -3,7 +3,7 @@ defmodule Pallium.Core.Agent do
   Documentation for Pallium Autonomous Intelligent Agents.
   """
   alias MerklePatriciaTree.Trie
-  alias Pallium.Core.{Agent, Message, Store}
+  alias Pallium.Core.{Message, Store}
   alias Pallium.Env
 
   @empty_trie MerklePatriciaTree.Trie.empty_trie_root_hash()
@@ -55,7 +55,7 @@ defmodule Pallium.Core.Agent do
     - code: Hex string with code of agent
   """
   def new(code \\ <<>>) do
-    %__MODULE__{%Agent{} | code: code |> Helpers.from_hex()}
+    %__MODULE__{code: code |> Helpers.from_hex()}
     |> serialize()
     |> ExRLP.encode(encoding: :hex)
   end

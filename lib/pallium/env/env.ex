@@ -17,18 +17,16 @@ defmodule Pallium.Env do
   def dispatch(agent, _state, address, method, props) do
     case method do
       :construct -> {:ok, agent.construct()}
-      :message -> {:ok, agent.handle(props.action, props.data)}
+      :message -> process_message(&agent.handle/2, props)
     end
   end
 
-  # TODO: remove to_process
-  def to_process(address, props) do
-    agent = String.to_existing_atom("Elixir.#{address}")
-
-    state = agent.will_deploy()
-    pid = spawn(agent, :deploy, [state, props])
-
-    pid |> Helpers.pid_to_binary()
+  defp process_message(handler, %{action: action, data: data}) do
+    try do
+      {:ok, handler.(action, data)}
+    rescue
+      e -> {:error, e}
+    end
   end
 
   def set_state(address, state) do
