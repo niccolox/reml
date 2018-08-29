@@ -45,6 +45,11 @@ defmodule Pallium.MixProject do
       {:myelin, path: "../myelin", only: [:dev, :test]},
       # {:myelin, github: "neocortexlab/myelin", only: [:dev, :test]},
       {:poison, "~> 3.1"},
+
+      # temporary fix :ranch version until cowboy upgrade to ranch >= 1.6 which is required by thrift
+      # TODO: remove :ranch dep later!
+      {:ranch, "~> 1.6", override: true},
+
       {:sage, "~> 0.4.0"},
     ]
   end
