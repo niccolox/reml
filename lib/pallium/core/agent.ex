@@ -169,6 +169,16 @@ defmodule Pallium.Core.Agent do
     end)
   end
 
+  def set_state_root_hash(address, hash) do
+    case get_agent(address) do
+      nil -> nil
+      agent ->
+        agent
+        |> update_state(hash)
+        |> commit(address)
+    end
+  end
+
   defp store_trie(root), do: Store.get().db |> Trie.new(root)
 
   defp state_fetch(root, key) do

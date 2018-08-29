@@ -14,18 +14,17 @@ defmodule Pallium.Env do
     end
   end
 
-  def dispatch(agent, _state, address, method, props) do
-    case method do
-      :construct -> {:ok, agent.construct()}
-      :message -> process_message(&agent.handle/2, props)
-    end
+  def dispatch(agent, _state, _address, :construct, _props) do
+    {:ok, agent.construct()}
   end
 
-  defp process_message(handler, %{action: action, data: data}) do
+  def dispatch(agent, state, address, :message, %{action: action, data: data}) do
     try do
-      {:ok, handler.(action, data)}
+      {:ok, agent.handle(action, data)}
     rescue
-      e -> {:error, e}
+      e ->
+        Agent.set_state_root_hash(address, state)
+        {:error, e}
     end
   end
 
@@ -41,7 +40,7 @@ defmodule Pallium.Env do
     Agent.put_state(address, key, value)
   end
 
-  def start_process(address, fun) do
+  def start_process(_address, fun) do
     Task.Supervisor.async_nolink(AgentProcessSupervisor, fun)
   end
 
