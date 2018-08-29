@@ -24,31 +24,16 @@ defmodule TransactionTest do
 
   test "executes :create type transaction", context do
     agent_hex_rlp = context.code |> Helpers.to_hex() |> Agent.new()
-
-    {0, :create, context.address, <<>>, 0, agent_hex_rlp}
-    |> Tx.new()
-    |> Helpers.from_hex()
-    |> Tx.execute()
-
+    TxHelpers.run(0, :create, context.address, <<>>, 0, agent_hex_rlp)
     agent = Agent.get_agent(context.address)
     assert agent.code == context.code
   end
 
   test "executes :send transaction", context do
     agent_hex_rlp = context.code |> Helpers.to_hex() |> Agent.new()
-
-    {0, :create, context.address, <<>>, 0, agent_hex_rlp}
-    |> Tx.new()
-    |> Helpers.from_hex()
-    |> Tx.execute()
-
+    TxHelpers.run(0, :create, context.address, <<>>, 0, agent_hex_rlp)
     msg = Message.new("foo", <<>>)
-
-    {:ok, result} =
-      {0, :send, context.address, <<>>, 0, msg}
-      |> Tx.new()
-      |> Helpers.from_hex()
-      |> Tx.execute()
+    {:ok, result} = TxHelpers.run(0, :send, context.address, <<>>, 0, msg)
 
     assert result == "bar"
   end
