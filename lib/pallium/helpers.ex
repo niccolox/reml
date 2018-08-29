@@ -3,10 +3,6 @@ defmodule Helpers do
   Helpers for common operations
   """
 
-  alias Extensor.Tensor
-  alias Pallium.Env
-  alias Pallium.Env.Flow
-
   @type keccak_hash :: binary()
 
   @spec keccak(binary()) :: keccak_hash

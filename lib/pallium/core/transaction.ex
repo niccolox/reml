@@ -2,7 +2,7 @@ defmodule Pallium.Core.Transaction do
   @moduledoc false
 
   alias JSONRPC2.Clients.HTTP
-  alias Pallium.Core.{Address, Agent, Transaction}
+  alias Pallium.Core.{Address, Agent}
 
   defstruct nonce: 0,
             type: <<>>,
