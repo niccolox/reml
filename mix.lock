@@ -31,6 +31,7 @@
   "metrics": {:hex, :metrics, "1.0.1", "25f094dea2cda98213cecc3aeff09e940299d950904393b2a29d191c346a8486", [:rebar3], [], "hexpm"},
   "mime": {:hex, :mime, "1.3.0", "5e8d45a39e95c650900d03f897fbf99ae04f60ab1daa4a34c7a20a5151b7a5fe", [:mix], [], "hexpm"},
   "mimerl": {:hex, :mimerl, "1.0.2", "993f9b0e084083405ed8252b99460c4f0563e41729ab42d9074fd5e52439be88", [:rebar3], [], "hexpm"},
+  "myelin": {:git, "https://github.com/neocortexlab/myelin.git", "0f3d7937188e54c189052d0225a6647cfc00ff99", []},
   "neuron": {:hex, :neuron, "0.7.0", "cd9d113633b42afbd957c8ee69aa02512a3976cf62081b9ca9e53ab826ba6a60", [:mix], [{:httpoison, "~> 1.0", [hex: :httpoison, repo: "hexpm", optional: false]}, {:poison, "~> 3.1", [hex: :poison, repo: "hexpm", optional: false]}], "hexpm"},
   "ok_jose": {:hex, :ok_jose, "3.0.0", "6cb32ccf1ce8582f9e4a6fef8cb678ac382b4f82030288f00bf862cb6c535523", [:mix], [], "hexpm"},
   "optimus": {:hex, :optimus, "0.1.8", "4c4b83062fb71683c50e32b9b968a0e76971bb7cbe7512d83333e2feeb436402", [:mix], [{:yamerl, "~> 0.6", [hex: :yamerl, repo: "hexpm", optional: false]}], "hexpm"},
