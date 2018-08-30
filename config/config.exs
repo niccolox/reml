@@ -30,5 +30,4 @@ use Mix.Config
 #     import_config "#{Mix.env}.exs"
 
 config :pallium,
-  host: "http://localhost:26657/",
-  broadcast: "broadcast_tx_commit?tx="
+  host: "http://localhost:26657/"

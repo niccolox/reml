@@ -50,4 +50,22 @@ defmodule Pallium.Api.Resolvers.Transaction do
             data:   response["deliver_tx"]["data"] }
     }
   end
+
+  @doc """
+  Checks transaction presence in blockchain
+
+  ## Arguments
+    - args.hash:  Transaction hash
+  """
+  def check_tx(_parent, args, _resolution) do
+    case Tx.check(args.hash) |> IO.inspect(label: :check_tx) do
+      {:ok, response} ->
+        {:ok, %{
+          hash: response["hash"],
+          height: response["height"],
+        }}
+      {:error, {_, reason, description}} ->
+        {:error, reason <> ": " <> description}
+    end
+  end
 end

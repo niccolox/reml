@@ -75,5 +75,12 @@ defmodule Pallium.Api.Schema do
 
       resolve &Transaction.send_msg/3
     end
+
+    @desc "Check transaction"
+    field :check_tx, type: :tx do
+      arg :hash, :string
+
+      resolve &Transaction.check_tx/3
+    end
   end
 end

@@ -4,6 +4,9 @@ defmodule Pallium.Core.Transaction do
   alias JSONRPC2.Clients.HTTP
   alias Pallium.Core.{Address, Agent}
 
+  @broadcast "broadcast_tx_commit?tx=0x"
+  @check_tx "tx?hash=0x"
+
   defstruct nonce: 0,
             type: <<>>,
             to: <<>>,
@@ -71,8 +74,12 @@ defmodule Pallium.Core.Transaction do
 
   def send(tx) do
     host = Application.get_env(:pallium, :host)
-    broadcast = Application.get_env(:pallium, :broadcast)
-    HTTP.call(host <> broadcast <> "0x" <> tx, "", [])
+    HTTP.call(host <> @broadcast <> tx, "", [])
+  end
+
+  def check(hash) do
+    host = Application.get_env(:pallium, :host)
+    HTTP.call(host <> @check_tx <> hash, "", [])
   end
 
   def execute(rlp) do
