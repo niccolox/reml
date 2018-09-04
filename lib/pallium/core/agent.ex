@@ -3,8 +3,9 @@ defmodule Pallium.Core.Agent do
   Documentation for Pallium Autonomous Intelligent Agents.
   """
   alias MerklePatriciaTree.Trie
-  alias Pallium.Core.{Message, Store}
+  alias Pallium.Core.{Bid, Message, Store}
   alias Pallium.Env
+  alias Pallium.App.Exchange
 
   @empty_trie MerklePatriciaTree.Trie.empty_trie_root_hash()
 
@@ -176,6 +177,17 @@ defmodule Pallium.Core.Agent do
         agent
         |> update_state(hash)
         |> commit(address)
+    end
+  end
+
+  def bid(address, data) do
+    case get_agent(address) do
+      nil -> {:error, :no_agent}
+      _agent ->
+        data
+        |> Bid.deserialize()
+        |> Exchange.bid(address)
+        :ok
     end
   end
 

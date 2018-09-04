@@ -69,7 +69,9 @@ defmodule Pallium.Core.Transaction do
       from: from,
       value: value,
       data: data
-    } |> serialize() |> ExRLP.encode(encoding: :hex)
+    }
+    |> serialize()
+    |> ExRLP.encode(encoding: :hex)
   end
 
   def send(tx) do
@@ -88,6 +90,7 @@ defmodule Pallium.Core.Transaction do
       :create -> Agent.create(tx.data, tx.to)
       :transfer -> Agent.transfer(tx.to, tx.from, tx.value)
       :send -> Agent.send(tx.to, tx.data)
+      :bid -> Agent.bid(tx.from, tx.data)
       _ -> {:reject, "Execution failure"}
     end
   end

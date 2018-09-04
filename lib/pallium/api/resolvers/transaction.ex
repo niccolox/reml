@@ -2,6 +2,7 @@ defmodule Pallium.Api.Resolvers.Transaction do
   @moduledoc false
 
   alias Pallium.Core.Transaction, as: Tx
+  alias Pallium.Core.Bid
 
   def send_tx(_parent, args, _resolution) do
     type = String.to_atom(args.type)
@@ -67,5 +68,17 @@ defmodule Pallium.Api.Resolvers.Transaction do
       {:error, {_, reason, description}} ->
         {:error, reason <> ": " <> description}
     end
+  end
+
+  def bid(_parent, args, _resolution) do
+    data = Bid.serialize(args)
+    {:ok, response} =
+      {0, :bid, "", args.from, "", data}
+      |> Tx.new()
+      |> Tx.send()
+    {:ok, %{
+      hash: response["hash"],
+      height: response["height"],
+    }}
   end
 end

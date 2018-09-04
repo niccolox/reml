@@ -1,6 +1,7 @@
 defmodule Pallium.Application do
   @moduledoc false
 
+  alias Pallium.App.Exchange
   alias Pallium.Core.Store
   alias MerklePatriciaTree.{Test, Trie}
 
@@ -8,6 +9,7 @@ defmodule Pallium.Application do
     children = [
       {Task.Supervisor, name: AgentProcessSupervisor},
       {Store, store_trie()},
+      Exchange,
     ]
     Supervisor.start_link(children, strategy: :one_for_one)
   end
