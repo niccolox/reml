@@ -2,7 +2,7 @@ defmodule Pallium.Env.Flow.System do
   alias Pallium.Env.Flow
 
   def devices() do
-    devices = Flow.python_call("devices")
+    devices = Flow.call("devices")
     devices |> Enum.map(&get_device_map/1)
   end
 

@@ -5,7 +5,7 @@ defmodule Pallium.Env.Flow do
   use Export.Python
   alias Extensor.{Session, Tensor}
 
-  def python_call(function, args \\ []) do
+  def call(function, args \\ []) do
     {:ok, py} = Python.start(python_path: Path.expand("priv"))
     Python.call(py, "flow_api", function, args)
   end
