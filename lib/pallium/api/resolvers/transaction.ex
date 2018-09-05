@@ -19,15 +19,19 @@ defmodule Pallium.Api.Resolvers.Transaction do
     - args.agent: Structure of the agent encoded by RLP
   """
   def create(_parent, args, _resolution) do
-    {:ok, response} =
-      {0, :create, args.address, <<>>, 0, [args.agent, args.params]}
-      |> Tx.new()
-      |> Tx.send()
-
-    {:ok, %{hash:   response["hash"],
-            height: response["height"],
-            data:   response["deliver_tx"]["data"] }
-    }
+    {0, :create, args.address, <<>>, 0, [args.agent, args.params]}
+    |> Tx.new()
+    |> Tx.send()
+    |> case do
+      {:ok, response} ->
+        {:ok, %{
+          hash:   response["hash"],
+          height: response["height"],
+          data:   response["deliver_tx"]["data"]
+        }}
+      {:error, reason} ->
+        {:error, inspect(reason)}
+    end
   end
 
   def mint(_parent, args, _resolution) do
@@ -49,11 +53,19 @@ defmodule Pallium.Api.Resolvers.Transaction do
     - args.message: Structure of the message encoded by RLP
   """
   def send_msg(_parent, args, _resolution) do
-    {:ok, response} = {0, :send, args.to, "", "", args.message} |> Tx.new() |> Tx.send()
-    {:ok, %{hash:   response["hash"],
-            height: response["height"],
-            data:   response["deliver_tx"]["data"] }
-    }
+    {0, :send, args.to, "", "", args.message}
+    |> Tx.new()
+    |> Tx.send()
+    |> case do
+      {:ok, response} ->
+        {:ok, %{
+          hash:   response["hash"],
+          height: response["height"],
+          data:   response["deliver_tx"]["data"]
+        }}
+      {:error, reason} ->
+        {:error, inspect(reason)}
+    end
   end
 
   @doc """
@@ -63,7 +75,7 @@ defmodule Pallium.Api.Resolvers.Transaction do
     - args.hash:  Transaction hash
   """
   def check_tx(_parent, args, _resolution) do
-    case Tx.check(args.hash) |> IO.inspect(label: :check_tx) do
+    case Tx.check(args.hash) do
       {:ok, response} ->
         {:ok, %{
           hash: response["hash"],
@@ -76,13 +88,17 @@ defmodule Pallium.Api.Resolvers.Transaction do
 
   def bid(_parent, args, _resolution) do
     data = Bid.serialize(args)
-    {:ok, response} =
-      {0, :bid, "", args.from, "", data}
-      |> Tx.new()
-      |> Tx.send()
-    {:ok, %{
-      hash: response["hash"],
-      height: response["height"],
-    }}
+    {0, :bid, "", args.from, "", data}
+    |> Tx.new()
+    |> Tx.send()
+    |> case do
+      {:ok, response} ->
+        {:ok, %{
+          hash: response["hash"],
+          height: response["height"],
+        }}
+      {:error, reason} ->
+        {:error, inspect(reason)}
+    end
   end
 end

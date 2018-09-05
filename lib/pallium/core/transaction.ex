@@ -61,6 +61,18 @@ defmodule Pallium.Core.Transaction do
     }
   end
 
+  def encode(%{} = tx) do
+    tx
+    |> serialize()
+    |> ExRLP.encode()
+  end
+
+  def decode(rlp) do
+    rlp
+    |> ExRLP.decode()
+    |> deserialize()
+  end
+
   def new({nonce, type, to, from, value, data}) do
     %__MODULE__{
       nonce: nonce,

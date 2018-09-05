@@ -4,11 +4,13 @@ defmodule Pallium.App do
   """
 
   alias ABCI.Types
+  alias Pallium.ABCI.Response
   alias Pallium.App.State
-  alias Pallium.Core.Transaction
+  alias Pallium.Core.Transaction, as: Tx
+  alias Pallium.Core.TxValidator
 
   @code_type_ok 0
-  @code_type_encoding_error 1
+  # @code_type_encoding_error 1
   # @code_type_bad_nonce 2
   # @code_type_unauthorized 3
 
@@ -60,14 +62,15 @@ defmodule Pallium.App do
   end
 
   def deliver_tx(req) do
-    case Transaction.execute(req.tx) do
-      :ok -> Types.ResponseDeliverTx.new(code: @code_type_ok)
-      {:ok, result} -> Types.ResponseDeliverTx.new(code: @code_type_ok, data: result)
-      {:error, _reason} -> Types.ResponseDeliverTx.new(code: @code_type_encoding_error)
-    end
+    req.tx
+    |> Tx.execute()
+    |> Response.deliver_tx()
   end
 
-  def check_tx(_req) do
-    Types.ResponseCheckTx.new(code: @code_type_ok)
+  def check_tx(%{tx: tx}) do
+    tx
+    |> Tx.decode()
+    |> TxValidator.validate()
+    |> Response.check_tx()
   end
 end
