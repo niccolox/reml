@@ -29,3 +29,5 @@ pallium-*.tar
 # TODO List
 TODO
 
+# Python cache
+/priv/__pycache__/
