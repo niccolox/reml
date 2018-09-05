@@ -1,5 +1,5 @@
 agent "{{address}}" do
-  def construct do
+  def construct(_params) do
     %{foo: "bar", hello: "Hello, world!"}
     |> set_state()
   end

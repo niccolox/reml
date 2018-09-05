@@ -1,5 +1,5 @@
 agent "{{address}}" do
-  def construct do
+  def construct(_params) do
     %{a: "1", b: "2"}
     |> set_state()
   end

@@ -10,7 +10,8 @@ defmodule AgentStateTest do
       AgentHelpers.agent_code("state", address)
       |> Helpers.to_hex()
       |> Agent.new()
-    TxHelpers.run(0, :create, address, <<>>, 0, agent)
+    data = [agent, ""]
+    TxHelpers.run(0, :create, address, <<>>, 0, data)
     {:ok, address: address, agent: agent}
   end
 

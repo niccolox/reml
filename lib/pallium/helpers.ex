@@ -27,6 +27,7 @@ defmodule Helpers do
   def decode_map(string) do
     string
     |> String.split(",")
+    |> Enum.reject(&(&1 == ""))
     |> Map.new(
       fn pair_str ->
         [k, v] =
