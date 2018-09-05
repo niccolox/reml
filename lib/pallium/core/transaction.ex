@@ -86,10 +86,12 @@ defmodule Pallium.Core.Transaction do
     |> ExRLP.encode(encoding: :hex)
   end
 
-  def send(tx) do
+  def send(%__MODULE__{} = tx) do
     host = Application.get_env(:pallium, :host)
     HTTP.call(host <> @broadcast <> tx, "", [])
   end
+
+  def send(tx), do: tx |> new() |> send()
 
   def check(hash) do
     host = Application.get_env(:pallium, :host)

@@ -7,7 +7,7 @@ defmodule Pallium.Api.Resolvers.Transaction do
   def send_tx(_parent, args, _resolution) do
     type = String.to_atom(args.type)
     data = args.data |> Helpers.from_hex()
-    {0, type, args.to, args.from, args.value, data} |> Tx.new() |> Tx.send()
+    {0, type, args.to, args.from, args.value, data} |> Tx.send()
     {:ok, %{rlp: "123"}}
   end
 
@@ -20,7 +20,6 @@ defmodule Pallium.Api.Resolvers.Transaction do
   """
   def create(_parent, args, _resolution) do
     {0, :create, args.address, <<>>, 0, [args.agent, args.params]}
-    |> Tx.new()
     |> Tx.send()
     |> case do
       {:ok, response} ->
@@ -35,12 +34,12 @@ defmodule Pallium.Api.Resolvers.Transaction do
   end
 
   def mint(_parent, args, _resolution) do
-    {0, :transfer, args.to, "0x", args.value, <<>>} |> Tx.new() |> Tx.send()
+    {0, :transfer, args.to, "0x", args.value, <<>>} |> Tx.send()
     {:ok, %{rlp: "123"}}
   end
 
   def transfer(_parent, args, _resolution) do
-    {0, :transfer, args.to, args.from, args.value, <<>>} |> Tx.new() |> Tx.send()
+    {0, :transfer, args.to, args.from, args.value, <<>>} |> Tx.send()
     {:ok, %{rlp: "123"}}
   end
 
@@ -54,7 +53,6 @@ defmodule Pallium.Api.Resolvers.Transaction do
   """
   def send_msg(_parent, args, _resolution) do
     {0, :send, args.to, "", "", args.message}
-    |> Tx.new()
     |> Tx.send()
     |> case do
       {:ok, response} ->
@@ -89,7 +87,6 @@ defmodule Pallium.Api.Resolvers.Transaction do
   def bid(_parent, args, _resolution) do
     data = Bid.serialize(args)
     {0, :bid, "", args.from, "", data}
-    |> Tx.new()
     |> Tx.send()
     |> case do
       {:ok, response} ->
