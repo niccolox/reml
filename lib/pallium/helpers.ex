@@ -24,6 +24,20 @@ defmodule Helpers do
     |> :erlang.list_to_pid()
   end
 
+  def decode_map(string) do
+    string
+    |> String.split(",")
+    |> Map.new(
+      fn pair_str ->
+        [k, v] =
+          pair_str
+          |> String.split("=")
+          |> Enum.map(&from_hex/1)
+        {String.to_atom(k), v}
+      end
+    )
+  end
+
   def observer do
     ob = fn f ->
       receive do

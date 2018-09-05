@@ -69,9 +69,9 @@ defmodule Pallium.Core.Agent do
     - agent_rlp: Hex string with RLP encoded agent struct
     - address: Address of agent
   """
-  def create(agent_hex_rlp, address) do
+  def create(address, agent_hex_rlp, params) do
     with :ok <- Store.update(address, agent_hex_rlp |> Helpers.from_hex),
-         {:ok, _} <- dispatch(address, :construct),
+         {:ok, _} <- dispatch(address, :construct, params),
          do: {:ok, address}
   end
 

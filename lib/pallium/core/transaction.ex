@@ -87,7 +87,11 @@ defmodule Pallium.Core.Transaction do
   def execute(rlp) do
     tx = rlp |> ExRLP.decode() |> deserialize()
     case tx.type do
-      :create -> Agent.create(tx.data, tx.to)
+      :create ->
+        [agent_rlp, encoded_params] = tx.data
+        params = Helpers.decode_map(encoded_params)
+        Agent.create(tx.to, agent_rlp, params)
+
       :transfer -> Agent.transfer(tx.to, tx.from, tx.value)
       :send -> Agent.send(tx.to, tx.data)
       :bid -> Agent.bid(tx.from, tx.data)

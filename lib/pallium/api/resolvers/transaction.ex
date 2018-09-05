@@ -19,7 +19,11 @@ defmodule Pallium.Api.Resolvers.Transaction do
     - args.agent: Structure of the agent encoded by RLP
   """
   def create(_parent, args, _resolution) do
-    {:ok, response} = {0, :create, args.address, <<>>, 0, args.agent} |> Tx.new() |> Tx.send()
+    {:ok, response} =
+      {0, :create, args.address, <<>>, 0, [args.agent, args.params]}
+      |> Tx.new()
+      |> Tx.send()
+
     {:ok, %{hash:   response["hash"],
             height: response["height"],
             data:   response["deliver_tx"]["data"] }

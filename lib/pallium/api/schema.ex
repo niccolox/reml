@@ -47,6 +47,8 @@ defmodule Pallium.Api.Schema do
     field :create, type: :tx do
       arg :address, non_null(:string)
       arg :agent, :string
+      arg :params, :string
+
       resolve &Transaction.create/3
     end
 
