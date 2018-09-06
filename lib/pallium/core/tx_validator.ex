@@ -1,15 +1,16 @@
 defmodule Pallium.Core.TxValidator do
   alias Pallium.Core.Store
+  alias Pallium.Core.Transaction, as: Tx
 
-  def validate(%{type: :send} = tx) do
+  def validate(%Tx{type: :send} = tx) do
     ensure_agent_exists(tx.to)
   end
 
-  def validate(%{type: :bid} = tx) do
+  def validate(%Tx{type: :bid} = tx) do
     ensure_agent_exists(tx.from)
   end
 
-  def validate(_), do: :ok
+  def validate(%Tx{}), do: :ok
 
   defp ensure_agent_exists(address) do
     case Store.get(address) do

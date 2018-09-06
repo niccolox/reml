@@ -73,15 +73,21 @@ defmodule Pallium.Core.Transaction do
     |> deserialize()
   end
 
-  def new({nonce, type, to, from, value, data}) do
+  def build({nonce, type, to, from, value, data}) do
     %__MODULE__{
       nonce: nonce,
-      type: Atom.to_string(type),
+      type: type,
       to: to,
       from: from,
       value: value,
       data: data
     }
+  end
+
+  def new(raw) do
+    raw
+    |> build()
+    |> Map.update!(:type, &Atom.to_string/1)
     |> serialize()
     |> ExRLP.encode(encoding: :hex)
   end
@@ -104,7 +110,7 @@ defmodule Pallium.Core.Transaction do
       :create ->
         [agent_rlp, encoded_params] = tx.data
         params = Helpers.decode_map(encoded_params)
-        Agent.create(tx.to, agent_rlp, params)
+        Agent.create(agent_rlp, tx.to, params)
 
       :transfer -> Agent.transfer(tx.to, tx.from, tx.value)
       :send -> Agent.send(tx.to, tx.data)

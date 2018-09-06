@@ -23,22 +23,22 @@ defmodule AgentTest do
   end
 
   test "creates agent to Store and gets it", context do
-    code =
+    {:ok, address} =
       context.code
       |> Helpers.to_hex()
       |> Agent.new()
-    {:ok, address} = Agent.create(context.address, code, %{})
+      |> Agent.create(context.address, %{})
 
     agent = Agent.get_agent(address)
     assert agent.code == context.code
   end
 
   test "executes construct function from agent code and sets state", context do
-    code =
+    {:ok, address} =
       context.code
       |> Helpers.to_hex()
       |> Agent.new()
-    {:ok, address} = Agent.create(context.address, code, %{})
+      |> Agent.create(context.address, %{})
 
     assert Agent.get_state_value(address, "foo") == "bar"
     assert Agent.get_state_value(address, "hello") == "Hello, world!"
