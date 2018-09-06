@@ -92,12 +92,12 @@ defmodule Pallium.Core.Transaction do
     |> ExRLP.encode(encoding: :hex)
   end
 
-  def send(%__MODULE__{} = tx) do
+  def send(tx) when is_binary(tx) do
     host = Application.get_env(:pallium, :host)
     HTTP.call(host <> @broadcast <> tx, "", [])
   end
 
-  def send(tx), do: tx |> new() |> send()
+  def send(tx) when is_tuple(tx), do: tx |> new() |> send()
 
   def check(hash) do
     host = Application.get_env(:pallium, :host)
