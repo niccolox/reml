@@ -6,7 +6,7 @@ defmodule Pallium.Env do
   alias Pallium.Env.Channel
 
   def deploy_agent(address, code) do
-    agent = String.to_atom("Elixir.#{address}")
+    agent = String.to_atom(address)
 
     case :code.load_binary(agent, 'nofile', code) do
       {:module, module_name} -> module_name
@@ -20,7 +20,7 @@ defmodule Pallium.Env do
 
   def dispatch(agent, state, address, :message, %{action: action, data: data}) do
     try do
-      {:ok, agent.handle(action, data)}
+      {:ok, agent.action(action, data)}
     rescue
       e ->
         Agent.set_state_root_hash(address, state)
