@@ -1,0 +1,19 @@
+construct(_params) do
+  %{a: "1", b: "2"}
+  |> set_state()
+end
+
+action :set, props do
+  [key, value] = String.split(props, "=")
+  set_value(key, value)
+end
+
+action :get, key do
+  get_value(key)
+end
+
+action :set_and_fail, data do
+  [key, value] = String.split(data, "=")
+  set_value(key, value)
+  raise "boom"
+end

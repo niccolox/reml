@@ -1,0 +1,12 @@
+construct(_params) do
+  %{foo: "bar", hello: "Hello, world!"}
+  |> set_state()
+end
+
+action :foo, _data do
+  get_value("foo")
+end
+
+action :hello, _props do
+  get_value("hello") |> Env.in_chan(@self)
+end

@@ -1,8 +1,9 @@
 defmodule TransactionTest do
   use ExUnit.Case
 
+  alias PalliumCore.Core.Agent, as: Ag
   alias Pallium.Core.Agent
-  alias Pallium.Core.Message
+  alias PalliumCore.Core.Message
   alias Pallium.Core.Transaction, as: Tx
 
   doctest Tx
@@ -13,17 +14,9 @@ defmodule TransactionTest do
     {:ok, address: address, code: code}
   end
 
-  test "returns new RLP encoded transaction struct", context do
-    decoded =
-      {0, :create, context.address, <<>>, 0, <<>>}
-      |> Tx.new()
-      |> ExRLP.decode(encoding: :hex)
-      |> Tx.deserialize()
-    assert decoded.to == context.address
-  end
-
   test "executes :create type transaction", context do
-    agent_hex_rlp = context.code |> Helpers.to_hex() |> Agent.new()
+    code = context.code
+    agent_hex_rlp = %Ag{code: code} |> Ag.encode(:hex)
     params = ""
     data = [agent_hex_rlp, params]
     TxHelpers.run(0, :create, context.address, <<>>, 0, data)
@@ -32,11 +25,12 @@ defmodule TransactionTest do
   end
 
   test "executes :send transaction", context do
-    agent_hex_rlp = context.code |> Helpers.to_hex() |> Agent.new()
+    code = context.code
+    agent_hex_rlp = %Ag{code: code} |> Ag.encode(:hex)
     params = ""
     data = [agent_hex_rlp, params]
     TxHelpers.run(0, :create, context.address, <<>>, 0, data)
-    msg = Message.new("foo", <<>>)
+    msg = %Message{action: :foo, props: ""} |> Message.encode()
     {:ok, result} = TxHelpers.run(0, :send, context.address, <<>>, 0, msg)
 
     assert result == "bar"

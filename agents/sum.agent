@@ -1,0 +1,16 @@
+construct(agent) do
+  state = %{model: "./examples/add.pb"}
+  set_state(state)
+end
+
+action :run, [x, y] do
+  model = get_value("model")
+  input = %{
+    "a" => Tensor.from_list([String.to_float(x)]),
+    "b" => Tensor.from_list([String.to_float(y)])
+  }
+
+  Flow.run(model, input)
+  |> List.first()
+  |> Float.to_string()
+end

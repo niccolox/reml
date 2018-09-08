@@ -1,26 +1,30 @@
 defmodule Pallium.Api.Resolvers.Transaction do
   @moduledoc false
 
-  alias Pallium.Core.Transaction, as: Tx
-  alias Pallium.Core.Bid
+  alias Pallium.Core.Transaction
+  alias PalliumCore.Core.Transaction, as: Tx
+  alias PalliumCore.Core.Bid
+  alias PalliumCore.Crypto
 
   def send_tx(_parent, args, _resolution) do
-    type = String.to_atom(args.type)
-    data = args.data |> Helpers.from_hex()
-    {0, type, args.to, args.from, args.value, data} |> Tx.send()
-    {:ok, %{rlp: "123"}}
+    %Tx{
+      type: String.to_atom(args.type),
+      to: args.to,
+      from: args.from,
+      value: args.value,
+      data: Crypto.from_hex(args.data)
+    }
+    |> Transaction.send()
+    {:ok, %{rlp: "RLP substituted in #{__MODULE__}!"}}
   end
 
-  @doc """
-  Creates and sends a transaction to create an agent in the Store
-
-  ## Arguments
-    - args.address:   Address of new agent
-    - args.agent: Structure of the agent encoded by RLP
-  """
   def create(_parent, args, _resolution) do
-    {0, :create, args.address, <<>>, 0, [args.agent, args.params]}
-    |> Tx.send()
+    %Tx{
+      type: :create,
+      from: args.address,
+      data: [args.agent, args.params]
+    }
+    |> Transaction.send()
     |> case do
       {:ok, response} ->
         {:ok, %{
@@ -34,13 +38,25 @@ defmodule Pallium.Api.Resolvers.Transaction do
   end
 
   def mint(_parent, args, _resolution) do
-    {0, :transfer, args.to, "0x", args.value, <<>>} |> Tx.send()
-    {:ok, %{rlp: "123"}}
+    %Tx{
+      type: :transfer,
+      to: args.to,
+      from: "0x",
+      value: args.value
+    }
+    |> Transaction.send()
+    {:ok, %{rlp: "RLP substituted in #{__MODULE__}!"}}
   end
 
   def transfer(_parent, args, _resolution) do
-    {0, :transfer, args.to, args.from, args.value, <<>>} |> Tx.send()
-    {:ok, %{rlp: "123"}}
+    %Tx{
+      type: :transfer,
+      to: args.to,
+      from: args.from,
+      value: args.value
+    }
+    |> Transaction.send()
+    {:ok, %{rlp: "RLP substituted in #{__MODULE__}!"}}
   end
 
   @doc """
@@ -52,8 +68,8 @@ defmodule Pallium.Api.Resolvers.Transaction do
     - args.message: Structure of the message encoded by RLP
   """
   def send_msg(_parent, args, _resolution) do
-    {0, :send, args.to, "", "", args.message}
-    |> Tx.send()
+    %Tx{type: :send, to: args.to, data: args.message}
+    |> Transaction.send()
     |> case do
       {:ok, response} ->
         {:ok, %{
@@ -73,7 +89,7 @@ defmodule Pallium.Api.Resolvers.Transaction do
     - args.hash:  Transaction hash
   """
   def check_tx(_parent, args, _resolution) do
-    case Tx.check(args.hash) do
+    case Transaction.check(args.hash) do
       {:ok, response} ->
         {:ok, %{
           hash: response["hash"],
@@ -85,9 +101,9 @@ defmodule Pallium.Api.Resolvers.Transaction do
   end
 
   def bid(_parent, args, _resolution) do
-    data = Bid.serialize(args)
-    {0, :bid, "", args.from, "", data}
-    |> Tx.send()
+    data = Bid.encode(args.bid)
+    %Tx{type: :bid, from: args.from, data: data}
+    |> Transaction.send()
     |> case do
       {:ok, response} ->
         {:ok, %{

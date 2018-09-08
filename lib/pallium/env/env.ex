@@ -5,11 +5,14 @@ defmodule Pallium.Env do
   alias Pallium.Core.Agent
   alias Pallium.Env.Channel
 
+  require Logger
+  require IEx
+
   def deploy_agent(address, code) do
     agent = String.to_atom(address)
 
     case :code.load_binary(agent, 'nofile', code) do
-      {:module, module_name} -> module_name
+      {:module, module_name} -> {:ok, module_name}
       {:error, reason} -> {:error, reason}
     end
   end
@@ -20,9 +23,10 @@ defmodule Pallium.Env do
 
   def dispatch(agent, state, address, :message, %{action: action, data: data}) do
     try do
-      {:ok, agent.action(action, data)}
+      {:ok, agent.action(to_string(action), data)}
     rescue
       e ->
+        Logger.error("Error in agent action: #{inspect e}")
         Agent.set_state_root_hash(address, state)
         {:error, e}
     end

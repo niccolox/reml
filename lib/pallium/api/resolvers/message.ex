@@ -1,7 +1,7 @@
 defmodule Pallium.Api.Resolvers.Message do
   @moduledoc false
 
-  alias Pallium.Core.Message
+  alias PalliumCore.Core.Message
 
   @doc """
   Get new message
@@ -13,6 +13,9 @@ defmodule Pallium.Api.Resolvers.Message do
     - args.props: Props string
   """
   def new(_parent, args, _resolution) do
-    {:ok, %{rlp: Message.new(args.action, args.props)}}
+    rlp =
+      %Message{action: args.action, props: args.props}
+      |> Message.encode()
+    {:ok, %{rlp: rlp}}
   end
 end

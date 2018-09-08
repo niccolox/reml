@@ -3,63 +3,11 @@ defmodule Pallium.Core.Agent do
   Documentation for Pallium Autonomous Intelligent Agents.
   """
   alias MerklePatriciaTree.Trie
-  alias Pallium.Core.{Bid, Message, Store}
+  alias Pallium.Core.Store
   alias Pallium.Env
   alias Pallium.App.Exchange
-
-  @empty_trie MerklePatriciaTree.Trie.empty_trie_root_hash()
-
-  defstruct nonce: 0,
-            balance: 0,
-            state: @empty_trie,
-            code: <<>>
-
-  @type agent :: %__MODULE__{
-          nonce: integer(),
-          balance: integer(),
-          state: Core.trie_root(),
-          code: binary()
-        }
-
-  @spec serialize(agent) :: ExRLP.t()
-  def serialize(agent) do
-    [
-      agent.nonce,
-      agent.balance,
-      agent.state,
-      agent.code
-    ]
-  end
-
-  @spec deserialize(ExRLP.t()) :: agent
-  def deserialize(rlp) do
-    [
-      nonce,
-      balance,
-      state,
-      code
-    ] = rlp
-
-    %__MODULE__{
-      nonce: :binary.decode_unsigned(nonce),
-      balance: :binary.decode_unsigned(balance),
-      state: state,
-      code: code
-    }
-  end
-  @doc """
-  Creates an agent struct
-
-  Return: Hex string with RLP encoded agent struct
-
-  ## Arguments
-    - code: Hex string with code of agent
-  """
-  def new(code \\ <<>>) do
-    %__MODULE__{code: code |> Helpers.from_hex()}
-    |> serialize()
-    |> ExRLP.encode(encoding: :hex)
-  end
+  alias PalliumCore.Core.{Agent, Bid, Message}
+  alias PalliumCore.Crypto
 
   @doc """
   Creates a new entry in the Store with an agent structure and execute construct
@@ -70,7 +18,7 @@ defmodule Pallium.Core.Agent do
     - address: Address of agent
   """
   def create(agent_hex_rlp, address, params) do
-    with :ok <- Store.update(address, agent_hex_rlp |> Helpers.from_hex),
+    with :ok <- Store.update(address, agent_hex_rlp |> Crypto.from_hex()),
          {:ok, _} <- dispatch(address, :construct, params),
          do: {:ok, address}
   end
@@ -86,8 +34,8 @@ defmodule Pallium.Core.Agent do
   def get_agent(address) do
     case Store.get(address) do
       nil -> nil
-      <<>> -> nil
-      agent -> agent |> ExRLP.decode() |> deserialize()
+      "" -> nil
+      agent_rlp -> agent_rlp |> Agent.decode()
     end
   end
 
@@ -100,9 +48,9 @@ defmodule Pallium.Core.Agent do
     with agent <- get_agent(address),
          state <- agent.state do
       if agent.code != <<>> do
-        address
-        |> Env.deploy_agent(agent.code)
-        |> Env.dispatch(state, address, method, data)
+        with {:ok, module} <- Env.deploy_agent(address, agent.code) do
+          Env.dispatch(module, state, address, method, data)
+        end
       end
     end
   end
@@ -129,10 +77,8 @@ defmodule Pallium.Core.Agent do
   end
 
   defp do_transfer(agent, address, value) do
-    agent
-    |> update_balance(agent.balance + value)
-    |> increment_nonce()
-    |> (fn next -> next |> commit(address) end).()
+    %Agent{agent | balance: agent.balance + value, nonce: agent.nonce + 1}
+    |> commit(address)
   end
 
   def get_balance(address) do
@@ -144,17 +90,21 @@ defmodule Pallium.Core.Agent do
 
   def put_state(address, key, value) do
     case get_agent(address) do
-      nil -> nil
+      nil ->
+        nil
+
       agent ->
-        updated_storage_trie = update_state(agent.state, key, value)
-        agent |> update_state(updated_storage_trie.root_hash) |> commit(address)
+        new_state = update_state(agent.state, key, value)
+        %Agent{agent | state: new_state}
+        |> commit(address)
     end
   end
 
   defp update_state(root, key, value) do
     root
     |> store_trie()
-    |> Trie.update(key |> Helpers.keccak(), value |> ExRLP.encode())
+    |> Trie.update(Helpers.keccak(key), ExRLP.encode(value))
+    |> Map.fetch!(:root_hash)
   end
 
   def get_state_value(address, key) do
@@ -172,21 +122,25 @@ defmodule Pallium.Core.Agent do
 
   def set_state_root_hash(address, hash) do
     case get_agent(address) do
-      nil -> nil
+      nil ->
+        nil
+
       agent ->
-        agent
-        |> update_state(hash)
+        %Agent{agent | state: hash}
         |> commit(address)
     end
   end
 
   def bid(address, data) do
     case get_agent(address) do
-      nil -> {:error, :no_agent}
+      nil ->
+        {:error, :no_agent}
+
       _agent ->
         data
-        |> Bid.deserialize()
+        |> Bid.decode()
         |> Exchange.bid(address)
+
         :ok
     end
   end
@@ -200,19 +154,19 @@ defmodule Pallium.Core.Agent do
     |> ExRLP.decode()
   end
 
-  defp increment_nonce(agent) do
-    %__MODULE__{agent | nonce: agent.nonce + 1}
-  end
+  # defp increment_nonce(agent) do
+  #   %__MODULE__{agent | nonce: agent.nonce + 1}
+  # end
 
-  defp update_balance(agent, value) do
-    %__MODULE__{agent | balance: value}
-  end
+  # defp update_balance(agent, value) do
+  #   %__MODULE__{agent | balance: value}
+  # end
 
-  defp update_state(agent, value) do
-    %__MODULE__{agent | state: value}
-  end
+  # defp update_state(agent, value) do
+  #   %__MODULE__{agent | state: value}
+  # end
 
-  defp commit(next_agent, address) do
-    Store.update(address, next_agent |> serialize() |> ExRLP.encode())
+  defp commit(agent, address) do
+    Store.update(address, Agent.encode(agent))
   end
 end

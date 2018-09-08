@@ -1,5 +1,7 @@
 defmodule AgentHelpers do
-  alias Myelin.Compiler
+  alias PalliumCore.Compiler
+  alias PalliumCore.Crypto
+  alias PalliumCore.Core.Agent, as: Ag
   alias Pallium.Core.Agent
 
   def random_address do
@@ -10,14 +12,15 @@ defmodule AgentHelpers do
   end
 
   def agent_code(tmpl_name, address) do
-    {:ok, code} = Compiler.compile_template(tmpl_name, address)
+    {:ok, code} = Compiler.compile_agent(tmpl_name, address)
     code
   end
 
   def create(tmpl_name, address) do
-    agent_code(tmpl_name, address)
-    |> Helpers.to_hex()
-    |> Agent.new()
+    code =
+      agent_code(tmpl_name, address)
+    %Ag{code: code}
+    |> Ag.encode(:hex)
     |> Agent.create(address, %{})
   end
 end

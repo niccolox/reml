@@ -2,6 +2,7 @@ defmodule AgentTest do
   use ExUnit.Case, async: false
 
   alias Pallium.Core.Agent
+  alias PalliumCore.Core.Agent, as: Ag
 
   doctest Agent
 
@@ -13,21 +14,16 @@ defmodule AgentTest do
 
   test "creates new agent struct and encodes/decodes it", context do
     agent_decode =
-      context.code
-      |> Helpers.to_hex()
-      |> Agent.new()
-      |> ExRLP.decode(encoding: :hex)
-      |> Agent.deserialize()
+      %Ag{code: context.code}
+      |> Ag.encode(:hex)
+      |> Ag.decode(:hex)
 
     assert agent_decode.code == context.code
   end
 
   test "creates agent to Store and gets it", context do
     {:ok, address} =
-      context.code
-      |> Helpers.to_hex()
-      |> Agent.new()
-      |> Agent.create(context.address, %{})
+      %Ag{code: context.code} |> Ag.encode(:hex) |> Agent.create(context.address, %{})
 
     agent = Agent.get_agent(address)
     assert agent.code == context.code
@@ -35,10 +31,7 @@ defmodule AgentTest do
 
   test "executes construct function from agent code and sets state", context do
     {:ok, address} =
-      context.code
-      |> Helpers.to_hex()
-      |> Agent.new()
-      |> Agent.create(context.address, %{})
+      %Ag{code: context.code} |> Ag.encode(:hex) |> Agent.create(context.address, %{})
 
     assert Agent.get_state_value(address, "foo") == "bar"
     assert Agent.get_state_value(address, "hello") == "Hello, world!"

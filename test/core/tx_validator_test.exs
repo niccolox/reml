@@ -2,15 +2,19 @@ defmodule TxValidatorTest do
   use ExUnit.Case
 
   alias Pallium.Core.TxValidator
-  alias Pallium.Core.Transaction, as: Tx
+  alias PalliumCore.Core.Transaction, as: Tx
 
   describe ":send" do
     test "requires recepient" do
       address = AgentHelpers.random_address()
       data = ""
       tx =
-        {0, :send, address, nil, 0, data}
-        |> Tx.build()
+        %Tx{
+          type: :send,
+          to: address,
+          data: data
+        }
+
       assert {:agent_missing, address} == TxValidator.validate(tx)
 
       AgentHelpers.create("foo", address)
@@ -24,8 +28,11 @@ defmodule TxValidatorTest do
       address = AgentHelpers.random_address()
       data = ""
       tx =
-        {0, :bid, nil, address, 0, data}
-        |> Tx.build()
+        %Tx{
+          type: :bid,
+          from: address,
+          data: data
+        }
       assert {:agent_missing, address} == TxValidator.validate(tx)
 
       AgentHelpers.create("foo", address)

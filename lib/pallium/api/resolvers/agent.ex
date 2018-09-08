@@ -1,10 +1,14 @@
 defmodule Pallium.Api.Resolvers.Agent do
   @moduledoc false
 
-  alias Pallium.Core.Agent
+  alias PalliumCore.Core.Agent
 
   def new(_parent, args, _resolution) do
-    {:ok, %{rlp: Agent.new(args.code)}}
+    rlp =
+      %Agent{code: args.code, key: args.key}
+      |> Agent.encode()
+
+    {:ok, %{rlp: rlp}}
   end
 
   def get_agent(_parent, args, _resolution) do

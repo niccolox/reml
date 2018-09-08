@@ -1,6 +1,6 @@
 defmodule Pallium.Core.TxValidator do
   alias Pallium.Core.Store
-  alias Pallium.Core.Transaction, as: Tx
+  alias PalliumCore.Core.Transaction, as: Tx
 
   def validate(%Tx{type: :send} = tx) do
     ensure_agent_exists(tx.to)
