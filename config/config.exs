@@ -31,3 +31,5 @@ use Mix.Config
 
 config :pallium,
   host: "http://localhost:26657/"
+
+config :absinthe, log: false
