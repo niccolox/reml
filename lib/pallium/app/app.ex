@@ -6,7 +6,8 @@ defmodule Pallium.App do
   alias ABCI.Types
   alias Pallium.ABCI.Response
   alias Pallium.App.State
-  alias Pallium.Core.Transaction, as: Tx
+  alias PalliumCore.Core.Transaction, as: Tx
+  alias Pallium.Core.TransactionController
   alias Pallium.Core.TxValidator
 
   @code_type_ok 0
@@ -63,7 +64,8 @@ defmodule Pallium.App do
 
   def deliver_tx(req) do
     req.tx
-    |> Tx.execute()
+    |> Tx.decode()
+    |> TransactionController.execute()
     |> Response.deliver_tx()
   end
 

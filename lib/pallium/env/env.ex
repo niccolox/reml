@@ -2,7 +2,7 @@ defmodule Pallium.Env do
   @moduledoc """
   Documentation for Pallium Environment.
   """
-  alias Pallium.Core.Agent
+  alias Pallium.Core.Store
   alias Pallium.Env.Channel
 
   require Logger
@@ -27,25 +27,21 @@ defmodule Pallium.Env do
     rescue
       e ->
         Logger.error("Error in agent action: #{inspect e}")
-        Agent.set_state_root_hash(address, state)
+        Store.reset_state_hash(address, state)
         {:error, e}
     end
   end
 
-  def set_state(address, state) do
-    Agent.set_state(address, state)
-  end
-
   def get_value(address, key) do
-    Agent.get_state_value(address, key)
+    Store.get_state_value!(address, key)
   end
 
   def set_value(address, key, value) do
-    Agent.put_state(address, key, value)
+    Store.update_state_value!(address, key, value)
   end
 
-  def start_process(_address, fun) do
-    Task.Supervisor.async_nolink(AgentProcessSupervisor, fun)
+  def set_state(address, map) do
+    Store.set_state(address, map)
   end
 
   def to_chan(msg, chan) do

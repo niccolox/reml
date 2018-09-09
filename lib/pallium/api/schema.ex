@@ -88,12 +88,7 @@ defmodule Pallium.Api.Schema do
     @desc "Propose bid"
     field :bid, type: :tx do
       arg :from, non_null(:string)
-      arg :ip, non_null(:string)
-      arg :net, non_null(:string)
-      arg :cluster, non_null(:string)
-      arg :device_name, non_null(:string)
-      arg :device_type, non_null(:string)
-      arg :memory_limit, non_null(:string)
+      arg :bid, non_null(:string)
 
       resolve &Transaction.bid/3
     end

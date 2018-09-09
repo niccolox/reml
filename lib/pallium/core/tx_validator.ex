@@ -13,7 +13,7 @@ defmodule Pallium.Core.TxValidator do
   def validate(%Tx{}), do: :ok
 
   defp ensure_agent_exists(address) do
-    case Store.get(address) do
+    case Store.get_agent(address) do
       nil -> {:agent_missing, address}
       _ -> :ok
     end

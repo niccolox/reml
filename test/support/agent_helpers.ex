@@ -1,8 +1,8 @@
 defmodule AgentHelpers do
   alias PalliumCore.Compiler
   alias PalliumCore.Crypto
-  alias PalliumCore.Core.Agent, as: Ag
-  alias Pallium.Core.Agent
+  alias PalliumCore.Core.Agent
+  alias Pallium.Core.AgentController
 
   def random_address do
     {_, pubkey} = Crypto.gen_key_pair()
@@ -19,9 +19,8 @@ defmodule AgentHelpers do
   def create(tmpl_name, address) do
     code =
       agent_code(tmpl_name, address)
-    %Ag{code: code}
-    |> Ag.encode(:hex)
-    |> Agent.create(address, %{})
+    %Agent{code: code}
+    |> AgentController.create(address, %{})
   end
 end
 
