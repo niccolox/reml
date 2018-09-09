@@ -42,7 +42,7 @@ defmodule Pallium.MixProject do
       {:keccakf1600, "~> 2.0.0", hex: :keccakf1600_orig},
       {:matrex, "~> 0.6"},
       {:merkle_patricia_tree, "~> 0.2.7"},
-      {:pallium_core, path: "../pallium_core"},
+      {:pallium_core, github: "neocortexlab/pallium-core"},
       {:poison, "~> 3.1"},
 
       # temporary fix :ranch version until cowboy upgrade to ranch >= 1.6 which is required by thrift
