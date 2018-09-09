@@ -1,7 +1,7 @@
-defmodule StoreTest do
+defmodule Pallium.App.StoreTest do
   use ExUnit.Case
 
-  alias Pallium.Core.Store
+  alias Pallium.App.Store
   alias PalliumCore.Core.Agent
 
   doctest Store

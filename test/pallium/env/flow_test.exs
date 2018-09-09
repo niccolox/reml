@@ -1,4 +1,4 @@
-defmodule FlowTest do
+defmodule Pallium.Env.FlowTest do
   use ExUnit.Case
 
   alias Extensor.Tensor

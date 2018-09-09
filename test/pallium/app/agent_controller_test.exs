@@ -1,8 +1,8 @@
-defmodule AgentControllerTest do
+defmodule Pallium.App.AgentControllerTest do
   use ExUnit.Case, async: false
 
-  alias Pallium.Core.AgentController
-  alias Pallium.Core.Store
+  alias Pallium.App.AgentController
+  alias Pallium.App.Store
   alias PalliumCore.Core.Agent
 
   doctest Agent

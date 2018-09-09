@@ -1,4 +1,4 @@
-defmodule Pallium.Core do
+defmodule Pallium.App.Core do
   @moduledoc """
   Documentation for Pallium Blockchain.
   """

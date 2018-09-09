@@ -1,8 +1,8 @@
-defmodule Pallium.Core.AgentController do
+defmodule Pallium.App.AgentController do
   @moduledoc """
   Documentation for Pallium Autonomous Intelligent Agents.
   """
-  alias Pallium.Core.Store
+  alias Pallium.App.Store
   alias Pallium.Env
   alias Pallium.App.Exchange
   alias PalliumCore.Core.{Agent, Bid, Message}

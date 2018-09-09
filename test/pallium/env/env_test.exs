@@ -1,9 +1,9 @@
-defmodule EnvTest do
+defmodule Pallium.Env.EnvTest do
   use ExUnit.Case
   # import ExUnit.CaptureIO
   doctest Pallium.Env
 
-  # alias Pallium.Core.{Agent, Message, Store}
+  # alias Pallium.App.{Agent, Message, Store}
 
   # @add_agent "eeb2be97535a4444950ce7304fc93ad0a216051244dda3021799dbe92edb0f19"
   # @square_agent "f26568ad9e5557a70aace0e699888ddc71c74b31102d5d3ab5161dd496e3f64d"

@@ -2,7 +2,7 @@ defmodule Pallium.Env.Channel do
   @moduledoc """
   Documentation for Pallium Channel.
   """
-  alias Pallium.Core.Address
+  alias Pallium.App.Address
 
   defstruct parties: [],
             owner: <<>>,

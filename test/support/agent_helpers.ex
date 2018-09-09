@@ -2,7 +2,7 @@ defmodule AgentHelpers do
   alias PalliumCore.Compiler
   alias PalliumCore.Crypto
   alias PalliumCore.Core.Agent
-  alias Pallium.Core.AgentController
+  alias Pallium.App.AgentController
 
   def random_address do
     {_, pubkey} = Crypto.gen_key_pair()

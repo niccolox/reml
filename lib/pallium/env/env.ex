@@ -2,7 +2,7 @@ defmodule Pallium.Env do
   @moduledoc """
   Documentation for Pallium Environment.
   """
-  alias Pallium.Core.Store
+  alias Pallium.App.Store
   alias Pallium.Env.Channel
 
   require Logger

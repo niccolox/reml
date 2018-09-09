@@ -2,7 +2,7 @@ defmodule Pallium.Application do
   @moduledoc false
 
   alias Pallium.App.Exchange
-  alias Pallium.Core.Store
+  alias Pallium.App.Store
   alias MerklePatriciaTree.{Test, Trie}
 
   def start(_type, _args) do

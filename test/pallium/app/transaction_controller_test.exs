@@ -1,11 +1,11 @@
-defmodule TransactionControllerTest do
+defmodule Pallium.App.TransactionControllerTest do
   use ExUnit.Case
 
   alias PalliumCore.Core.Agent
   alias PalliumCore.Core.Message
   alias PalliumCore.Core.Transaction, as: Tx
-  alias Pallium.Core.TransactionController
-  alias Pallium.Core.Store
+  alias Pallium.App.TransactionController
+  alias Pallium.App.Store
 
   doctest Tx
 

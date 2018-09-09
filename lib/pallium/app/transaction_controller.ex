@@ -1,8 +1,8 @@
-defmodule Pallium.Core.TransactionController do
+defmodule Pallium.App.TransactionController do
   @moduledoc false
 
   alias JSONRPC2.Clients.HTTP
-  alias Pallium.Core.AgentController
+  alias Pallium.App.AgentController
   alias PalliumCore.Core.Agent
   alias PalliumCore.Core.Bid
   alias PalliumCore.Core.Transaction, as: Tx

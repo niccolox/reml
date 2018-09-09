@@ -1,5 +1,5 @@
-defmodule Pallium.Core.TxValidator do
-  alias Pallium.Core.Store
+defmodule Pallium.App.TxValidator do
+  alias Pallium.App.Store
   alias PalliumCore.Core.Transaction, as: Tx
 
   def validate(%Tx{type: :send} = tx) do

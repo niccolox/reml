@@ -1,4 +1,4 @@
-defmodule Pallium.Core.Store do
+defmodule Pallium.App.Store do
   @moduledoc false
 
   use GenServer

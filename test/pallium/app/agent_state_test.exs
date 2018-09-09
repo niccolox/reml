@@ -1,11 +1,11 @@
-defmodule AgentStateTest do
+defmodule Pallium.App.AgentStateTest do
   use ExUnit.Case
 
   alias PalliumCore.Core.Agent
   alias PalliumCore.Core.Message
   alias PalliumCore.Core.Transaction, as: Tx
-  alias Pallium.Core.Store
-  alias Pallium.Core.TransactionController
+  alias Pallium.App.Store
+  alias Pallium.App.TransactionController
   alias MerklePatriciaTree.Trie
 
   setup do

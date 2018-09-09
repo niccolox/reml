@@ -1,4 +1,4 @@
-defmodule ChannelTest do
+defmodule Pallium.Env.ChannelTest do
   use ExUnit.Case
   import ExUnit.CaptureIO
 

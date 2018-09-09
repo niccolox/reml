@@ -1,7 +1,7 @@
 defmodule Pallium.Api.Resolvers.Transaction do
   @moduledoc false
 
-  alias Pallium.Core.TransactionController
+  alias Pallium.App.TransactionController
   alias PalliumCore.Core.Transaction, as: Tx
   alias PalliumCore.Crypto
 

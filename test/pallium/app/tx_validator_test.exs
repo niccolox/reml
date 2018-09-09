@@ -1,7 +1,7 @@
-defmodule TxValidatorTest do
+defmodule Pallium.App.TxValidatorTest do
   use ExUnit.Case
 
-  alias Pallium.Core.TxValidator
+  alias Pallium.App.TxValidator
   alias PalliumCore.Core.Transaction, as: Tx
 
   describe ":send" do

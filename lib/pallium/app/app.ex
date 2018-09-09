@@ -7,8 +7,8 @@ defmodule Pallium.App do
   alias Pallium.ABCI.Response
   alias Pallium.App.State
   alias PalliumCore.Core.Transaction, as: Tx
-  alias Pallium.Core.TransactionController
-  alias Pallium.Core.TxValidator
+  alias Pallium.App.TransactionController
+  alias Pallium.App.TxValidator
 
   @code_type_ok 0
   # @code_type_encoding_error 1
