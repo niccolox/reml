@@ -12,3 +12,6 @@ tm.init:
 tm.node:
 	tendermint unsafe_reset_all
 	tendermint node --consensus.create_empty_blocks=false
+
+run:
+	elixir --detached --no-halt -S mix run
