@@ -36,10 +36,9 @@ make tm.init
 
 ## Running
 
-Run Pallium client and start Pallium application:
+Run Pallium application:
 ```
 $ iex -S mix
-iex(1)> Pallium.start
 ```
 
 After Pallium application started, run tendermint node in another terminal window:
