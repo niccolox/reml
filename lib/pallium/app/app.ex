@@ -17,11 +17,6 @@ defmodule Pallium.App do
 
   # credo:disable-for-this-file Credo.Check.Design.AliasUsage
 
-  def init do
-    State.start_link()
-    ABCI.start_link(__MODULE__)
-  end
-
   def info(_req) do
     state = State.get()
 

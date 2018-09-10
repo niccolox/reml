@@ -21,4 +21,11 @@ defmodule Pallium.Api.Server do
   def start_link do
     {:ok, _} = Cowboy2.http(Server, [], port: 8080)
   end
+
+  def child_spec(_opts) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, []},
+    }
+  end
 end

@@ -10,4 +10,11 @@ defmodule Pallium.App.State do
   def get do
     Agent.get(:pallium_app, & &1)
   end
+
+  def child_spec(_opts) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, []},
+    }
+  end
 end
