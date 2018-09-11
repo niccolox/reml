@@ -8,22 +8,23 @@ defmodule Pallium.App.TransactionController do
   alias PalliumCore.Core.Transaction, as: Tx
   alias PalliumCore.Crypto
 
-  @broadcast "broadcast_tx_commit?tx=0x"
-  @check_tx "tx?hash=0x"
-
   def send(%Tx{} = tx) do
-    tx_hex = Tx.encode(tx, :hex)
-    http_request(@broadcast <> tx_hex)
+    params = %{tx: Tx.encode(tx, :base64)}
+    rpc_request("broadcast_tx_commit", params)
   end
 
   def check(hash) do
-    http_request(@check_tx <> hash)
+    params = %{hash: hash |> Base.decode16!() |> Base.encode64()}
+    rpc_request("tx", params)
   end
 
-  # TODO: use proper method and params in request
-  defp http_request(request) do
+  @doc """
+  Sends JSONRPC2 request to tendermint
+  Params - map with base64 encoded values
+  """
+  def rpc_request(method, params \\ []) do
     host = Application.get_env(:pallium, :host)
-    HTTP.call(host <> request, "", [])
+    HTTP.call(host, method, params)
   end
 
   def execute(%Tx{} = tx) do

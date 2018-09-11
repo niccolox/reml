@@ -38,7 +38,10 @@ defmodule Pallium.MixProject do
       {:exleveldb, "~> 0.13.1"},
       {:extensor, "~> 0.1"},
       {:hackney, "~> 1.12"},
-      {:jsonrpc2, "~> 1.0.3"},
+
+      # jsonrpc2 requires sending request id as a string, which is implemented in this fork
+      {:jsonrpc2, github: "whitered/jsonrpc2-elixir"},
+
       {:keccakf1600, "~> 2.0.0", hex: :keccakf1600_orig},
       {:matrex, "~> 0.6"},
       {:merkle_patricia_tree, "~> 0.2.7"},
