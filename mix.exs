@@ -33,10 +33,7 @@ defmodule Pallium.MixProject do
       {:absinthe_plug, "~> 1.4.0"},
       {:cowboy, "~> 2.4"},
       {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
-      {:ed25519, "~> 1.3"},
-      {:ex_rlp, "~> 0.3.0"},
       {:exleveldb, "~> 0.13.1"},
-      {:extensor, "~> 0.1"},
       {:hackney, "~> 1.12"},
 
       # jsonrpc2 requires sending request id as a string, which is implemented in this fork
