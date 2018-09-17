@@ -19,7 +19,7 @@ defmodule Pallium.Api.Server do
     init_opts: [schema: Pallium.Api.Schema]
 
   def start_link do
-    {:ok, _} = Cowboy2.http(Server, [], port: 8080)
+    {:ok, _} = Cowboy2.http(Server, [], port: 8787)
   end
 
   def child_spec(_opts) do
