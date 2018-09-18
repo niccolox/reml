@@ -1,4 +1,33 @@
 defmodule Pallium.App.AllocatorTest do
+  @doc """
+  ## @network
+
+  @network defines network topology - bids, grouped by nodes and clusters.
+
+  Each bid is defined by a letter "a", "b", "c" - where "a" stands for lowest configuration,
+  "b" - more powerful device, and so on.
+
+  Each node is defined by a "word", e.g. "2a2b" - node with 2 devices of type "a" + 2 devices
+  of type "b".
+
+  Cluster defined by a line, starting with cluster id.
+
+  So line "5 4c" stands for "cluster with id 5, consisting of one node 4c".
+
+
+  ## @matches
+
+  @matches defines test cases.
+
+  Each line contains given Ask and batches, expected to be returned by Allocator.allocate/2.
+
+  Ask "4b/c" means Ask for 4 devices of type "b" in the same cluster.  Modifier "/n" stands
+  for "same node".
+
+  Batches are separated by " - ". "3x4.1.b" stands for "3 bids of type `b` from cluster 4,
+  node 1"
+  """
+
   use ExUnit.Case
 
   alias Pallium.App.Allocator
@@ -30,7 +59,7 @@ defmodule Pallium.App.AllocatorTest do
   |> String.split("\n", trim: true)
   |> Enum.map(fn s ->
     @s s
-    test "finds correct bids for in #{inspect @s}", context do
+    test "finds correct batches for ask #{inspect(@s)}", context do
       {ask, expected_result} = AllocatorHelpers.parse_test_data(@s)
       result = Allocator.allocate(ask, context.bids) |> AllocatorHelpers.batches_to_string()
       assert expected_result == result
