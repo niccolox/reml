@@ -1,5 +1,5 @@
 defmodule Pallium.App.AllocatorTest do
-  @doc """
+  @moduledoc """
   ## @network
 
   @network defines network topology - bids, grouped by nodes and clusters.

@@ -2,7 +2,6 @@ defmodule Pallium.App.Allocator do
   @moduledoc "Allocates tasks"
 
   alias PalliumCore.Core.Ask
-  alias PalliumCore.Core.Bid
   alias Pallium.App.Allocator.Rate
 
   @doc """
@@ -26,9 +25,7 @@ defmodule Pallium.App.Allocator do
     end)
   end
 
-  @doc """
-  Groups rated bids (i.e. pairs {bid, rate}) by ask's demand (same cluster/same node/global)
-  """
+  # Groups rated bids (i.e. pairs {bid, rate}) by ask's demand (same cluster/same node/global)
   defp group(rated_bids, %Ask{same_node: true}), do: group_by(rated_bids, [:cluster_id, :node_id])
 
   defp group(rated_bids, %Ask{same_node: false, same_cluster: true}), do: group_by(rated_bids, [:cluster_id])
@@ -41,11 +38,9 @@ defmodule Pallium.App.Allocator do
     |> Map.values()
   end
 
-  @doc """
-  Splits list of rated bids into batches. First batch should include enough bids for satisfying
-  the ask's num_device demand. Subsequent batches used to expand set of allowed bids on next
-  iterations in case some of bids will not confirm readiness at their iterations
-  """
+  # Splits list of rated bids into batches. First batch should include enough bids for satisfying
+  # the ask's num_device demand. Subsequent batches used to expand set of allowed bids on next
+  # iterations in case some of bids will not confirm readiness at their iterations
   defp make_batches(rated_bids, min_first_batch) do
     rated_bids
     |> Enum.group_by(fn {_bid, rate} -> rate end, fn {bid, _rate} -> bid end)
