@@ -24,15 +24,31 @@ defmodule FlowTest do
   end
 
   test "join wrapped tasks" do
-    {:ok, host} = Wrapper.start_link
+
+    task = fn pid ->
+      state = Wrapper.get_state(pid)
+      buffer= if state.rank == 0 do
+              data = 100
+              Wrapper.broadcast(pid, data)
+              data
+      else
+        Wrapper.get_buffer(pid)
+      end
+      IO.puts("Hello, my rank #{inspect state.rank} and my buffer: #{inspect buffer}")
+      #IO.puts("Hello i,am #{inspect self()} my parrent is #{inspect pid} and my state #{inspect state}") 
+    end
+
+    {:ok, host} = Wrapper.start_link(task, 4)
     {:ok, w1}   = Wrapper.start_link(host)
     {:ok, w2}   = Wrapper.start_link(host)
     {:ok, w3}   = Wrapper.start_link(host)
 
-    assert Wrapper.get_state(host) == %{rank: 0, workers: [w1, w2, w3]}
-    assert Wrapper.get_state(w1)   == %{rank: 1, workers: [host, w2, w3]}
-    assert Wrapper.get_state(w2)   == %{rank: 2, workers: [host, w1, w3]}
-    assert Wrapper.get_state(w3)   == %{rank: 3, workers: [host, w1, w2]}  
-  end  
+    result_state = %{rank: 0, workers: [host, w1, w2, w3], size: 4, task: task, buffer: ""}
 
+    assert Wrapper.get_state(host) == result_state   
+    assert Wrapper.get_state(w1)   == %{result_state | rank: 0}
+    assert Wrapper.get_state(w2)   == %{result_state | rank: 2}
+    assert Wrapper.get_state(w3)   == %{result_state | rank: 3}
+  end  
+  
 end
