@@ -7,13 +7,21 @@ defmodule Pallium.App.Exchange do
 
   def init(state), do: {:ok, state}
 
-  def bid(bid, address) do
-    GenServer.cast(Exchange, {:bid, bid, address})
+  def add_bid(bid) do
+    GenServer.cast(Exchange, {:add_bid, bid})
+  end
+
+  def get_bids do
+    GenServer.call(Exchange, :get_bids)
   end
 
   # callbacks
 
-  def handle_cast({:bid, bid, address}, state) do
-    {:noreply, [{bid, address} | state]}
+  def handle_cast({:add_bid, bid}, state) do
+    {:noreply, [bid | state]}
+  end
+
+  def handle_call(:get_bids, _from, state) do
+    {:reply, state, state}
   end
 end

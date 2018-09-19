@@ -42,8 +42,7 @@ defmodule Pallium.App.TransactionController do
         AgentController.send(tx.to, tx.data)
 
       :bid ->
-        bid = Bid.decode(tx.data)
-        AgentController.bid(tx.from, bid)
+        Bid.decode(tx.data) |> AgentController.bid()
 
       _ ->
         {:reject, "Execution failure: unknown tx type #{inspect tx.type}"}

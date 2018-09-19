@@ -67,16 +67,7 @@ defmodule Pallium.App.AgentController do
     end
   end
 
-  def bid(address, %Bid{} = bid) do
-    case Store.get_agent(address) do
-      nil ->
-        {:error, :no_agent}
-
-      _agent ->
-        bid
-        |> Exchange.bid(address)
-
-        :ok
-    end
+  def bid(%Bid{} = bid) do
+    Exchange.add_bid(bid)
   end
 end
