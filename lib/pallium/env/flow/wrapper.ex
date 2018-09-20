@@ -2,7 +2,7 @@ defmodule Pallium.Env.Flow.Wrapper do
   @moduledoc false
   use GenServer
   
-  @initial_state %{workers: [], rank: 0, task: nil, size: 0, buffer: ""}
+  @initial_state %{workers: [], rank: 0, task: nil, size: 0, buffer: []}
  
   def start_link(task, size) do
     state = %{@initial_state | task: task, size: size}
@@ -28,7 +28,11 @@ defmodule Pallium.Env.Flow.Wrapper do
   def push(pid, data) do
     GenServer.cast(pid, {:push, data})
   end
- 
+
+  def add(pid, data) do
+    GenServer.cast(pid, {:add, data})
+  end
+
   def run(pid) do
     GenServer.call(pid, :run)
   end  
@@ -36,7 +40,11 @@ defmodule Pallium.Env.Flow.Wrapper do
   def broadcast(pid, data) do
     GenServer.cast(pid, {:broadcast, data})
   end
-
+  
+  def allgather(pid, data) do
+    GenServer.call(pid, {:allgether, data})
+  end
+  
   def init(state) when is_map(state) do
     {:ok, %{state | workers: [self()]}}
   end
@@ -71,11 +79,25 @@ defmodule Pallium.Env.Flow.Wrapper do
     {:noreply, %{state | buffer: data}}
   end
   
+  def handle_call({:allgether, data}, _from, state) do
+    #if state.rank != 0 do
+    #  __MODULE__.add(List.first(state.workers), data)
+    #end
+    #Enum.each(state.workers, fn w -> if w != self() do __MODULE__.add(w, data) end end)
+    {:reply, data, %{state | buffer: state.buffer ++ [data]}}
+  end
+
   def handle_cast({:register, worker}, state) do
     {:noreply, %{state | workers: state.workers ++ [worker]}}
   end  
 
   def handle_call(:get_state, _from, state), do: {:reply, state, state}
-  def handle_call(:get_buffer, _from, state), do: {:reply, state.buffer, state.buffer}
+  def handle_call(:get_buffer, _from, state), do: {:reply, state.buffer, state}
+  
+  def handle_cast({:add, data}, state) do
+    buffer = state.buffer ++ [data]
+    {:noreply, %{state | buffer: buffer}}
+  end
+  
   def handle_cast({:push, data}, state), do: {:noreply, %{state | buffer: data }} 
 end

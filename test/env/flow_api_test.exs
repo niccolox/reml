@@ -6,7 +6,7 @@ defmodule FlowTest do
 
   #doctest Flow
 
-  use ExUnit.Case, async: true
+  use ExUnit.Case
   
   @tag :skip
   setup_all do
@@ -22,7 +22,8 @@ defmodule FlowTest do
     config = [batch_size: 128]
     Model.fit("gpu", 0, context[:model], context[:images], context[:labels], config)
   end
-
+  
+  @tag :skip
   test "join wrapped tasks" do
 
     task = fn pid ->
@@ -50,5 +51,20 @@ defmodule FlowTest do
     assert Wrapper.get_state(w2)   == %{result_state | rank: 2}
     assert Wrapper.get_state(w3)   == %{result_state | rank: 3}
   end  
+
+  test "allgather communicate method" do
+    task = fn pid -> 
+      data = :rand.uniform(100)
+      buffer = Wrapper.allgather(pid, data)
+      IO.puts("My random number is #{data} and my buffer #{inspect buffer, char_lists: :as_lists}")
+    end
+   
+    {:ok, host} = Wrapper.start_link(task, 3)
+    {:ok, w1} = Wrapper.start_link(host)
+    {:ok, w2} = Wrapper.start_link(host)
+
+    ref = Process.monitor(host)
+    assert_receive {:DOWN, ^ref, :process, _, :normal}, 10000
+  end
   
 end

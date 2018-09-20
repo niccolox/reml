@@ -31,3 +31,5 @@ TODO
 
 # Python cache
 /priv/__pycache__/
+
+**/*.swp
