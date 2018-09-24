@@ -1,30 +1,15 @@
 defmodule Pallium.App.TransactionController do
   @moduledoc false
 
-  alias JSONRPC2.Clients.HTTP
   alias Pallium.App.AgentController
+  alias Pallium.Tendermint.RPC
   alias PalliumCore.Core.Agent
   alias PalliumCore.Core.Bid
   alias PalliumCore.Core.Transaction, as: Tx
   alias PalliumCore.Crypto
 
   def send(%Tx{} = tx) do
-    params = %{tx: Tx.encode(tx, :base64)}
-    rpc_request("broadcast_tx_commit", params)
-  end
-
-  def check(hash) do
-    params = %{hash: hash |> Base.decode16!() |> Base.encode64()}
-    rpc_request("tx", params)
-  end
-
-  @doc """
-  Sends JSONRPC2 request to tendermint
-  Params - map with base64 encoded values
-  """
-  def rpc_request(method, params \\ []) do
-    host = Application.get_env(:pallium, :host)
-    HTTP.call(host, method, params)
+    RPC.broadcast_tx_commit(tx)
   end
 
   def execute(%Tx{} = tx) do

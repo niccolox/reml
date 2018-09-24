@@ -7,6 +7,8 @@ defmodule Pallium.Application do
   alias Pallium.App.State
   alias Pallium.App.Store
 
+  alias Pallium.Tendermint.Node
+
   alias MerklePatriciaTree.{Test, Trie}
 
   def start(_type, _args) do
@@ -17,6 +19,7 @@ defmodule Pallium.Application do
       State,
       {ABCI, App},
       Server,
+      Node,
     ]
     Supervisor.start_link(children, strategy: :one_for_one)
   end

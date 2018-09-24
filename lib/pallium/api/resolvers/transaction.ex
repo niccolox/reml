@@ -1,6 +1,7 @@
 defmodule Pallium.Api.Resolvers.Transaction do
   @moduledoc false
 
+  alias Pallium.Tendermint.RPC
   alias Pallium.App.TransactionController
   alias PalliumCore.Core.Transaction, as: Tx
   alias PalliumCore.Crypto
@@ -90,7 +91,7 @@ defmodule Pallium.Api.Resolvers.Transaction do
     - args.hash:  Transaction hash
   """
   def check_tx(_parent, args, _resolution) do
-    case TransactionController.check(args.hash) do
+    case RPC.tx(args.hash) do
       {:ok, response} ->
         {:ok, %{
           hash: response["hash"],
