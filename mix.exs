@@ -46,7 +46,7 @@ defmodule Pallium.MixProject do
       {:poison, "~> 3.1"},
       {:export, "~> 0.1.0"},
       {:ipfs_api_ex, github: "neocortexlab/ipfs-api-ex"},
-
+      {:gen_stage, "~> 0.14"},
       # temporary fix :ranch version until cowboy upgrade to ranch >= 1.6 which is required by thrift
       # TODO: remove :ranch dep later!
       {:ranch, "~> 1.6", override: true},
