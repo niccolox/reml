@@ -1,9 +1,9 @@
-defmodule Pallium.App.Allocator.RateTest do
+defmodule Pallium.App.Task.BidRateTest do
   use ExUnit.Case
 
   alias PalliumCore.Core.Ask
   alias PalliumCore.Core.Bid
-  alias Pallium.App.Allocator.Rate
+  alias Pallium.App.Task.BidRate, as: Rate
 
   test "rates bids" do
     ask = %Ask{min_memory: 1000, device_type: :cpu}

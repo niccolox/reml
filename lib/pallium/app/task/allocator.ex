@@ -1,14 +1,18 @@
-defmodule Pallium.App.Allocator do
+defmodule Pallium.App.Task.Allocator do
   @moduledoc "Allocates tasks"
 
   alias PalliumCore.Core.Ask
-  alias Pallium.App.Allocator.Rate
+  alias Pallium.App.Task.BidRate, as: Rate
 
   @doc """
   Returns list of batches, each batch is a list of bids, suitable for responding
   to given ask on specific iteration
   """
-  def allocate(ask, bids, iteration), do: allocate(ask, bids) |> Enum.at(iteration)
+  def allocate(ask, bids, iteration) do
+    allocate(ask, bids)
+    |> Enum.take(iteration + 1)
+    |> List.flatten()
+  end
 
   def allocate(ask, bids) do
     bids

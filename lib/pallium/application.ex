@@ -3,7 +3,9 @@ defmodule Pallium.Application do
 
   alias Pallium.Api.Server
   alias Pallium.App
-  alias Pallium.App.Exchange
+  alias Pallium.App.Task.BidStorage
+  alias Pallium.App.Task.TaskStorage
+  alias Pallium.App.Task.ConfirmationStorage
   alias Pallium.App.State
   alias Pallium.App.Store
 
@@ -15,7 +17,9 @@ defmodule Pallium.Application do
     children = [
       {Task.Supervisor, name: AgentProcessSupervisor},
       {Store, store_trie()},
-      Exchange,
+      BidStorage,
+      TaskStorage,
+      ConfirmationStorage,
       State,
       {ABCI, App},
       Server,

@@ -3,8 +3,8 @@ defmodule Pallium.App.AgentController do
   Documentation for Pallium Autonomous Intelligent Agents.
   """
   alias Pallium.App.Store
+  alias Pallium.App.Task.BidStorage
   alias Pallium.Env
-  alias Pallium.App.Exchange
   alias PalliumCore.Core.{Agent, Bid, Message}
 
   @doc """
@@ -68,6 +68,6 @@ defmodule Pallium.App.AgentController do
   end
 
   def bid(%Bid{} = bid) do
-    Exchange.add_bid(bid)
+    BidStorage.add_bid(bid)
   end
 end

@@ -1,4 +1,4 @@
-defmodule Pallium.App.Allocator.Rate do
+defmodule Pallium.App.Task.BidRate do
   @moduledoc """
   Calculates rationality of fulfiling ask with given bid
 

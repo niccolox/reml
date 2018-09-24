@@ -11,6 +11,10 @@ defmodule Pallium.App.State do
     Agent.get(:pallium_app, & &1)
   end
 
+  def last_block_height do
+    Agent.get(:pallium_app, &(&1.last_block_height))
+  end
+
   def child_spec(_opts) do
     %{
       id: __MODULE__,

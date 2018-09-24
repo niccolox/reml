@@ -30,7 +30,7 @@ defmodule Pallium.App.AllocatorTest do
 
   use ExUnit.Case
 
-  alias Pallium.App.Allocator
+  alias Pallium.App.Task.Allocator
 
   @network """
   1 a

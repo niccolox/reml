@@ -2,8 +2,11 @@ defmodule Pallium.Env do
   @moduledoc """
   Documentation for Pallium Environment.
   """
-  alias Pallium.App.Store
   alias Pallium.Env.Channel
+  alias Pallium.App.State
+  alias Pallium.App.Store
+  alias Pallium.App.Task
+  alias Pallium.App.Task.TaskController
 
   require Logger
   require IEx
@@ -42,6 +45,16 @@ defmodule Pallium.Env do
 
   def set_state(address, map) do
     Store.set_state(address, map)
+  end
+
+  def start_task(from, to, task) do
+    %Task{
+      from: from,
+      to: to,
+      task: task,
+      created_at: State.last_block_height(),
+    }
+    |> TaskController.add_task()
   end
 
   def to_chan(msg, chan) do

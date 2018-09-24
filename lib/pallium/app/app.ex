@@ -4,11 +4,12 @@ defmodule Pallium.App do
   """
 
   alias ABCI.Types
+  alias PalliumCore.Core.Transaction, as: Tx
   alias Pallium.ABCI.Response
   alias Pallium.App.State
-  alias PalliumCore.Core.Transaction, as: Tx
   alias Pallium.App.TransactionController
   alias Pallium.App.TxValidator
+  alias Pallium.App.Task.TaskController
 
   @code_type_ok 0
   # @code_type_encoding_error 1
@@ -36,6 +37,7 @@ defmodule Pallium.App do
   end
 
   def end_block(_req) do
+    TaskController.check_unassigned_tasks()
     Types.ResponseEndBlock.new(code: @code_type_ok)
   end
 

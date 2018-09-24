@@ -2,6 +2,8 @@ defmodule Pallium.App.TransactionController do
   @moduledoc false
 
   alias Pallium.App.AgentController
+  alias Pallium.App.Task
+  alias Pallium.App.Task.TaskController
   alias Pallium.Tendermint.RPC
   alias PalliumCore.Core.Agent
   alias PalliumCore.Core.Bid
@@ -28,6 +30,12 @@ defmodule Pallium.App.TransactionController do
 
       :bid ->
         Bid.decode(tx.data) |> AgentController.bid()
+
+      :confirm ->
+        [bid_rlp, task_rlp] = tx.data
+        bid = Bid.decode(bid_rlp)
+        task = Task.decode(task_rlp)
+        TaskController.new_confirmation(bid, task)
 
       _ ->
         {:reject, "Execution failure: unknown tx type #{inspect tx.type}"}
