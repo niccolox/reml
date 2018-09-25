@@ -33,6 +33,7 @@ defmodule Pallium.MixProject do
       {:absinthe_plug, "~> 1.4.0"},
       {:cowboy, "~> 2.4"},
       {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
+      {:distillery, "~> 2.0"},
       {:exleveldb, "~> 0.13.1"},
       {:hackney, "~> 1.12"},
 
@@ -40,7 +41,6 @@ defmodule Pallium.MixProject do
       {:jsonrpc2, github: "whitered/jsonrpc2-elixir"},
 
       {:keccakf1600, "~> 2.0.0", hex: :keccakf1600_orig},
-      {:matrex, "~> 0.6"},
       {:merkle_patricia_tree, "~> 0.2.7"},
       {:pallium_core, github: "neocortexlab/pallium-core"},
       {:poison, "~> 3.1"},
