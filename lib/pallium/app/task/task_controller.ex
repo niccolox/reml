@@ -52,6 +52,7 @@ defmodule Pallium.App.Task.TaskController do
       nil -> :noop
       bids when is_list(bids) -> run_task(task, bids)
     end
+    :ok
   end
 
   defp run_task(task, [master_bid | worker_bids]) do
