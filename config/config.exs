@@ -31,7 +31,7 @@ use Mix.Config
 
 config :pallium,
   host: "http://localhost:26657/",
-  tendermint_priv_validator: System.get_env("TENDERMINT_PRIV_VALIDATOR") || "~/.tendermint/config/priv_validator.json"
+  tendermint_priv_validator: System.get_env("TENDERMINT_PRIV_VALIDATOR") || "config/priv_validator.json"
 
 
 config :absinthe, log: false
