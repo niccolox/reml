@@ -3,10 +3,11 @@ defmodule Pallium.Api.Schema do
 
   use Absinthe.Schema
 
-  alias Pallium.Api.Resolvers.{Agent, Transaction, Message}
+  alias Pallium.Api.Resolvers.{Agent, Message, Tendermint, Transaction}
 
   import_types Pallium.Api.Schema.AgentTypes
   import_types Pallium.Api.Schema.TransactionTypes
+  import_types Pallium.Api.Schema.TendermintTypes
 
   query do
     @desc "Get agent"
@@ -27,6 +28,11 @@ defmodule Pallium.Api.Schema do
         arg :action, non_null(:string)
         arg :props, non_null(:string)
         resolve &Message.new/3
+    end
+
+    @desc "Tendermint validator public key"
+    field :tm_pub_key, :key do
+      resolve &Tendermint.pub_key/3
     end
   end
 

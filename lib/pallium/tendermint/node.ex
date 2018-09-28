@@ -3,11 +3,12 @@ defmodule Pallium.Tendermint.Node do
 
   alias PalliumCore.Crypto
 
-  @node_config Application.get_env(:pallium, :tendermint_priv_validator)
+  @tm_home Application.get_env(:pallium, :tendermint_home)
 
   def start_link(_) do
     node_cfg =
-      @node_config
+      @tm_home
+      |> Path.join("config/priv_validator.json")
       |> Path.expand()
       |> File.read!()
       |> Poison.decode!()
@@ -15,8 +16,8 @@ defmodule Pallium.Tendermint.Node do
     state =
       %{
         address: node_cfg["address"] |> String.downcase() |> Crypto.from_hex(),
-        priv_key: node_cfg["priv_key"]["value"],
-        pub_key: node_cfg["pub_key"]["value"],
+        priv_key: node_cfg["priv_key"],
+        pub_key: node_cfg["pub_key"],
       }
     Agent.start_link(fn -> state end, name: __MODULE__)
   end
