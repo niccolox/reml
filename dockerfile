@@ -23,8 +23,6 @@ ENV SKIP_PHOENIX=${SKIP_PHOENIX} \
     APP_VSN=${APP_VSN} \
     MIX_ENV=${MIX_ENV}
 
-# By convention, /opt is typically used for applications
-WORKDIR /opt/app
 
 # This step installs all the build tools we'll need
 RUN apk update && \
@@ -33,9 +31,20 @@ RUN apk update && \
     nodejs \
     yarn \
     git \
+    curl \
     build-base && \
   mix local.rebar --force && \
   mix local.hex --force
+
+WORKDIR /opt/tm
+
+RUN curl -o tendermint.zip -L https://github.com/tendermint/tendermint/releases/download/v0.22.8/tendermint_0.22.8_linux_amd64.zip
+RUN unzip tendermint.zip
+RUN rm tendermint.zip
+RUN ./tendermint init
+
+# By convention, /opt is typically used for applications
+WORKDIR /opt/app
 
 # This copies our app source code into the build container
 COPY . .
@@ -43,8 +52,10 @@ COPY . .
 RUN mix do deps.clean --all, deps.get, deps.compile, compile
 
 ENV REPLACE_OS_VARS=true \
-    APP_NAME=${APP_NAME}
+    APP_NAME=${APP_NAME} \
+    TENDERMINT_PRIV_VALIDATOR=/root/.tendermint/config/priv_validator.json
 
 
 # CMD trap 'exit' INT; /opt/app/bin/${APP_NAME} foreground
-CMD iex -S mix
+# CMD iex -S mix
+CMD /bin/sh
