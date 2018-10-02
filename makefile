@@ -22,9 +22,9 @@ docker.build:
     -t $(APP_NAME):latest .
 
 docker.clean:
-	docker rm `docker ps -a -q`
-	docker rmi -f `docker images -q`
-	docker network prune
+	-docker rm `docker ps -a -q`
+	-docker rmi -f `docker images -q`
+	-docker network prune -f
 
 docker.tm:
 	docker exec -it node$(NODE) /opt/tm/tendermint node
