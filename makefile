@@ -36,6 +36,6 @@ docker.sh:
 	docker exec -it node$(NODE) /bin/sh
 
 tmux.node:
-	tmux new -d -s $(NODE) 'NODE=node$(NODE) make docker.tm; read' \; \
-		split-window -h -d 'NODE=node$(NODE) make docker.app; read'\; \
+	tmux new -d -s node$(NODE) 'NODE=$(NODE) make docker.tm; read' \; \
+		split-window -h -d 'NODE=$(NODE) make docker.app; read'\; \
 		attach
