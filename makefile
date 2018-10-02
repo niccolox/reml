@@ -13,8 +13,6 @@ APP_NAME ?= `grep 'app:' mix.exs | sed -e 's/\[//g' -e 's/ //g' -e 's/app://' -e
 APP_VSN ?= `grep 'version:' mix.exs | cut -d '"' -f2`
 BUILD ?= `git rev-parse --short HEAD`
 
-docker: docker.build docker.run
-
 docker.build:
 	docker build --build-arg APP_NAME=$(APP_NAME) \
     --build-arg APP_VSN=$(APP_VSN) \
