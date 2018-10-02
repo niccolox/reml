@@ -68,7 +68,7 @@ defmodule Mix.Tasks.Docker do
   end
 
   defp docker(args, msg) do
-    Logger.debug "docker #{args |> Enum.join(" ")}"
+    # Logger.debug "docker #{args |> Enum.join(" ")}"
     case System.cmd("docker", args) do
       {result, 0} ->
         Logger.info(msg)
