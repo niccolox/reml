@@ -1,4 +1,15 @@
 defmodule Mix.Tasks.Testnet do
+  @shortdoc "Create testnet in docker containers"
+  @moduledoc """
+  Creates docker containers for testnet
+
+  ## Usage:
+
+  mix testnet start - create containers for each node
+
+  mix testnet stop  - stop all containers
+  """
+
   use Mix.Task
 
   require Logger
