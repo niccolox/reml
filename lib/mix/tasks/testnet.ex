@@ -44,8 +44,8 @@ defmodule Mix.Tasks.Testnet do
 
   defp update_genesis_file do
     genesis_file =
-      @nodes
-      |> Enum.map(&Docker.get_validator_key/1)
+      fn node -> Docker.get_validator_key(node) end
+      |> async_nodes()
       |> Enum.map(&(%{name: "", power: "10", pub_key: &1}))
       |> Poison.encode!()
       |> build_genesis_file()
