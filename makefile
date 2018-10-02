@@ -1,10 +1,3 @@
-docker.init:
-	docker run -it --rm -v "/tmp:/tendermint" tendermint/tendermint init
-
-docker.node:
-	docker run -it --rm -v "/tmp:/tendermint" tendermint/tendermint unsafe_reset_all
-	docker run -it --rm -v "/tmp:/tendermint" tendermint/tendermint node --consensus.create_empty_blocks=false
-
 tm.init:
 	rm -rf ~/.tendermint
 	tendermint init
@@ -28,12 +21,21 @@ docker.build:
     -t $(APP_NAME):$(APP_VSN)-$(BUILD) \
     -t $(APP_NAME):latest .
 
-docker.run:
-	docker run --env-file config/docker.env \
-    -v /Users/dmitryzhelnin/projects/neocortexlab/pallium/lib:/opt/app/lib \
-    --expose 4000 -p 4000:4000 \
-    --rm -it $(APP_NAME):latest
-
 docker.clean:
 	docker rm `docker ps -a -q`
 	docker rmi -f `docker images -q`
+	docker network prune
+
+docker.tm:
+	docker exec -it node$(NODE) /opt/tm/tendermint node
+
+docker.app:
+	docker exec -it node$(NODE) iex -S mix
+
+docker.sh:
+	docker exec -it node$(NODE) /bin/sh
+
+tmux.node:
+	tmux new -d -s $(NODE) 'NODE=node$(NODE) make docker.tm; read' \; \
+		split-window -h -d 'NODE=node$(NODE) make docker.app; read'\; \
+		attach

@@ -32,6 +32,7 @@ RUN apk update && \
     yarn \
     git \
     curl \
+    vim \
     build-base && \
   mix local.rebar --force && \
   mix local.hex --force
@@ -41,7 +42,6 @@ WORKDIR /opt/tm
 RUN curl -o tendermint.zip -L https://github.com/tendermint/tendermint/releases/download/v0.22.8/tendermint_0.22.8_linux_amd64.zip
 RUN unzip tendermint.zip
 RUN rm tendermint.zip
-RUN ./tendermint init
 
 # By convention, /opt is typically used for applications
 WORKDIR /opt/app
@@ -51,11 +51,11 @@ COPY . .
 
 RUN mix do deps.clean --all, deps.get, deps.compile, compile
 
-ENV REPLACE_OS_VARS=true \
-    APP_NAME=${APP_NAME} \
-    TENDERMINT_PRIV_VALIDATOR=/root/.tendermint/config/priv_validator.json
+# ENV REPLACE_OS_VARS=true \
+#     APP_NAME=${APP_NAME} \
 
+# RUN elixir --sname pallium_app -S mix run
 
 # CMD trap 'exit' INT; /opt/app/bin/${APP_NAME} foreground
 # CMD iex -S mix
-CMD /bin/sh
+# CMD /bin/sh

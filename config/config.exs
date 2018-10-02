@@ -34,4 +34,4 @@ config :pallium,
   tendermint_home: System.get_env("TENDERMINT_HOME") || "~/.tendermint"
 
 
-config :absinthe, log: false
+# config :absinthe, log: false

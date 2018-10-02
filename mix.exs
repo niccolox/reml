@@ -51,6 +51,7 @@ defmodule Pallium.MixProject do
       {:ranch, "~> 1.6", override: true},
 
       {:sage, "~> 0.4.0"},
+      {:temp, "~> 0.4"},
     ]
   end
 end

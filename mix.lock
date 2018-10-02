@@ -47,6 +47,7 @@
   "ranch": {:hex, :ranch, "1.6.1", "2609724c9a7e163ca716a46c9087e037db4262935f5d866122ba158ed917c233", [:rebar3], [], "hexpm"},
   "sage": {:hex, :sage, "0.4.0", "b244f17cd185536a3ead64bec7c728d4b4812ee8d1b2aa600b66a791f6f3c259", [:mix], [], "hexpm"},
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.1", "28a4d65b7f59893bc2c7de786dec1e1555bd742d336043fe644ae956c3497fbe", [:make, :rebar], [], "hexpm"},
+  "temp": {:hex, :temp, "0.4.5", "c62ee92c778ddebb2738212fecea372f1a9beba10bacbd7e54e7efe29357a82e", [:mix], [], "hexpm"},
   "tesla": {:hex, :tesla, "1.0.0", "94a9059456d51266f3d40b75ff6be3d18496072ce5ffaabad03d6c00f065cfd1", [:mix], [{:exjsx, ">= 3.0.0", [hex: :exjsx, repo: "hexpm", optional: true]}, {:fuse, "~> 2.4", [hex: :fuse, repo: "hexpm", optional: true]}, {:hackney, "~> 1.6", [hex: :hackney, repo: "hexpm", optional: true]}, {:ibrowse, "~> 4.4.0", [hex: :ibrowse, repo: "hexpm", optional: true]}, {:jason, ">= 1.0.0", [hex: :jason, repo: "hexpm", optional: true]}, {:mime, "~> 1.0", [hex: :mime, repo: "hexpm", optional: false]}, {:poison, ">= 1.0.0", [hex: :poison, repo: "hexpm", optional: true]}], "hexpm"},
   "thrift": {:git, "https://github.com/pinterest/elixir-thrift.git", "e2a50c554368eb6fd944b746bec8d6af0b07c35c", []},
   "unicode_util_compat": {:hex, :unicode_util_compat, "0.3.1", "a1f612a7b512638634a603c8f401892afbf99b8ce93a45041f8aaca99cadb85e", [:rebar3], [], "hexpm"},
