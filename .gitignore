@@ -33,3 +33,5 @@ TODO
 /priv/__pycache__/
 
 **/*.swp
+**/*.swo
+**/*.swn

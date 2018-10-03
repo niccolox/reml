@@ -36,7 +36,7 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.4-Linux-x86_
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc
 
-RUN pip install --upgrade pip && pip install numpy keras
+RUN pip install --upgrade pip && pip install numpy keras erlport
 
 RUN wget --quiet https://pallium.nyc3.digitaloceanspaces.com/tensorflow-1.10.0-cp36-cp36m-linux_x86_64.whl && \
     pip install tensorflow-1.10.0-cp36-cp36m-linux_x86_64.whl && \
