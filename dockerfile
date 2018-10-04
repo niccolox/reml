@@ -49,6 +49,8 @@ WORKDIR /opt/app
 # This copies our app source code into the build container
 COPY . .
 
+ENV TENDERMINT_PRIV_VALIDATOR=/root/.tendermint/config/priv_validator.json
+
 RUN mix do deps.clean --all, deps.get, deps.compile, compile
 
 # ENV REPLACE_OS_VARS=true \

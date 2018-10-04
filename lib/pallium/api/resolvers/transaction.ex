@@ -2,7 +2,9 @@ defmodule Pallium.Api.Resolvers.Transaction do
   @moduledoc false
 
   alias Pallium.Tendermint.RPC
+  alias Pallium.Tendermint.Node
   alias Pallium.App.TransactionController
+  alias PalliumCore.Core.Bid
   alias PalliumCore.Core.Transaction, as: Tx
   alias PalliumCore.Crypto
 
@@ -103,7 +105,12 @@ defmodule Pallium.Api.Resolvers.Transaction do
   end
 
   def bid(_parent, args, _resolution) do
-    bid_rlp = Crypto.from_hex(args.bid)
+    # bid_rlp = Crypto.from_hex(args.bid)
+    bid_rlp =
+      args.bid
+      |> Bid.decode(:hex)
+      |> update_node_id()
+      |> Bid.encode()
     %Tx{type: :bid, from: args.from, data: bid_rlp}
     |> TransactionController.send()
     |> case do
@@ -115,5 +122,9 @@ defmodule Pallium.Api.Resolvers.Transaction do
       {:error, reason} ->
         {:error, inspect(reason)}
     end
+  end
+
+  defp update_node_id(%Bid{} = bid) do
+    %Bid{bid | node_id: Node.address}
   end
 end
