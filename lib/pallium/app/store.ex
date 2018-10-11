@@ -64,6 +64,10 @@ defmodule Pallium.App.Store do
     end
   end
 
+  def root_hash do
+    GenServer.call(Store, :root_hash)
+  end
+
   # callbacks
 
   def handle_cast({:update_agent, address, agent}, trie) do
@@ -127,6 +131,10 @@ defmodule Pallium.App.Store do
 
       {:reply, :ok, new_trie}
     end)
+  end
+
+  def handle_call(:root_hash, _from, trie) do
+    {:reply, trie.root_hash, trie}
   end
 
   # private

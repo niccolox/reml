@@ -7,6 +7,7 @@ defmodule Pallium.App do
   alias PalliumCore.Core.Transaction, as: Tx
   alias Pallium.ABCI.Response
   alias Pallium.App.State
+  alias Pallium.App.Store
   alias Pallium.App.TransactionController
   alias Pallium.App.TxValidator
   alias Pallium.App.Task.TaskController
@@ -18,7 +19,12 @@ defmodule Pallium.App do
 
   # credo:disable-for-this-file Credo.Check.Design.AliasUsage
 
-  def info(_req) do
+  def handle(message, request) do
+    process(message, request)
+    |> IO.inspect(label: message)
+  end
+
+  def process(:info, _req) do
     state = State.get()
 
     Types.ResponseInfo.new(
@@ -28,45 +34,47 @@ defmodule Pallium.App do
     )
   end
 
-  def init_chain(_req) do
+  def process(:init_chain, _req) do
     Types.ResponseInitChain.new()
   end
 
-  def begin_block(_req) do
+  def process(:begin_block, _req) do
     Types.ResponseBeginBlock.new(code: @code_type_ok)
   end
 
-  def end_block(_req) do
+  def process(:end_block, _req) do
     TaskController.check_unassigned_tasks()
     Types.ResponseEndBlock.new(code: @code_type_ok)
   end
 
-  def commit(_req) do
+  def process(:commit, _req) do
     # response hash state
-    Types.ResponseCommit.new(data: <<>>)
+    # Types.ResponseCommit.new(data: Store.root_hash())
+    Types.ResponseCommit.new(data: "hello")
   end
 
-  def flush(_req) do
+  def process(:flush, _req) do
     Types.ResponseFlush.new()
   end
 
-  def echo(req) do
+  def process(:echo, req) do
     msg = req.message
     Types.ResponseEcho.new(message: msg)
   end
 
-  def set_option(_req) do
+  def process(:set_option, _req) do
     Types.ResponseSetOption.new()
   end
 
-  def deliver_tx(req) do
+  def process(:deliver_tx, req) do
     req.tx
     |> Tx.decode()
+    |> IO.inspect(label: :processing_tx)
     |> TransactionController.execute()
     |> Response.deliver_tx()
   end
 
-  def check_tx(%{tx: tx}) do
+  def process(:check_tx, %{tx: tx}) do
     tx
     |> Tx.decode()
     |> TxValidator.validate()
