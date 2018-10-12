@@ -3,6 +3,7 @@ defmodule Pallium.App.Store do
 
   use GenServer
 
+  # TODO: maybe switch to https://github.com/ZanjeerPlatform/bargad
   alias MerklePatriciaTree.Trie
   alias PalliumCore.Core.Agent
 

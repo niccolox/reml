@@ -29,6 +29,8 @@ defmodule Pallium.ABCI.Response do
 
   def deliver_tx(:ok), do: ResponseDeliverTx.new(code: @deliver_tx_codes.ok)
 
+  def deliver_tx({:ok, result}) when is_atom(result), do: deliver_tx({:ok, to_string(result)})
+
   def deliver_tx({:ok, result}) do
     ResponseDeliverTx.new(
       code: @deliver_tx_codes.ok,
