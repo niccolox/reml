@@ -7,6 +7,7 @@ defmodule Pallium.App.TransactionController do
   alias Pallium.Tendermint.RPC
   alias PalliumCore.Core.Agent
   alias PalliumCore.Core.Bid
+  alias PalliumCore.Core.Message
   alias PalliumCore.Core.Transaction, as: Tx
   alias PalliumCore.Crypto
 
@@ -34,7 +35,8 @@ defmodule Pallium.App.TransactionController do
   end
 
   def execute(%Tx{type: :send} = tx) do
-    AgentController.send(tx.to, tx.data)
+    message = Message.decode(tx.data)
+    AgentController.send(tx.to, message.action, message.props)
   end
 
   def execute(%Tx{type: :bid} = tx) do

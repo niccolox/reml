@@ -49,8 +49,7 @@ defmodule Pallium.App do
 
   def process(:commit, _req) do
     # response hash state
-    # Types.ResponseCommit.new(data: Store.root_hash())
-    Types.ResponseCommit.new(data: "hello")
+    Types.ResponseCommit.new(data: Store.root_hash())
   end
 
   def process(:flush, _req) do

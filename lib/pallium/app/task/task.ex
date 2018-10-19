@@ -8,7 +8,8 @@ defmodule Pallium.App.Task do
     to: "",
     task: "",
     status: :unassigned,
-    created_at: 0
+    created_at: 0,
+    params: []
 
   def age(%Task{created_at: created_at}) do
     State.last_block_height() - created_at

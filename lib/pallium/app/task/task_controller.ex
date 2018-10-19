@@ -1,6 +1,7 @@
 defmodule Pallium.App.Task.TaskController do
   alias PalliumCore.Core.Bid
   alias PalliumCore.Core.Transaction, as: Tx
+  alias Pallium.App.AgentController
   alias Pallium.App.Task
   alias Pallium.App.Task.Allocator
   alias Pallium.App.Task.BidStorage
@@ -24,7 +25,7 @@ defmodule Pallium.App.Task.TaskController do
     task
     |> allocate_bids()
     |> Enum.filter(&current_node?/1)
-    |> Enum.each(&send_confirmation(&1, task))
+    |> Enum.each(&assign(&1, task))
   end
 
   defp allocate_bids(task) do
@@ -35,6 +36,12 @@ defmodule Pallium.App.Task.TaskController do
   defp current_node?(%Bid{node_id: node_id}) do
     current_node = Node.address()
     node_id == current_node
+  end
+
+  #TODO: mark bid as assigned to prevent double-assigning
+  defp assign(bid, task) do
+    send_confirmation(bid, task)
+    TaskStorage.assign(task)
   end
 
   defp send_confirmation(bid, task) do
@@ -60,11 +67,10 @@ defmodule Pallium.App.Task.TaskController do
     Enum.map(worker_bids, &run_node(task, &1, :worker))
   end
 
-  defp run_node(task, bid, mode) do
+  defp run_node(task, bid, _mode) do
     cond do
       bid.node_id == Node.address ->
-        IO.inspect(bid, label: "Starting #{mode} on bid")
-        IO.inspect(task, label: :task)
+        AgentController.send(task.to, task.task, task.params)
 
       true ->
         :noop

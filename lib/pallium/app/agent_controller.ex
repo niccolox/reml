@@ -5,7 +5,7 @@ defmodule Pallium.App.AgentController do
   alias Pallium.App.Store
   alias Pallium.App.Task.BidStorage
   alias Pallium.Env
-  alias PalliumCore.Core.{Agent, Bid, Message}
+  alias PalliumCore.Core.{Agent, Bid}
 
   @doc """
   Creates a new entry in the Store with an agent structure and execute construct
@@ -21,9 +21,8 @@ defmodule Pallium.App.AgentController do
          do: {:ok, address}
   end
 
-  def send(address, rlp_msg) do
-    message = Message.decode(rlp_msg)
-    dispatch(address, :message, %{action: message.action, data: message.props})
+  def send(address, action, props) do
+    dispatch(address, :message, %{action: action, data: props})
   end
 
   defp dispatch(address, method, data) do
