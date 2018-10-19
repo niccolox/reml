@@ -10,6 +10,6 @@ defmodule Pallium.App.Task.BidStorageTest do
       %Bid{device_name: "B"},
     ]
     Enum.each(bids, &BidStorage.add_bid/1)
-    assert [] == bids -- BidStorage.get_bids()
+    assert [] == bids -- BidStorage.get_all()
   end
 end
