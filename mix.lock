@@ -38,7 +38,7 @@
   "neuron": {:hex, :neuron, "0.7.0", "cd9d113633b42afbd957c8ee69aa02512a3976cf62081b9ca9e53ab826ba6a60", [:mix], [{:httpoison, "~> 1.0", [hex: :httpoison, repo: "hexpm", optional: false]}, {:poison, "~> 3.1", [hex: :poison, repo: "hexpm", optional: false]}], "hexpm"},
   "ok_jose": {:hex, :ok_jose, "3.0.0", "6cb32ccf1ce8582f9e4a6fef8cb678ac382b4f82030288f00bf862cb6c535523", [:mix], [], "hexpm"},
   "optimus": {:hex, :optimus, "0.1.8", "4c4b83062fb71683c50e32b9b968a0e76971bb7cbe7512d83333e2feeb436402", [:mix], [{:yamerl, "~> 0.6", [hex: :yamerl, repo: "hexpm", optional: false]}], "hexpm"},
-  "pallium_core": {:git, "https://github.com/neocortexlab/pallium-core.git", "b6570338e76363c4e0b51747f6195aa6724eeebe", []},
+  "pallium_core": {:git, "https://github.com/neocortexlab/pallium-core.git", "5e67c5653c44afa79988325f25858d32b07c28c3", []},
   "parse_trans": {:hex, :parse_trans, "3.2.0", "2adfa4daf80c14dc36f522cf190eb5c4ee3e28008fc6394397c16f62a26258c2", [:rebar3], [], "hexpm"},
   "plug": {:hex, :plug, "1.6.2", "e06a7bd2bb6de5145da0dd950070110dce88045351224bd98e84edfdaaf5ffee", [:mix], [{:cowboy, "~> 1.0.1 or ~> 1.1 or ~> 2.4", [hex: :cowboy, repo: "hexpm", optional: true]}, {:mime, "~> 1.0", [hex: :mime, repo: "hexpm", optional: false]}], "hexpm"},
   "poison": {:hex, :poison, "3.1.0", "d9eb636610e096f86f25d9a46f35a9facac35609a7591b3be3326e99a0484665", [:mix], [], "hexpm"},

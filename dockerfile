@@ -6,7 +6,7 @@ FROM elixir:1.7.2-alpine AS builder
 
 # The following are build arguments used to change variable parts of the image.
 # The name of your application/release (required)
-ARG APP_NAME=pallium
+ARG APP_NAME=reml
 # The version of the application we are building (required)
 ARG APP_VSN=0.1.0
 # The environment to build with
@@ -56,7 +56,7 @@ RUN mix do deps.clean --all, deps.get, deps.compile, compile
 # ENV REPLACE_OS_VARS=true \
 #     APP_NAME=${APP_NAME} \
 
-# RUN elixir --sname pallium_app -S mix run
+# RUN elixir --sname reml_app -S mix run
 
 # CMD trap 'exit' INT; /opt/app/bin/${APP_NAME} foreground
 # CMD iex -S mix

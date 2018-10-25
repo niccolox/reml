@@ -2,7 +2,7 @@ defmodule FlowTest do
   # Before starting the test, run IPFS: ipfs daemon --mount
   use ExUnit.Case
 
-  alias Pallium.Env.Flow.{Model}
+  alias Reml.Env.Flow.{Model}
 
   #doctest Flow
 

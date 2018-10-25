@@ -1,18 +1,21 @@
-defmodule Pallium.MixProject do
+defmodule Reml.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :pallium,
+      app: :reml,
       version: "0.1.0",
       elixir: "~> 1.7",
       description: "Open source decentralized ecosystem for autonomous intelligent agents",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: [
-        maintainers: ["Anton Zhuravlev <anton@pallium.network>"],
+        maintainers: [
+          "Anton Zhuravlev <anton@pallium.network>",
+          "Dmitry Zhelnin <dmitry.zhelnin@gmail.com>",
+        ],
         licenses: ["MIT"],
-        links: %{"GitHub" => "https://github.com/neocortexlab/pallium"}
+        links: %{"GitHub" => "https://github.com/neocortexlab/reml"}
       ]
     ]
   end
@@ -20,7 +23,7 @@ defmodule Pallium.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      mod: {Pallium.Application, []},
+      mod: {Reml.Application, []},
       extra_applications: [:logger]
     ]
   end

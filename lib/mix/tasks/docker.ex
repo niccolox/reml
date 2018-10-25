@@ -29,7 +29,7 @@ defmodule Mix.Tasks.Docker do
       --name #{node.name} \
       --net testnet \
       --hostname #{node.name} \
-      --rm -d pallium:latest
+      --rm -d reml:latest
     )
     |> docker("Started container", node: node)
   end

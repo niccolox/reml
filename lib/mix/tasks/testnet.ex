@@ -81,7 +81,7 @@ defmodule Mix.Tasks.Testnet do
   end
 
   defp read_template(filename) do
-    :pallium
+    :reml
     |> :code.priv_dir()
     |> Path.join("tendermint/" <> filename)
     |> File.read!()

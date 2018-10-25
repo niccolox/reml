@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure your application as:
 #
-#     config :pallium, key: :value
+#     config :reml, key: :value
 #
 # and access this configuration in your application as:
 #
-#     Application.get_env(:pallium, :key)
+#     Application.get_env(:reml, :key)
 #
 # You can also configure a 3rd-party app:
 #
@@ -29,7 +29,7 @@ use Mix.Config
 #
 #     import_config "#{Mix.env}.exs"
 
-config :pallium,
+config :reml,
   host: "http://localhost:26657/",
   tendermint_priv_validator: System.get_env("TENDERMINT_PRIV_VALIDATOR") || "config/priv_validator.json"
 
