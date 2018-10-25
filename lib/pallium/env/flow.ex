@@ -1,13 +1,12 @@
-defmodule Pallium.Env.Flow do
+defmodule Pallium.Env.Backends.Keras do
   @moduledoc """
-  Documentation for TendorFlow models API.
+  Documentation for Keras backend.
   """
   use Export.Python
-  alias Extensor.{Session, Tensor}
 
   def call(function, args \\ []) do
-    {:ok, py} = Python.start(python_path: Path.expand("priv"))
-    Python.call(py, "flow_api", function, args)
+    {:ok, py} = Python.start(python_path: Path.expand("priv/backends"))
+    Python.call(py, "keras", function, args)
   end
 
 end

@@ -4,7 +4,7 @@ MAINTAINER Neocortex R&D "hello@neocortexlab.io"
 
 ENV PATH /opt/conda/bin:$PATH
 ENV GOPATH /go
-ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH 
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
                 wget \
@@ -36,7 +36,7 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.4-Linux-x86_
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc
 
-RUN pip install --upgrade pip && pip install numpy keras erlport
+RUN pip install --upgrade pip && pip install numpy keras erlport opencv-python-headless
 
 RUN wget --quiet https://pallium.nyc3.digitaloceanspaces.com/tensorflow-1.10.0-cp36-cp36m-linux_x86_64.whl && \
     pip install tensorflow-1.10.0-cp36-cp36m-linux_x86_64.whl && \

@@ -50,7 +50,7 @@ defmodule Pallium.MixProject do
       # temporary fix :ranch version until cowboy upgrade to ranch >= 1.6 which is required by thrift
       # TODO: remove :ranch dep later!
       {:ranch, "~> 1.6", override: true},
-
+      {:onnxs, "~> 0.2.0"},
       {:sage, "~> 0.4.0"},
     ]
   end

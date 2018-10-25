@@ -39,6 +39,7 @@
   "myelin": {:git, "https://github.com/neocortexlab/myelin.git", "59119f233e45ca9bcb27bdd4c7bd0532b90c8595", []},
   "neuron": {:hex, :neuron, "0.7.0", "cd9d113633b42afbd957c8ee69aa02512a3976cf62081b9ca9e53ab826ba6a60", [:mix], [{:httpoison, "~> 1.0", [hex: :httpoison, repo: "hexpm", optional: false]}, {:poison, "~> 3.1", [hex: :poison, repo: "hexpm", optional: false]}], "hexpm"},
   "ok_jose": {:hex, :ok_jose, "3.0.0", "6cb32ccf1ce8582f9e4a6fef8cb678ac382b4f82030288f00bf862cb6c535523", [:mix], [], "hexpm"},
+  "onnxs": {:hex, :onnxs, "0.2.0", "232e8c1afdd48e82aff5d9d4f59a7ece53b2c2ac2e7a3b1b8c4db2f13ee0df04", [:mix], [{:protobuf, "~> 0.5.3", [hex: :protobuf, repo: "hexpm", optional: false]}], "hexpm"},
   "optimus": {:hex, :optimus, "0.1.8", "4c4b83062fb71683c50e32b9b968a0e76971bb7cbe7512d83333e2feeb436402", [:mix], [{:yamerl, "~> 0.6", [hex: :yamerl, repo: "hexpm", optional: false]}], "hexpm"},
   "pallium_core": {:git, "https://github.com/neocortexlab/pallium-core.git", "70b4547c0de1ba1ac7f2997df8b4d8ad10a6ab21", []},
   "parse_trans": {:hex, :parse_trans, "3.2.0", "2adfa4daf80c14dc36f522cf190eb5c4ee3e28008fc6394397c16f62a26258c2", [:rebar3], [], "hexpm"},

@@ -1,10 +1,10 @@
 defmodule Pallium.Env.Flow.Producer do
   @moduledoc false
   use GenStage
-  
+
   alias Pallium.Env.Flow.Model
 
-  def start_link(rank) do   
+  def start_link(rank) do
     state = %{
               rank: rank,
               model:  "examples/mnist_keras/model.h5",
@@ -14,10 +14,10 @@ defmodule Pallium.Env.Flow.Producer do
 
     GenStage.start_link(__MODULE__, state)
   end
-  
+
   def train(pid, x, y) do
     GenStage.cast(pid, {:train, x, y})
-  end  
+  end
 
   def init(state), do: {:producer, state}
 
@@ -31,3 +31,4 @@ defmodule Pallium.Env.Flow.Producer do
   def handle_demand(demand, state) do
     {:noreply, [:hello], state}
   end
+end
