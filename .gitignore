@@ -31,3 +31,4 @@ TODO
 
 # Python cache
 /priv/__pycache__/
+python/__pycache__/
