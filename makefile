@@ -40,3 +40,6 @@ tmux.node:
 
 py.console:
 	PYTHONPATH=python python
+
+db.start:
+	cassandra -f
