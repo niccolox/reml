@@ -37,3 +37,6 @@ tmux.node:
 	tmux new -d -s node$(NODE) 'NODE=$(NODE) make docker.tm; read' \; \
 		split-window -h -d 'NODE=$(NODE) make docker.app; read'\; \
 		attach
+
+db.start:
+	cassandra -f

@@ -33,5 +33,4 @@ config :reml,
   host: "http://localhost:26657/",
   tendermint_priv_validator: System.get_env("TENDERMINT_PRIV_VALIDATOR") || Path.expand("~/.tendermint/config/priv_validator.json")
 
-
 # config :absinthe, log: false
