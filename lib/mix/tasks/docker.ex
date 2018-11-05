@@ -54,8 +54,6 @@ defmodule Mix.Tasks.Docker do
   end
 
   def update_config(node, file) do
-    # sed = ~s(sed -i 's/persistent_peers = ""/persistent_peers = "#{peers}"/' #{@tm_config_file})
-    # ["exec", "-i", node.name, "sh", "-c", sed]
     ["cp", file, "#{node.name}:#{@tm_config_file}"]
     |> docker("Updated peers config", node: node)
   end
@@ -68,7 +66,6 @@ defmodule Mix.Tasks.Docker do
   end
 
   defp docker(args, msg, opts \\ []) do
-    # Logger.debug "docker #{args |> Enum.join(" ")}"
     case System.cmd("docker", args) do
       {result, 0} ->
         msg
