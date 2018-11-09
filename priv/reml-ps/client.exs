@@ -9,5 +9,8 @@ model = Path.absname("examples/mnist_keras/model.h5")
 # y = Path.absname("examples/mnist_keras/train_labels.npy")
 #{:ok, weights} = Client.fit(client, model, x, y)
 weights_path = Path.join(["priv", "reml-ps", "weights"]) |> Path.absname()
+model = "model.h5"
+weights_path = "weights"
+IO.inspect([client, model, weights_path, vec], label: :params)
 {:ok, result} = Client.predict(client, model, weights_path, vec)
 IO.inspect(result)

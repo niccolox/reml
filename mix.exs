@@ -44,7 +44,8 @@ defmodule Reml.MixProject do
 
       {:keccakf1600, "~> 2.0.0", hex: :keccakf1600_orig},
       {:merkle_patricia_tree, "~> 0.2.7"},
-      {:pallium_core, github: "neocortexlab/pallium-core"},
+      {:pallium_core, "~> 0.2.0", github: "neocortexlab/pallium-core"},
+      # {:pallium_core, path: "../pallium_core"},
       {:poison, "~> 3.1"},
       {:export, "~> 0.1.0"},
       {:ipfs_api_ex, github: "neocortexlab/ipfs-api-ex"},
