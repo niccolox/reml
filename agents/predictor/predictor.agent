@@ -1,0 +1,29 @@
+alias ReMLService.Binary.Framed.Client
+
+@model_path "/root/model.h5"
+@weights_path "/root/weights"
+
+construct _ do
+end
+
+run vec do
+  docker_context = Env.local_path("predictor")
+  model_file = Env.local_path("predictor/model.h5")
+  weights_file = Env.local_path("predictor/weights")
+
+  {container, port} = Docker.start_container(docker_context)
+  Docker.copy(container, model_file, @model_path)
+  Docker.copy(container, weights_file, @weights_path)
+  Docker.exec(~w(-d #{container} python rms.py))
+  :timer.sleep 2000
+
+  {:ok, client} = Client.start_link("localhost", port, [])
+  {:ok, result} = Client.predict(client, @model_path, @weights_path, vec)
+
+  # TODO: stop docker container automatically
+  Docker.stop_container(container)
+
+  max = Enum.max(result)
+  pos = Enum.find_index(result, &(&1 == max))
+  {pos, max}
+end

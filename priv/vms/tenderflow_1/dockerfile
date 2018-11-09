@@ -1,0 +1,13 @@
+FROM tensorflow/tensorflow:1.11.0-py3
+
+ARG WD=/root
+
+WORKDIR ${WD}
+
+COPY gen-py gen-py
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# CMD python3 rms.py
+# CMD /bin/sh
+ENTRYPOINT /bin/sh

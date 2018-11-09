@@ -57,6 +57,8 @@ defmodule Reml.Env do
     |> TaskController.add_task()
   end
 
+  def local_path(path), do: Path.join("fs", path)
+
   def to_chan(msg, chan) do
     send chan, msg
   end
