@@ -3,7 +3,7 @@ defmodule Reml.Agents.PredictTest do
 
   alias PalliumCore.Compiler
 
-  test "compiles" do
+  test "recognizes handwritten digit" do
     address = "abcdef"
     {:ok, compiled} = Compiler.compile_agent("predictor", address)
     {:module, agent} = Compiler.load_agent(compiled)

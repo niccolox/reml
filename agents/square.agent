@@ -3,7 +3,7 @@ construct(agent) do
   set_state(state)
 end
 
-action :run, [x] do
+run [x] do
   model = get_value("model")
 
   input = %{
