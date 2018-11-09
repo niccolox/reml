@@ -7,17 +7,14 @@ defmodule Reml.Env do
   alias Reml.App.Store
   alias Reml.App.Task
   alias Reml.App.Task.TaskController
+  alias PalliumCore.Compiler
 
   require Logger
   require IEx
 
   def deploy_agent(address, code) do
-    agent = String.to_atom(address)
-
-    case :code.load_binary(agent, 'nofile', code) do
-      {:module, module_name} -> {:ok, module_name}
-      {:error, reason} -> {:error, reason}
-    end
+    :ok = Compiler.load_agent_modules(code)
+    {:ok, String.to_atom(address)}
   end
 
   def dispatch(agent, _state, _address, :construct, params) do
@@ -26,7 +23,7 @@ defmodule Reml.Env do
 
   def dispatch(agent, state, address, :message, %{action: action, data: data}) do
     try do
-      {:ok, agent.action(to_string(action), data)}
+      {:ok, agent.run([action, data])}
     rescue
       e ->
         Logger.error("Error in agent action: #{inspect e}")

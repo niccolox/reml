@@ -27,12 +27,9 @@ defmodule Reml.App.AgentController do
 
   defp dispatch(address, method, data) do
     with agent <- Store.get_agent(address),
-         state <- agent.state do
-      if agent.code != <<>> do
-        with {:ok, module} <- Env.deploy_agent(address, agent.code) do
-          Env.dispatch(module, state, address, method, data)
-        end
-      end
+         state <- agent.state,
+         {:ok, module} <- Env.deploy_agent(address, agent.code) do
+           Env.dispatch(module, state, address, method, data)
     end
   end
 

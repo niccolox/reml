@@ -1,12 +1,6 @@
-defmodule Docker do
+defmodule Reml.Env.Docker do
   require Logger
 
-  # def run_in_container(name, block) do
-  #   {cid, _} = cnt = start_container(name)
-  #   result = block.(cnt)
-  #   stop_container(cid)
-  #   result
-  # end
   def copy(cid, path, dest) do
     ~w(cp #{path} #{cid}:#{dest})
     |> docker("Copying file #{path}")
@@ -27,15 +21,6 @@ defmodule Docker do
     |> docker("Building docker image")
     |> IO.inspect(label: "built image")
   end
-
-  # defp start_container(name) do
-  #   port = find_free_port()
-  #   {:ok, container_id} =
-  #     ~w(run -itd -p #{port}:9090 #{name})
-  #     |> docker("Starting docker container")
-  #   {container_id, port}
-  #   |> IO.inspect(label: :docker_container)
-  # end
 
   def stop_container(cid) do
     ~w(stop #{cid})

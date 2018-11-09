@@ -1,4 +1,5 @@
 alias ReMLService.Binary.Framed.Client
+alias Reml.Env.Docker
 
 @model_path "/root/model.h5"
 @weights_path "/root/weights"

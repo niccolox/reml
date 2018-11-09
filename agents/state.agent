@@ -3,16 +3,16 @@ construct(_params) do
   |> set_state()
 end
 
-action :set, props do
+run [:set, props] do
   [key, value] = String.split(props, "=")
   set_value(key, value)
 end
 
-action :get, key do
+run [:get, key] do
   get_value(key)
 end
 
-action :set_and_fail, data do
+run [:set_and_fail, data] do
   [key, value] = String.split(data, "=")
   set_value(key, value)
   raise "boom"

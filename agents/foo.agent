@@ -3,10 +3,10 @@ construct(_params) do
   |> set_state()
 end
 
-action :foo, _data do
+run _data do
   get_value("foo")
 end
 
-action :hello, _props do
-  get_value("hello") |> Env.in_chan(@self)
-end
+# action :hello, _props do
+#   get_value("hello") |> Env.in_chan(@self)
+# end
