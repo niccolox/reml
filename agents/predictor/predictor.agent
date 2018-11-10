@@ -15,7 +15,6 @@ run vec do
   {container, port} = Docker.start_container(docker_context)
   Docker.copy(container, model_file, @model_path)
   Docker.copy(container, weights_file, @weights_path)
-  Docker.exec(~w(-d #{container} python rms.py))
   :timer.sleep 3000
 
   {:ok, client} = Client.start_link("localhost", port, [])
