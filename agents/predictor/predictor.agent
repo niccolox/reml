@@ -16,7 +16,7 @@ run vec do
   Docker.copy(container, model_file, @model_path)
   Docker.copy(container, weights_file, @weights_path)
   Docker.exec(~w(-d #{container} python rms.py))
-  :timer.sleep 2000
+  :timer.sleep 3000
 
   {:ok, client} = Client.start_link("localhost", port, [])
   {:ok, result} = Client.predict(client, @model_path, @weights_path, vec)
