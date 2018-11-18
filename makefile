@@ -6,6 +6,9 @@ tm.node:
 	tendermint unsafe_reset_all
 	tendermint node --consensus.create_empty_blocks=false
 
+TM_PRIV_VALIDATOR ?= ~/.tendermint/config/priv_validator.json
+NODE_ADDRESS = `cat $(TM_PRIV_VALIDATOR) | grep '"address"' | sed 's/"address": "\([^"]*\)",/\1/'`
+
 run:
 	elixir --detached --no-halt -S mix run
 
@@ -28,7 +31,7 @@ docker.tm:
 	docker exec -it node$(NODE) /opt/tm/tendermint node
 
 docker.app:
-	docker exec -it node$(NODE) iex -S mix
+	docker exec -it node$(NODE) iex --sname $(NODE_ADDRESS) -S mix
 
 docker.sh:
 	docker exec -it node$(NODE) /bin/sh
