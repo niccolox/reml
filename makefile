@@ -31,7 +31,8 @@ docker.tm:
 	docker exec -it node$(NODE) /opt/tm/tendermint node
 
 docker.app:
-	docker exec -it node$(NODE) iex --sname $(NODE_ADDRESS) -S mix
+	docker exec -it node$(NODE) /bin/sh start_app.sh
+	# docker exec -it node$(NODE) iex --sname $(NODE_ADDRESS) -S mix
 
 docker.sh:
 	docker exec -it node$(NODE) /bin/sh

@@ -1,5 +1,4 @@
 defmodule Mix.Tasks.Docker do
-
   require Logger
 
   @tm_home "/root/.tendermint"
@@ -22,10 +21,12 @@ defmodule Mix.Tasks.Docker do
 
   def create_container(node) do
     lib_dir = Path.expand("lib")
+
     ~w(
       run --env-file config/docker.env \
       -v #{lib_dir}:/opt/app/lib \
-      --expose #{node.port} -p #{node.port}:8080 \
+      --expose #{node.port} \
+      -p #{node.port}:8080 \
       --name #{node.name} \
       --net testnet \
       --hostname #{node.name} \
@@ -39,10 +40,25 @@ defmodule Mix.Tasks.Docker do
     |> docker("Tendermint initialized", node: node)
   end
 
+  def set_primary_node_id(node, primary_id) do
+    %{node_id: node_id} = get_node_id(node)
+
+    run_cmd = """
+      #!/bin/sh
+      PRIMARY_NODE_ID=#{primary_id} iex --sname #{node_id} --cookie cookie -S mix
+    """
+
+    echo_cmd = "echo '#{run_cmd}' >> start_app.sh"
+
+    ["exec", node.name, "sh", "-c", echo_cmd]
+    |> docker("Set start app script", node: node)
+  end
+
   def get_validator_key(node) do
     {:ok, result} =
       ~w(exec #{node.name} cat #{@tm_priv_validator_file})
       |> docker("Taken validator key", node: node)
+
     result
     |> Poison.decode!()
     |> Map.get("pub_key")
@@ -59,9 +75,13 @@ defmodule Mix.Tasks.Docker do
   end
 
   def get_node_id(node) do
+    cat_cmd =
+      ~s(cat #{@tm_priv_validator_file} | grep '"address"' | sed 's/\\s*"address": "\\\([^"]*\\\)",/\\1/')
+
     {:ok, node_id} =
-      ~w(exec #{node.name} /opt/tm/tendermint show_node_id)
+      ["exec", node.name, "sh", "-c", cat_cmd]
       |> docker("Got node id", node: node)
+
     Map.put(node, :node_id, node_id)
   end
 
@@ -71,7 +91,9 @@ defmodule Mix.Tasks.Docker do
         msg
         |> format(opts)
         |> Logger.info()
+
         {:ok, result |> String.trim_trailing("\n")}
+
       {out, code} ->
         cmd = "docker" <> Enum.join(args, " ")
         Logger.error(cmd <> " returned " <> inspect({out, code}))
@@ -80,6 +102,5 @@ defmodule Mix.Tasks.Docker do
   end
 
   defp format(msg, []), do: msg
-  defp format(msg, [node: %{name: name}]), do: "[#{name}] #{msg}"
-
+  defp format(msg, node: %{name: name}), do: "[#{name}] #{msg}"
 end

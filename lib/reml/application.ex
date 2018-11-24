@@ -9,7 +9,7 @@ defmodule Reml.Application do
   alias Reml.App.State
   alias Reml.App.Store
 
-  alias Reml.Tendermint.Node
+  alias Reml.Tendermint.TMNode
 
   alias MerklePatriciaTree.{Test, Trie}
 
@@ -23,7 +23,7 @@ defmodule Reml.Application do
       State,
       {ABCI, App},
       Server,
-      Node,
+      TMNode,
     ]
     Supervisor.start_link(children, strategy: :one_for_one)
   end

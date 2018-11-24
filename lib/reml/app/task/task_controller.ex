@@ -8,7 +8,7 @@ defmodule Reml.App.Task.TaskController do
   alias Reml.App.Task.ConfirmationStorage
   alias Reml.App.Task.TaskStorage
   alias Reml.App.TransactionController
-  alias Reml.Tendermint.Node
+  alias Reml.Tendermint.TMNode
 
   def add_task(task) do
     TaskStorage.add_task(task)
@@ -34,7 +34,7 @@ defmodule Reml.App.Task.TaskController do
   end
 
   defp current_node?(%Bid{node_id: node_id}) do
-    current_node = Node.address()
+    current_node = TMNode.address()
     node_id == current_node
   end
 
@@ -47,7 +47,7 @@ defmodule Reml.App.Task.TaskController do
   defp send_confirmation(bid, task) do
     %Tx{
       type: :confirm,
-      from: Node.address(),
+      from: TMNode.address(),
       data: [Bid.encode(bid), Task.encode(task)],
     }
     |> TransactionController.send()
@@ -69,7 +69,7 @@ defmodule Reml.App.Task.TaskController do
 
   defp run_node(task, bid, _mode) do
     cond do
-      bid.node_id == Node.address ->
+      bid.node_id == TMNode.address ->
         AgentController.send(task.to, task.task, task.params)
 
       true ->

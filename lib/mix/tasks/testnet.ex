@@ -34,12 +34,19 @@ defmodule Mix.Tasks.Testnet do
     async_nodes &Docker.init_tendermint/1
     update_genesis_file()
     update_peers()
+    set_primary_node()
   end
 
   defp async_nodes(task) do
     @nodes
     |> Enum.map(&Task.async(fn -> task.(&1) end))
     |> Enum.map(&Task.await/1)
+  end
+
+  defp set_primary_node do
+    %{node_id: node_id} = Docker.get_node_id(Enum.at(@nodes, 0))
+
+    async_nodes &(Docker.set_primary_node_id(&1, node_id))
   end
 
   defp update_genesis_file do

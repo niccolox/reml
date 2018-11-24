@@ -2,7 +2,7 @@ defmodule Reml.Api.Resolvers.Transaction do
   @moduledoc false
 
   alias Reml.Tendermint.RPC
-  alias Reml.Tendermint.Node
+  alias Reml.Tendermint.TMNode
   alias Reml.App.TransactionController
   alias PalliumCore.Core.Bid
   alias PalliumCore.Core.Transaction, as: Tx
@@ -125,6 +125,6 @@ defmodule Reml.Api.Resolvers.Transaction do
   end
 
   defp update_node_id(%Bid{} = bid) do
-    %Bid{bid | node_id: Node.address}
+    %Bid{bid | node_id: TMNode.address}
   end
 end
