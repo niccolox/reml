@@ -7,6 +7,7 @@ defmodule Reml.App.Task do
     from: "",
     to: "",
     task: "",
+    pipeline: "",
     status: :unassigned,
     created_at: 0,
     params: []

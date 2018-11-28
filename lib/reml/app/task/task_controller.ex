@@ -2,6 +2,8 @@ defmodule Reml.App.Task.TaskController do
   alias PalliumCore.Core.Bid
   alias PalliumCore.Core.Transaction, as: Tx
   alias Reml.App.AgentController
+  alias Reml.App.Pipeline
+  alias Reml.App.State
   alias Reml.App.Task
   alias Reml.App.Task.Allocator
   alias Reml.App.Task.BidStorage
@@ -10,9 +12,17 @@ defmodule Reml.App.Task.TaskController do
   alias Reml.App.TransactionController
   alias Reml.Tendermint.TMNode
 
-  def add_task(task) do
+  def add_task(from, to, task, pipeline \\ "") do
+    task = %Task{
+      from: from,
+      to: to,
+      task: task,
+      pipeline: pipeline,
+      created_at: State.last_block_height()
+    }
     TaskStorage.add_task(task)
     check_task(task)
+    task
   end
 
   def check_unassigned_tasks do
@@ -56,10 +66,20 @@ defmodule Reml.App.Task.TaskController do
   def new_confirmation(bid, task) do
     ConfirmationStorage.add_confirmation(task, bid)
     case ConfirmationStorage.get_workers(task) do
-      nil -> :noop
-      bids when is_list(bids) -> run_task(task, bids)
+      nil ->
+        :noop
+
+      bids when is_list(bids) ->
+        case task.pipeline do
+          "" -> run_task(task, bids)
+          _ -> check_pipeline_readiness(task, bids)
+        end
     end
     :ok
+  end
+
+  defp check_pipeline_readiness(task, bids) do
+    Pipeline.accept_confirmation(task, bids)
   end
 
   defp run_task(task, [master_bid | worker_bids]) do

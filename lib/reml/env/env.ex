@@ -3,9 +3,7 @@ defmodule Reml.Env do
   Documentation for Reml Environment.
   """
   alias Reml.Env.Channel
-  alias Reml.App.State
   alias Reml.App.Store
-  alias Reml.App.Task
   alias Reml.App.Task.TaskController
   alias PalliumCore.Compiler
 
@@ -45,13 +43,7 @@ defmodule Reml.Env do
   end
 
   def start_task(from, to, task) do
-    %Task{
-      from: from,
-      to: to,
-      task: task,
-      created_at: State.last_block_height(),
-    }
-    |> TaskController.add_task()
+    TaskController.add_task(from, to, task)
   end
 
   def local_path(path), do: Path.join("fs", path)

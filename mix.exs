@@ -37,6 +37,7 @@ defmodule Reml.MixProject do
       {:cowboy, "~> 2.4"},
       {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
       {:exleveldb, "~> 0.14"},
+      {:gen_stage, "~> 0.14.1"},
       {:hackney, "~> 1.12"},
 
       # jsonrpc2 requires sending request id as a string, which is implemented in this fork
