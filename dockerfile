@@ -51,7 +51,7 @@ COPY . .
 
 ENV TENDERMINT_PRIV_VALIDATOR=/root/.tendermint/config/priv_validator.json
 
-RUN mix do deps.clean --all, deps.get, deps.compile, compile
+RUN HEX_HTTP_CONCURRENCY=1 HEX_HTTP_TIMEOUT=200 mix do deps.clean --all, deps.get, deps.compile, compile
 
 # ENV REPLACE_OS_VARS=true \
 #     APP_NAME=${APP_NAME} \
