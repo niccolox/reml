@@ -43,7 +43,6 @@ defmodule Reml.App.TransactionController do
 
   def execute(%Tx{type: :bid} = tx) do
     Bid.decode(tx.data)
-    |> IO.inspect(label: :bid)
     |> AgentController.bid()
   end
 

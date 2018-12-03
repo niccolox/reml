@@ -124,6 +124,15 @@ defmodule Reml.Api.Resolvers.Transaction do
     end
   end
 
+  def pipeline(_parent, args, _resolution) do
+    %Tx{
+      type: :start_pipeline,
+      from: TMNode.address,
+      data: args.agents
+    }
+    |> TransactionController.send()
+  end
+
   defp update_node_id(%Bid{} = bid) do
     %Bid{bid | node_id: TMNode.address}
   end

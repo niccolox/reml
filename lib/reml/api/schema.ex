@@ -92,5 +92,12 @@ defmodule Reml.Api.Schema do
 
       resolve &Transaction.bid/3
     end
+
+    @desc "Start pipeline"
+    field :pipeline, type: :tx do
+      arg :agents, list_of(:string)
+
+      resolve &Transaction.pipeline/3
+    end
   end
 end
