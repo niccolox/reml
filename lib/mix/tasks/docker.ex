@@ -41,7 +41,7 @@ defmodule Mix.Tasks.Docker do
   end
 
   def set_primary_node_id(node, primary_id) do
-    %{node_id: node_id} = get_node_id(node)
+    node_id = get_node_address(node)
 
     run_cmd = """
       #!/bin/sh
@@ -74,7 +74,7 @@ defmodule Mix.Tasks.Docker do
     |> docker("Updated peers config", node: node)
   end
 
-  def get_node_id(node) do
+  def get_node_address(node) do
     cat_cmd =
       ~s(cat #{@tm_priv_validator_file} | grep '"address"' | sed 's/\\s*"address": "\\\([^"]*\\\)",/\\1/')
 
@@ -82,8 +82,17 @@ defmodule Mix.Tasks.Docker do
       ["exec", node.name, "sh", "-c", cat_cmd]
       |> docker("Got node id", node: node)
 
+    node_id
+  end
+
+  def get_node_id(node) do
+    {:ok, node_id} =
+      ~w(exec #{node.name} /opt/tm/tendermint show_node_id)
+      |> docker("Got node id", node: node)
+
     Map.put(node, :node_id, node_id)
   end
+
 
   defp docker(args, msg, opts \\ []) do
     case System.cmd("docker", args) do

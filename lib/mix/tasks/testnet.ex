@@ -44,9 +44,9 @@ defmodule Mix.Tasks.Testnet do
   end
 
   defp set_primary_node do
-    %{node_id: node_id} = Docker.get_node_id(Enum.at(@nodes, 0))
+    node_address = Docker.get_node_address(Enum.at(@nodes, 0))
 
-    async_nodes &(Docker.set_primary_node_id(&1, node_id))
+    async_nodes &(Docker.set_primary_node_id(&1, node_address))
   end
 
   defp update_genesis_file do
