@@ -13,4 +13,8 @@ defmodule Reml.App.Pipeline.Producer do
     IO.inspect(demand, label: "Demanded")
     {:noreply, [], :state}
   end
+
+  def handle_cast({:run, data}, state) do
+    {:noreply, [data], state}
+  end
 end

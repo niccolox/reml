@@ -13,6 +13,14 @@ defmodule Reml.App.Pipeline do
     {pid, address} |> encode()
   end
 
+  def run(id, data) do
+    {pid, address} = decode(id)
+    case TMNode.address() do
+      ^address -> GenServer.call(pid, {:run, data})
+      _ -> :wrong_node
+    end
+  end
+
   def accept_confirmation(task, [bid]) do
     address = TMNode.address()
     task
@@ -54,6 +62,12 @@ defmodule Reml.App.Pipeline do
     |> IO.inspect(label: "Accepting confirmation")
     # update confirmed agents
     # if all confirmed -> start pipeline
+  end
+
+  def handle_cast({:run, data}, _from, state) do
+    %{pid: pid} = state
+    GenStage.cast(pid, {:run, data})
+    {:noreply, state}
   end
 
   defp check_readiness(state) do
