@@ -1,5 +1,5 @@
 %{
-  "abci": {:git, "https://github.com/neocortexlab/abci-ex.git", "291378170596694022b0f59478c01721309c5811", []},
+  "abci": {:git, "https://github.com/neocortexlab/abci-ex.git", "9d98c16538a6aeb617a2e112aab6121215958e50", []},
   "abci_server": {:git, "https://github.com/KrzysiekJ/abci_server.git", "ee7e1674064899488e23e191064d4085ac2b11c9", [tag: "v0.4.0"]},
   "absinthe": {:hex, :absinthe, "1.4.13", "81eb2ff41f1b62cd6e992955f62c22c042d1079b7936c27f5f7c2c806b8fc436", [:mix], [{:dataloader, "~> 1.0.0", [hex: :dataloader, repo: "hexpm", optional: true]}, {:decimal, "~> 1.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm"},
   "absinthe_plug": {:hex, :absinthe_plug, "1.4.5", "f63d52a76c870cd5f11d4bed8f61351ab5c5f572c5eb0479a0137f9f730ba33d", [:mix], [{:absinthe, "~> 1.4.11", [hex: :absinthe, repo: "hexpm", optional: false]}, {:plug, "~> 1.3.2 or ~> 1.4", [hex: :plug, repo: "hexpm", optional: false]}], "hexpm"},

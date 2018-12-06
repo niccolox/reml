@@ -39,7 +39,7 @@ RUN apk update && \
 
 WORKDIR /opt/tm
 
-RUN curl -o tendermint.zip -L https://github.com/tendermint/tendermint/releases/download/v0.22.8/tendermint_0.22.8_linux_amd64.zip
+RUN curl -o tendermint.zip -L https://github.com/tendermint/tendermint/releases/download/v0.26.4/tendermint_0.26.4_linux_amd64.zip
 RUN unzip tendermint.zip
 RUN rm tendermint.zip
 
