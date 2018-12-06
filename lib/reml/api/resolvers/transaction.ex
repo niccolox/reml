@@ -124,13 +124,42 @@ defmodule Reml.Api.Resolvers.Transaction do
     end
   end
 
-  def pipeline(_parent, args, _resolution) do
+  def start_pipeline(_parent, args, _resolution) do
     %Tx{
       type: :start_pipeline,
-      from: TMNode.address,
-      data: args.agents
+      from: TMNode.address(),
+      data: args.agents |> String.split(",")
     }
     |> TransactionController.send()
+    |> case do
+      {:ok, response} ->
+        {:ok, %{
+          data: response["deliver_tx"]["data"],
+          hash: response["hash"],
+          height: response["height"],
+        }}
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  def run_pipeline(_parent, args, _resolution) do
+    %Tx{
+      type: :run_pipeline,
+      from: TMNode.address(),
+      data: [args.pipeline_id, args.input]
+    }
+    |> TransactionController.send()
+    |> case do
+      {:ok, response} ->
+        {:ok, %{
+          data: response["deliver_tx"]["data"],
+          hash: response["hash"],
+          height: response["height"]
+        }}
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
   defp update_node_id(%Bid{} = bid) do

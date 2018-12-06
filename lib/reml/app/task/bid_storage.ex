@@ -12,4 +12,19 @@ defmodule Reml.App.Task.BidStorage do
   def get_all do
     Agent.get(__MODULE__, &(&1))
   end
+
+  def delete_bid(bid) do
+    Agent.get_and_update(__MODULE__, fn bids ->
+      bids
+      |> Enum.find_index(&(&1 == bid))
+      |> case do
+        nil -> {false, bids}
+        i -> {true, List.delete_at(bids, i)}
+      end
+    end)
+  end
+
+  def has_bid?(bid) do
+    Agent.get(__MODULE__, fn bids -> Enum.any?(bids, &(&1 == bid)) end)
+  end
 end

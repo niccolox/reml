@@ -7,10 +7,11 @@ defmodule Reml.App do
   alias PalliumCore.Core.Transaction, as: Tx
   alias Reml.ABCI.Response
   alias Reml.App.State
-  alias Reml.App.Store
   alias Reml.App.TransactionController
   alias Reml.App.TxValidator
   alias Reml.App.Task.TaskController
+
+  require Logger
 
   @code_type_ok 0
   # @code_type_encoding_error 1
@@ -21,7 +22,7 @@ defmodule Reml.App do
 
   def handle(message, request) do
     process(message, request)
-    |> IO.inspect(label: message)
+    # |> IO.inspect(label: "App.handle(#{inspect message})")
   end
 
   def process(:info, _req) do
@@ -48,8 +49,9 @@ defmodule Reml.App do
   end
 
   def process(:commit, _req) do
+    IO.puts("COMMIT\n\n\n")
     # response hash state
-    Types.ResponseCommit.new(data: Store.root_hash())
+    Types.ResponseCommit.new(data: "tree state")
   end
 
   def process(:flush, _req) do
@@ -74,9 +76,17 @@ defmodule Reml.App do
   end
 
   def process(:check_tx, %{tx: tx}) do
-    tx
-    |> Tx.decode()
-    |> TxValidator.validate()
-    |> Response.check_tx()
+    resp =
+      tx
+      |> Tx.decode()
+      |> TxValidator.validate()
+      |> Response.check_tx()
+        
+    case resp.code do
+      0 -> :ok
+      _ -> Logger.warn("TX declined: #{resp.info}")
+    end
+
+    resp
   end
 end

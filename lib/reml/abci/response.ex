@@ -9,6 +9,7 @@ defmodule Reml.ABCI.Response do
   @check_tx_codes %{
     ok: 0,
     agent_missing: 1,
+    bid_missing: 2,
   }
 
   @deliver_tx_codes %{
@@ -24,6 +25,13 @@ defmodule Reml.ABCI.Response do
     ResponseCheckTx.new(
       code: @check_tx_codes.agent_missing,
       info: "Agent #{address} does not exist"
+    )
+  end
+
+  def check_tx({:bid_not_found, _bid}) do
+    ResponseCheckTx.new(
+      code: @check_tx_codes.bid_missing,
+      info: "Bid does not exist or assigned"
     )
   end
 

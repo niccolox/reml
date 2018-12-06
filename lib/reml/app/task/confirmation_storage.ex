@@ -37,7 +37,7 @@ defmodule Reml.App.Task.ConfirmationStorage do
 
   defp find_satisfied(grouped_bids, num_bids) do
     case Enum.filter(grouped_bids, &(length(&1) >= num_bids)) do
-      [bids] -> bids
+      [bids] -> bids |> Enum.shuffle() |> Enum.take(num_bids)
       [] -> nil
       [bids | _] -> Logger.warn("More than 1 group of bids satisfying task"); bids
     end

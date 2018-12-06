@@ -94,10 +94,18 @@ defmodule Reml.Api.Schema do
     end
 
     @desc "Start pipeline"
-    field :pipeline, type: :tx do
-      arg :agents, list_of(:string)
+    field :start_pipeline, type: :tx do
+      arg :agents, non_null(:string)
 
-      resolve &Transaction.pipeline/3
+      resolve &Transaction.start_pipeline/3
+    end
+
+    @desc "Run pipeline"
+    field :run_pipeline, type: :tx do
+      arg :pipeline_id, non_null(:string)
+      arg :input, :string
+
+      resolve &Transaction.run_pipeline/3
     end
   end
 end

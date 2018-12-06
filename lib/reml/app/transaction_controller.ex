@@ -6,7 +6,6 @@ defmodule Reml.App.TransactionController do
   alias Reml.App.Task
   alias Reml.App.Task.TaskController
   alias Reml.Tendermint.RPC
-  alias Reml.Tendermint.TMNode
   alias PalliumCore.Core.Agent
   alias PalliumCore.Core.Bid
   alias PalliumCore.Core.Message
@@ -41,8 +40,9 @@ defmodule Reml.App.TransactionController do
     AgentController.send(tx.to, message.action, message.props)
   end
 
-  def execute(%Tx{type: :bid} = tx) do
-    Bid.decode(tx.data)
+  def execute(%Tx{type: :bid, data: data}) do
+    data
+    |> Bid.decode()
     |> AgentController.bid()
   end
 
@@ -53,16 +53,22 @@ defmodule Reml.App.TransactionController do
     TaskController.new_confirmation(bid, task)
   end
 
-  def execute(%Tx{type: :start_pipeline} = tx) do
-    %{
-      data: required_agents,
-      from: from
-    } = tx
-    case TMNode.address() do
-      # TODO: use supervisor to start pipelines
-      ^from -> Pipeline.start_link(required_agents)
-      _ -> :noop
-    end
+  def execute(%Tx{type: :start_pipeline, from: from, data: agents} = tx) do
+    # TODO: uniq tx id, could be swiched to tx.sign when its implemented
+    tx_id =
+      tx
+      |> Tx.encode()
+      |> Crypto.hash()
+      |> Base.encode64()
+
+    Pipeline.create(from, agents, tx_id)
+    {:ok, tx_id}
+  end
+
+  def execute(%Tx{type: :run_pipeline, data: [pipeline_id, input]}) do
+    Pipeline.run(pipeline_id, input)
+    |> IO.inspect(label: "Run pipeline")
+    {:ok, "Done"}
   end
 
   def execute(%Tx{} = tx) do

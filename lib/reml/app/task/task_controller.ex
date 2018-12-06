@@ -64,28 +64,24 @@ defmodule Reml.App.Task.TaskController do
   end
 
   def new_confirmation(bid, task) do
+    BidStorage.delete_bid(bid)
     ConfirmationStorage.add_confirmation(task, bid)
     case ConfirmationStorage.get_workers(task) do
       nil ->
         :noop
 
       bids when is_list(bids) ->
-        case task.pipeline do
-          "" -> run_task(task, bids)
-          _ -> check_pipeline_readiness(task, bids)
-        end
+        process_confirmation(task, bids)
     end
     :ok
   end
 
-  defp check_pipeline_readiness(task, bids) do
-    Pipeline.accept_confirmation(task, bids)
-  end
-
-  defp run_task(task, [master_bid | worker_bids]) do
+  defp process_confirmation(%Task{pipeline: ""} = task, [master_bid | worker_bids]) do
     run_node(task, master_bid, :master)
     Enum.map(worker_bids, &run_node(task, &1, :worker))
   end
+
+  defp process_confirmation(task, bids), do: Pipeline.accept_confirmation(task, bids)
 
   defp run_node(task, bid, _mode) do
     cond do

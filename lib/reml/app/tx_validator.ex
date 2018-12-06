@@ -1,6 +1,8 @@
 defmodule Reml.App.TxValidator do
-  alias Reml.App.Store
   alias PalliumCore.Core.Transaction, as: Tx
+  alias PalliumCore.Core.Bid
+  alias Reml.App.Store
+  alias Reml.App.Task.BidStorage
 
   def validate(%Tx{type: :send} = tx) do
     ensure_agent_exists(tx.to)
@@ -8,6 +10,15 @@ defmodule Reml.App.TxValidator do
 
   def validate(%Tx{type: :bid} = tx) do
     ensure_agent_exists(tx.from)
+  end
+
+  def validate(%Tx{type: :confirm} = tx) do
+    [bid_rlp, _] = tx.data
+    bid = Bid.decode(bid_rlp)
+    case BidStorage.has_bid?(bid) do
+      true -> :ok
+      false -> {:bid_not_found, bid}
+    end
   end
 
   def validate(%Tx{}), do: :ok

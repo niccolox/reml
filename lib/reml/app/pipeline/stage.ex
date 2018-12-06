@@ -1,8 +1,9 @@
 defmodule Stage do
   use GenStage
 
-  alias Reml.Env
+  alias PalliumCore.Crypto
   alias Reml.App.Store
+  alias Reml.Env
 
   def start_link(task) do
     GenStage.start_link(__MODULE__, task)
@@ -10,6 +11,8 @@ defmodule Stage do
 
   def start_node(task, [bid]) do
     bid.node_id
+    |> Crypto.to_hex()
+    |> String.upcase()
     |> find_node()
     |> :rpc.call(Stage, :start_link, [task])
   end
@@ -19,7 +22,7 @@ defmodule Stage do
     |> find_node(address)
   end
 
-  defp find_node([], _), do: nil
+  defp find_node([], address), do: raise("Node #{address} not found")
   defp find_node([node | rest], address) do
     node
     |> Atom.to_string()
@@ -31,8 +34,7 @@ defmodule Stage do
   end
 
   def init(task) do
-    state = deploy_agent(task.agent)
-    IO.inspect(state, label: "Starting at #{Node.self()}")
+    state = deploy_agent(task.to)
     {:producer_consumer, state}
   end
 
@@ -44,15 +46,12 @@ defmodule Stage do
     end
   end
 
-  def handle_events(events, from, state) do
-    IO.inspect(events, label: "Stage handling events from #{inspect from} on #{Node.self()}")
-    IO.inspect(state, label: :state)
+  def handle_events(events, _from, state) do
     results = Enum.map(events, &run_task(&1, state))
     {:noreply, results, state}
   end
 
   defp run_task(data, agent) do
     agent.run(data)
-    |> IO.inspect(label: "Agent result")
   end
 end

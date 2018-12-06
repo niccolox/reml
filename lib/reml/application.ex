@@ -24,6 +24,7 @@ defmodule Reml.Application do
       {ABCI, App},
       Server,
       TMNode,
+      {Registry, keys: :unique, name: PipelineRegistry},
     ]
     Supervisor.start_link(children, strategy: :one_for_one)
   end
