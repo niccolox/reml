@@ -21,6 +21,7 @@ defmodule Reml.App do
   # credo:disable-for-this-file Credo.Check.Design.AliasUsage
 
   def handle(message, request) do
+    IO.inspect(message, label: "Processing message")
     process(message, request)
     # |> IO.inspect(label: "App.handle(#{inspect message})")
   end
@@ -49,7 +50,6 @@ defmodule Reml.App do
   end
 
   def process(:commit, _req) do
-    IO.puts("COMMIT\n\n\n")
     # response hash state
     Types.ResponseCommit.new(data: "tree state")
   end

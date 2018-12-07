@@ -9,8 +9,7 @@ defmodule Reml.App.Pipeline.Producer do
     {:producer, :state}
   end
 
-  def handle_demand(demand, :state) do
-    IO.inspect(demand, label: "Demanded")
+  def handle_demand(_demand, :state) do
     {:noreply, [], :state}
   end
 

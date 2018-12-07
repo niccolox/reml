@@ -84,7 +84,6 @@ defmodule Reml.App.Pipeline do
     |> Enum.map(fn {:ok, pid} -> pid end)
     |> Enum.reverse()
     |> subscribe_stages()
-    |> IO.inspect(label: "PIPELINE")
   end
 
   defp subscribe_stages([s | []]), do: s
