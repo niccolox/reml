@@ -31,3 +31,4 @@ TODO
 
 # Python cache
 __pycache__/
+python/*.pyc

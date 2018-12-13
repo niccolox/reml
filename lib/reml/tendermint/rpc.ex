@@ -2,11 +2,20 @@ defmodule Reml.Tendermint.RPC do
   require Logger
 
   alias PalliumCore.Core.Transaction, as: Tx
-  alias JSONRPC2.Clients.HTTP
+  alias Ethereumex.HttpClient
 
-  def broadcast_tx_commit(tx) do
-    params = %{tx: Tx.encode(tx, :base64)}
-    request("broadcast_tx_commit", params)
+  def send_tx(%Tx{} = tx) do
+    encoded_tx =
+      tx
+      |> set_nonce()
+      |> Tx.encode(:base64)
+    request("broadcast_tx_commit", %{tx: encoded_tx})
+  end
+
+  defp set_nonce(tx) do
+    # FIXME: use proper nonce
+    nonce = :rand.uniform(1000000)
+    %Tx{tx | nonce: nonce}
   end
 
   def status do
@@ -19,8 +28,7 @@ defmodule Reml.Tendermint.RPC do
   end
 
   defp request(method, params \\ []) do
-    host = Application.get_env(:reml, :host)
-    HTTP.call(host, method, params)
+    HttpClient.request(method, params, [])
     |> case do
       {:error, :econnrefused} ->
         Logger.warn("Could not connect to Tendermint RPC server")

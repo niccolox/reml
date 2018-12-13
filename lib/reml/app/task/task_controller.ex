@@ -9,8 +9,8 @@ defmodule Reml.App.Task.TaskController do
   alias Reml.App.Task.BidStorage
   alias Reml.App.Task.ConfirmationStorage
   alias Reml.App.Task.TaskStorage
-  alias Reml.App.TransactionController
   alias Reml.Tendermint.TMNode
+  alias Reml.Tendermint.RPC
 
   def add_task(from, to, task, pipeline \\ "") do
     task = %Task{
@@ -44,8 +44,7 @@ defmodule Reml.App.Task.TaskController do
   end
 
   defp current_node?(%Bid{node_id: node_id}) do
-    current_node = TMNode.address()
-    node_id == current_node
+    node_id == TMNode.address()
   end
 
   #TODO: mark bid as assigned to prevent double-assigning
@@ -60,7 +59,7 @@ defmodule Reml.App.Task.TaskController do
       from: TMNode.address(),
       data: [Bid.encode(bid), Task.encode(task)],
     }
-    |> TransactionController.send()
+    |> RPC.send_tx()
   end
 
   def new_confirmation(bid, task) do

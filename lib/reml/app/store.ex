@@ -8,21 +8,21 @@ defmodule Reml.App.Store do
   alias PalliumCore.Core.Agent
 
   def start_link(trie) do
-    GenServer.start_link(__MODULE__, trie, name: Store)
+    GenServer.start_link(__MODULE__, trie, name: __MODULE__)
   end
 
   def init(trie), do: {:ok, trie}
 
   def get_agent(address) do
-    GenServer.call(Store, {:get_agent, address})
+    GenServer.call(__MODULE__, {:get_agent, address})
   end
 
   def update_agent(address, %Agent{} = agent) do
-    GenServer.cast(Store, {:update_agent, address, agent})
+    GenServer.cast(__MODULE__, {:update_agent, address, agent})
   end
 
   def update_state_value(address, key, value) do
-    GenServer.call(Store, {:update_state_value, address, key, value})
+    GenServer.call(__MODULE__, {:update_state_value, address, key, value})
   end
 
   def update_state_value!(address, key, value) do
@@ -33,7 +33,7 @@ defmodule Reml.App.Store do
   end
 
   def reset_state_hash(address, state_hash) do
-    GenServer.call(Store, {:reset_state_hash, address, state_hash})
+    GenServer.call(__MODULE__, {:reset_state_hash, address, state_hash})
   end
 
   def reset_state_hash!(address, state_hash) do
@@ -44,7 +44,7 @@ defmodule Reml.App.Store do
   end
 
   def get_state_value(address, key) do
-    GenServer.call(Store, {:get_state_value, address, key})
+    GenServer.call(__MODULE__, {:get_state_value, address, key})
   end
 
   def get_state_value!(address, key) do
@@ -55,7 +55,7 @@ defmodule Reml.App.Store do
   end
 
   def set_state(address, map) do
-    GenServer.call(Store, {:set_state, address, map})
+    GenServer.call(__MODULE__, {:set_state, address, map})
   end
 
   def set_state!(address, map) do
@@ -66,7 +66,7 @@ defmodule Reml.App.Store do
   end
 
   def root_hash do
-    GenServer.call(Store, :root_hash)
+    GenServer.call(__MODULE__, :root_hash)
   end
 
   # callbacks

@@ -3,9 +3,8 @@ defmodule Reml.App.AgentController do
   Documentation for Reml Autonomous Intelligent Agents.
   """
   alias Reml.App.Store
-  alias Reml.App.Task.BidStorage
   alias Reml.Env
-  alias PalliumCore.Core.{Agent, Bid}
+  alias PalliumCore.Core.Agent
 
   @doc """
   Creates a new entry in the Store with an agent structure and execute construct
@@ -61,9 +60,5 @@ defmodule Reml.App.AgentController do
     with {:ok, agent} <- Store.get_agent(address) do
       {:ok, agent.balance}
     end
-  end
-
-  def bid(%Bid{} = bid) do
-    BidStorage.add_bid(bid)
   end
 end

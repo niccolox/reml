@@ -5,7 +5,7 @@ defmodule Reml.App.AgentStateTest do
   alias PalliumCore.Core.Message
   alias PalliumCore.Core.Transaction, as: Tx
   alias Reml.App.Store
-  alias Reml.App.TransactionController
+  alias Reml.Tendermint.TxExecutor
   alias MerklePatriciaTree.Trie
 
   setup do
@@ -14,7 +14,7 @@ defmodule Reml.App.AgentStateTest do
     agent_rlp = %Agent{code: code} |> Agent.encode()
     data = [agent_rlp, ""]
     %Tx{type: :create, from: address, data: data}
-    |> TransactionController.execute()
+    |> TxExecutor.execute_tx()
     {:ok, address: address, agent: agent_rlp}
   end
 
@@ -25,14 +25,14 @@ defmodule Reml.App.AgentStateTest do
   test "modifies state", context do
     msg_rlp = %Message{action: :set, props: "a=5"} |> Message.encode()
     %Tx{type: :send, to: context.address, data: msg_rlp}
-    |> TransactionController.execute()
+    |> TxExecutor.execute_tx()
     assert "5" == Store.get_state_value!(context.address, "a")
   end
 
   test "restores state on failure", context do
     msg_rlp = %Message{action: :set_and_fail, props: "a=5"} |> Message.encode()
     %Tx{type: :send, to: context.address, data: msg_rlp}
-    |> TransactionController.execute()
+    |> TxExecutor.execute_tx()
     assert "1" == Store.get_state_value!(context.address, "a")
    end
 

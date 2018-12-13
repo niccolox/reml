@@ -2,7 +2,7 @@ defmodule Reml.Api.Server do
   @moduledoc false
 
   alias Reml.Api.Server
-  alias Plug.Adapters.Cowboy2
+  alias Plug.Cowboy
 
   use Plug.Router
 
@@ -19,7 +19,7 @@ defmodule Reml.Api.Server do
     init_opts: [schema: Reml.Api.Schema]
 
   def start_link do
-    {:ok, _} = Cowboy2.http(Server, [], port: 8080)
+    {:ok, _} = Cowboy.http(Server, [], port: 8080)
   end
 
   def child_spec(_opts) do

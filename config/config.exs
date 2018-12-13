@@ -30,7 +30,9 @@ use Mix.Config
 #     import_config "#{Mix.env}.exs"
 
 config :reml,
-  host: "http://localhost:26657/",
   tendermint_priv_validator: System.get_env("TENDERMINT_PRIV_VALIDATOR") || Path.expand("~/.tendermint/config/priv_validator.json")
+
+config :ethereumex,
+  url: "http://localhost:26657"
 
 # config :absinthe, log: false

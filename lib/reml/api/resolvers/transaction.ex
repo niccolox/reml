@@ -3,7 +3,6 @@ defmodule Reml.Api.Resolvers.Transaction do
 
   alias Reml.Tendermint.RPC
   alias Reml.Tendermint.TMNode
-  alias Reml.App.TransactionController
   alias PalliumCore.Core.Bid
   alias PalliumCore.Core.Transaction, as: Tx
   alias PalliumCore.Crypto
@@ -16,7 +15,7 @@ defmodule Reml.Api.Resolvers.Transaction do
       value: args.value,
       data: Crypto.from_hex(args.data)
     }
-    |> TransactionController.send()
+    |> RPC.send_tx()
     {:ok, %{rlp: "RLP substituted in #{__MODULE__}!"}}
   end
 
@@ -27,7 +26,7 @@ defmodule Reml.Api.Resolvers.Transaction do
       from: args.address,
       data: [agent_rlp, args.params]
     }
-    |> TransactionController.send()
+    |> RPC.send_tx()
     |> case do
       {:ok, response} ->
         {:ok, %{
@@ -47,7 +46,7 @@ defmodule Reml.Api.Resolvers.Transaction do
       from: "0x",
       value: args.value
     }
-    |> TransactionController.send()
+    |> RPC.send_tx()
     {:ok, %{rlp: "RLP substituted in #{__MODULE__}!"}}
   end
 
@@ -58,7 +57,7 @@ defmodule Reml.Api.Resolvers.Transaction do
       from: args.from,
       value: args.value
     }
-    |> TransactionController.send()
+    |> RPC.send_tx()
     {:ok, %{rlp: "RLP substituted in #{__MODULE__}!"}}
   end
 
@@ -73,7 +72,7 @@ defmodule Reml.Api.Resolvers.Transaction do
   def send_msg(_parent, args, _resolution) do
     msg_rlp = Crypto.from_hex(args.message)
     %Tx{type: :send, to: args.to, data: msg_rlp}
-    |> TransactionController.send()
+    |> RPC.send_tx()
     |> case do
       {:ok, response} ->
         {:ok, %{
@@ -112,7 +111,7 @@ defmodule Reml.Api.Resolvers.Transaction do
       |> update_node_id()
       |> Bid.encode()
     %Tx{type: :bid, from: args.from, data: bid_rlp}
-    |> TransactionController.send()
+    |> RPC.send_tx()
     |> case do
       {:ok, response} ->
         {:ok, %{
@@ -130,7 +129,7 @@ defmodule Reml.Api.Resolvers.Transaction do
       from: TMNode.address(),
       data: args.agents |> String.split(",")
     }
-    |> TransactionController.send()
+    |> RPC.send_tx()
     |> case do
       {:ok, response} ->
         {:ok, %{
@@ -149,7 +148,7 @@ defmodule Reml.Api.Resolvers.Transaction do
       from: TMNode.address(),
       data: [args.pipeline_id, args.input]
     }
-    |> TransactionController.send()
+    |> RPC.send_tx()
     |> case do
       {:ok, response} ->
         {:ok, %{

@@ -3,6 +3,8 @@ defmodule Reml.Tendermint.TMNode do
 
   alias PalliumCore.Crypto
 
+  require Logger
+
   @node_config Application.get_env(:reml, :tendermint_priv_validator)
 
   def start_link(_) do
@@ -17,7 +19,10 @@ defmodule Reml.Tendermint.TMNode do
       |> Poison.decode!()
 
     connect_to_master_node(System.get_env("PRIMARY_NODE_ID"), address)
-    |> IO.inspect(label: "Connected to masternode")
+    |> case do
+      false -> Logger.warn("Could not connect to masternode")
+      _ -> :ok
+    end
 
     state = %{
       address: address |> String.downcase() |> Crypto.from_hex(),

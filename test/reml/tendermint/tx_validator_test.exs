@@ -1,7 +1,7 @@
-defmodule Reml.App.TxValidatorTest do
+defmodule Reml.Tendermint.TxValidatorTest do
   use ExUnit.Case
 
-  alias Reml.App.TxValidator
+  alias Reml.Tendermint.TxValidator
   alias PalliumCore.Core.Transaction, as: Tx
 
   describe ":send" do
@@ -15,11 +15,11 @@ defmodule Reml.App.TxValidatorTest do
           data: data
         }
 
-      assert {:agent_missing, address} == TxValidator.validate(tx)
+      assert {:error, {:agent_not_found, _}} = TxValidator.validate_tx(tx)
 
       AgentHelpers.create("foo", address)
 
-      assert :ok == TxValidator.validate(tx)
+      assert :ok == TxValidator.validate_tx(tx)
     end
   end
 
@@ -33,11 +33,11 @@ defmodule Reml.App.TxValidatorTest do
           from: address,
           data: data
         }
-      assert {:agent_missing, address} == TxValidator.validate(tx)
+      assert {:error, {:agent_not_found, _}} = TxValidator.validate_tx(tx)
 
       AgentHelpers.create("foo", address)
 
-      assert :ok == TxValidator.validate(tx)
+      assert :ok == TxValidator.validate_tx(tx)
     end
   end
 end

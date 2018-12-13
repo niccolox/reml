@@ -20,7 +20,6 @@ defmodule Reml.MixProject do
     ]
   end
 
-  # Run "mix help compile.app" to learn about applications.
   def application do
     [
       mod: {Reml.Application, []},
@@ -28,37 +27,27 @@ defmodule Reml.MixProject do
     ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
       {:abci, github: "neocortexlab/abci-ex"},
       {:absinthe, "~> 1.4"},
       {:absinthe_plug, "~> 1.4.0"},
-      {:cowboy, "~> 2.4"},
       {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
+      {:ethereumex, "~> 0.5.1"},
       {:exleveldb, "~> 0.14"},
+      {:export, "~> 0.1.0"},
       {:gen_stage, "~> 0.14.1"},
       {:hackney, "~> 1.12"},
-
-      # jsonrpc2 requires sending request id as a string, which is implemented in this fork
-      {:jsonrpc2, github: "whitered/jsonrpc2-elixir"},
-
+      {:ipfs_api_ex, github: "neocortexlab/ipfs-api-ex"},
       {:keccakf1600, "~> 2.0.0", hex: :keccakf1600_orig},
       {:merkle_patricia_tree, "~> 0.2.7"},
       {:pallium_core, "~> 0.2.1", github: "neocortexlab/pallium-core"},
-      # {:pallium_core, path: "../pallium_core"},
+      {:plug_cowboy, "~> 2.0"},
       {:poison, "~> 3.1"},
-      {:export, "~> 0.1.0"},
-      {:ipfs_api_ex, github: "neocortexlab/ipfs-api-ex"},
-      {:xandra, "~> 0.10" },
-      {:thrift, github: "pinterest/elixir-thrift"},
-
-      # temporary fix :ranch version until cowboy upgrade to ranch >= 1.6 which is required by thrift
-      # TODO: remove :ranch dep later!
-      {:ranch, "~> 1.6", override: true},
-
       {:sage, "~> 0.4.0"},
       {:temp, "~> 0.4"},
+      {:thrift, github: "pinterest/elixir-thrift"},
+      {:xandra, "~> 0.10" },
     ]
   end
 end

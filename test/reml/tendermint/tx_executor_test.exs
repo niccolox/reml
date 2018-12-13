@@ -1,10 +1,10 @@
-defmodule Reml.App.TransactionControllerTest do
+defmodule Reml.Tendermint.TxExecutorTest do
   use ExUnit.Case
 
   alias PalliumCore.Core.Agent
   alias PalliumCore.Core.Message
   alias PalliumCore.Core.Transaction, as: Tx
-  alias Reml.App.TransactionController
+  alias Reml.Tendermint.TxExecutor
   alias Reml.App.Store
 
   doctest Tx
@@ -22,7 +22,7 @@ defmodule Reml.App.TransactionControllerTest do
     data = [agent_hex_rlp, params]
 
     %Tx{type: :create, from: context.address, data: data}
-    |> TransactionController.execute()
+    |> TxExecutor.execute_tx()
 
     agent = Store.get_agent(context.address)
     assert agent.code == context.code
@@ -35,13 +35,13 @@ defmodule Reml.App.TransactionControllerTest do
     data = [agent_hex_rlp, params]
 
     %Tx{type: :create, from: context.address, data: data}
-    |> TransactionController.execute()
+    |> TxExecutor.execute_tx()
 
     msg = %Message{action: :foo, props: ""} |> Message.encode()
 
     {:ok, result} =
       %Tx{type: :send, to: context.address, data: msg}
-      |> TransactionController.execute()
+      |> TxExecutor.execute_tx()
 
     assert result == "bar"
   end

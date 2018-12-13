@@ -2,13 +2,13 @@ defmodule Reml.Application do
   @moduledoc false
 
   alias Reml.Api.Server
-  alias Reml.App
   alias Reml.App.Task.BidStorage
   alias Reml.App.Task.TaskStorage
   alias Reml.App.Task.ConfirmationStorage
   alias Reml.App.State
   alias Reml.App.Store
 
+  alias Reml.Tendermint.Handler
   alias Reml.Tendermint.TMNode
 
   alias MerklePatriciaTree.{Test, Trie}
@@ -21,7 +21,7 @@ defmodule Reml.Application do
       TaskStorage,
       ConfirmationStorage,
       State,
-      {ABCI, App},
+      {ABCI, Handler},
       Server,
       TMNode,
       {Registry, keys: :unique, name: PipelineRegistry},
